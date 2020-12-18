@@ -1,0 +1,5 @@
+ARG ARCH
+FROM gcr.io/distroless/base-debian10:latest-${ARCH}
+WORKDIR /verify
+COPY verify* /bin/
+ENTRYPOINT [ "/bin/verify" ]
