@@ -1,6 +1,6 @@
 package verify
 
-//go:generate go run github.com/rakyll/statik -src=./assets -include=*.svg,*.html,*.css,*.js,*.png
+//go:generate go run github.com/rakyll/statik -m -src=./assets -include=*.svg,*.html,*.css,*.js,*.png
 //go:generate go fmt statik/statik.go
 
 import (

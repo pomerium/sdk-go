@@ -11,11 +11,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/pomerium/sdk-go"
+	"github.com/gorilla/mux"
+	sdk "github.com/pomerium/sdk-go"
 )
 
 type Verify struct {
-	pomerium  *sdk.Attestation
+	pomerium  *sdk.Verifier
 	templates *template.Template
 }
 
@@ -35,12 +36,12 @@ func New(cacheSize int) (*Verify, error) {
 }
 
 func (h *Verify) Handler() http.Handler {
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
+	mux.Use(sdk.AddIdentityToRequest(h.pomerium))
 	mux.HandleFunc("/", h.html)
-	mux.HandleFunc("/health", h.healthCheck)
 	mux.HandleFunc("/headers", h.headers)
 	mux.HandleFunc("/json", h.json)
-	mux.Handle("/assets/", http.StripPrefix("/assets/", MustAssetHandler()))
+	mux.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", MustAssetHandler()))
 	return mux
 }
 
@@ -67,7 +68,7 @@ func (h *Verify) serverInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Verify) allDetails(r *http.Request) map[string]interface{} {
-	a, attestErr := h.pomerium.VerifyRequest(r)
+	a, attestErr := sdk.FromContext(r.Context())
 	payload := map[string]interface{}{
 		"Request": map[string]interface{}{
 			"Origin":   getOrigin(r),

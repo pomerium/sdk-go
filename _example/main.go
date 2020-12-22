@@ -16,12 +16,15 @@ var (
 	addr     string
 	certFile string
 	keyFile  string
+
+	jwksEndpoint string
 )
 
 func run() (err error) {
 	flag.StringVar(&addr, "addr", defaultAddr, "Address to listen on")
 	flag.StringVar(&certFile, "https-cert-file", "", "HTTPS Server certificate file")
 	flag.StringVar(&keyFile, "https-key-file", "", "HTTPS Server private key file")
+	flag.StringVar(&jwksEndpoint, "jwks-endpoint", "", "(optional) Location of the JWKS endpoint.")
 
 	if addr == defaultAddr && os.Getenv("Addr") != "" {
 		addr = os.Getenv("Addr")

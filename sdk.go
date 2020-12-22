@@ -16,6 +16,13 @@ import (
 	"gopkg.in/square/go-jose.v2/jwt"
 )
 
+var (
+	ErrJWKSEndpointOrDatastore = errors.New("must set either an endpoint or datstore")
+	ErrJWKSNotFound            = errors.New("no JSON Web Key found")
+	ErrJWKSInvalid             = errors.New("invalid JSON Web Key")
+	ErrJWKSTypeMismatch        = errors.New("priv/pub JSON Web Key mismatch")
+)
+
 // JSONWebKeyStore is the interface to support storing multiple web keys
 // for more than one authenticate services.
 type JSONWebKeyStore interface {
@@ -24,32 +31,20 @@ type JSONWebKeyStore interface {
 }
 
 const (
-	defaultAttestationHeader     = "x-pomerium-jwt-assertion"
-	defaultAttestationQueryParam = "jwt"
-	defaultMaxBodySize           = 1024 * 1024 * 4
-	defaultJWKSPath              = "/.well-known/pomerium/jwks.json"
+	defaultMaxBodySize = 1024 * 1024 * 4
+	defaultJWKSPath    = "/.well-known/pomerium/jwks.json"
 )
 
-// Attestation is r
-type Attestation struct {
+type Verifier struct {
 	StaticJSONWebKey *jose.JSONWebKey
 
-	attestationHeader     string
-	attestationQueryParam string
-	maxBodySize           int64
-	datastore             JSONWebKeyStore
-	logger                *log.Logger
-	httpClient            *http.Client
+	datastore  JSONWebKeyStore
+	logger     *log.Logger
+	httpClient *http.Client
 }
 
-// Options are the configurations for Pomerium's attestation.
+// Options are the configurations for an attestation.
 type Options struct {
-	// 	AttestationHeader is the attestation header to look for the attestation JWT.
-	AttestationHeader string
-	// 	AttestationQueryParam is the query param to look for the attestation JWT.
-	AttestationQueryParam string
-	// MaxBodySize is the max size to read from the JWKS endpoint.
-	MaxBodySize int64
 	// JWKSEndpoint is the static JWKS endpoint to use to verify the attestation JWTs.
 	// This setting is mutually exclusive with Datastore.
 	JWKSEndpoint string
@@ -64,49 +59,44 @@ type Options struct {
 	Logger *log.Logger
 }
 
-// New creates a new Attestation.
-func New(ctx context.Context, o *Options) (*Attestation, error) {
+// New creates a new pomerium Verifier which can be used to verify a JWT token against a
+// public JWKS endpoint(s).
+//
+// If JWKS endpoint option is set, a http request will be made to fetch the JSON Web Token at the
+// provided url on creation  and will be static for the lifetime of the attestation instance.
+//
+// Otherwise, if a datastore is used, verifier will attempt fetch a JSON Web Token ad-hoc and
+// trust that token on first use.
+func New(ctx context.Context, o *Options) (*Verifier, error) {
 	if (o.Datastore == nil && o.JWKSEndpoint == "") || o.Datastore != nil && o.JWKSEndpoint != "" {
-		return nil, errors.New("pomerium/sdk: either JWKS endpoint or datstore must be set.")
+		return nil, ErrJWKSEndpointOrDatastore
 	}
 
-	a := Attestation{
-		attestationHeader:     o.AttestationHeader,
-		attestationQueryParam: o.AttestationQueryParam,
-		maxBodySize:           o.MaxBodySize,
-		datastore:             o.Datastore,
-		logger:                o.Logger,
-		httpClient:            o.HTTPClient,
+	v := Verifier{
+		datastore:  o.Datastore,
+		logger:     o.Logger,
+		httpClient: o.HTTPClient,
 	}
 	// set unassigned to defaults
-	if a.logger == nil {
-		a.logger = log.New(os.Stderr, "", log.LstdFlags)
+	if v.logger == nil {
+		v.logger = log.New(os.Stderr, "", log.LstdFlags)
 	}
-	if a.httpClient == nil {
-		a.httpClient = http.DefaultClient
-	}
-	if a.attestationHeader == "" {
-		a.attestationHeader = defaultAttestationHeader
-	}
-	if a.attestationQueryParam == "" {
-		a.attestationQueryParam = defaultAttestationQueryParam
+	if v.httpClient == nil {
+		v.httpClient = http.DefaultClient
 	}
 
-	if a.maxBodySize == 0 {
-		a.maxBodySize = defaultMaxBodySize
-	}
-
+	// if JWKS endpoint is set, try to grab the web key from the endpoint now
 	if o.JWKSEndpoint != "" {
 		var err error
-		a.StaticJSONWebKey, err = a.getJSONWebKey(ctx, o.JWKSEndpoint)
+		v.StaticJSONWebKey, err = v.getJSONWebKey(ctx, o.JWKSEndpoint)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return &a, nil
+	return &v, nil
 }
 
-// Identity is a pomerium attested identity.
+// Identity is a Pomerium attested identity.
 type Identity struct {
 	jwt.Claims          // standard JWT claims
 	Groups     []string `json:"groups,omitempty"`
@@ -116,17 +106,8 @@ type Identity struct {
 	PublicKey  string   `json:"public_key,omitempty"`
 }
 
-// VerifyRequest takes a http request and returns a verified identity, if valid.
-func (a *Attestation) VerifyRequest(r *http.Request) (*Identity, error) {
-	jwt := getRawJWT(r)
-	if len(jwt) == 0 {
-		return nil, errors.New("attestation header / queryparam not found")
-	}
-	return a.Verify(r.Context(), jwt)
-}
-
-// VerifyRequest takes a raw pomerium JWT and returns a verified identity, if valid.
-func (a *Attestation) Verify(ctx context.Context, rawJWT string) (*Identity, error) {
+// GetIdentity takes a raw JWT string and returns a parsed, and validated Identity.
+func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, error) {
 	var id Identity
 	// get the web signature of the raw jwt
 	sig, err := jose.ParseSigned(rawJWT)
@@ -134,10 +115,10 @@ func (a *Attestation) Verify(ctx context.Context, rawJWT string) (*Identity, err
 		return nil, fmt.Errorf("couldn't parse raw JWT: %w", err)
 	}
 	// if set, use the static JSON Web Token
-	jsonWebKey := a.StaticJSONWebKey
+	jsonWebKey := v.StaticJSONWebKey
 	// otherwise, grab it at runtime and TOFU
 	if jsonWebKey == nil {
-		jsonWebKey, err = a.getJSONWebKeyFromToken(ctx, rawJWT)
+		jsonWebKey, err = v.getJSONWebKeyFromToken(ctx, rawJWT)
 		if err != nil {
 			return nil, fmt.Errorf("couldn't get json web key: %w", err)
 		}
@@ -161,16 +142,7 @@ func (a *Attestation) Verify(ctx context.Context, rawJWT string) (*Identity, err
 	return &id, nil
 }
 
-// getRawJWT checks first for the query param, and then the attestation header
-// for pomerium's attestation jwt. If non exists, returns ""
-func getRawJWT(r *http.Request) string {
-	if jwt := r.FormValue(defaultAttestationQueryParam); jwt != "" {
-		return jwt
-	}
-	return r.Header.Get(defaultAttestationHeader)
-}
-
-func (a *Attestation) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*jose.JSONWebKey, error) {
+func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*jose.JSONWebKey, error) {
 	tok, err := jwt.ParseSigned(rawJWT)
 	if err != nil {
 		return nil, fmt.Errorf("invalid JWT: %w", err)
@@ -180,7 +152,7 @@ func (a *Attestation) getJSONWebKeyFromToken(ctx context.Context, rawJWT string)
 		return nil, fmt.Errorf("couldn't get json web key: %w", err)
 	}
 
-	if val, ok := a.datastore.Get(out.ID); ok {
+	if val, ok := v.datastore.Get(out.ID); ok {
 		return val.(*jose.JSONWebKey), nil
 	}
 
@@ -189,23 +161,23 @@ func (a *Attestation) getJSONWebKeyFromToken(ctx context.Context, rawJWT string)
 		Host:   out.Issuer,
 		Path:   defaultJWKSPath,
 	}
-	val, err := a.getJSONWebKey(ctx, u.String())
+	val, err := v.getJSONWebKey(ctx, u.String())
 	if err != nil {
 		return nil, err
 	}
-	a.datastore.Add(out.ID, val)
-	a.logger.Printf("added %s to the keystore", out.ID)
+	v.datastore.Add(out.ID, val)
+	v.logger.Printf("added %s to the keystore", out.ID)
 	return val, nil
 }
 
-func (a *Attestation) getJSONWebKey(ctx context.Context, endpoint string) (*jose.JSONWebKey, error) {
+func (v *Verifier) getJSONWebKey(ctx context.Context, endpoint string) (*jose.JSONWebKey, error) {
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := a.httpClient.Do(req)
+	res, err := v.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -215,7 +187,6 @@ func (a *Attestation) getJSONWebKey(ctx context.Context, endpoint string) (*jose
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("wb %s", bs)
 
 	return loadJSONWebKey(bs, true)
 }
@@ -226,14 +197,14 @@ func loadJSONWebKey(bs []byte, pub bool) (*jose.JSONWebKey, error) {
 		return nil, err
 	}
 	if len(jwks.Keys) < 1 {
-		return nil, errors.New("no JSON Web Key found")
+		return nil, ErrJWKSNotFound
 	}
 	jwk := jwks.Keys[0]
 	if !jwk.Valid() {
-		return nil, errors.New("invalid JSON Web Key")
+		return nil, ErrJWKSInvalid
 	}
 	if jwk.IsPublic() != pub {
-		return nil, errors.New("priv/pub JSON Web Key mismatch")
+		return nil, ErrJWKSTypeMismatch
 	}
 	return &jwk, nil
 }
