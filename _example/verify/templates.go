@@ -15,8 +15,9 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/pomerium/sdk-go/_example/verify/statik" // load static assets
 	"github.com/rakyll/statik/fs"
+
+	_ "github.com/pomerium/sdk-go/_example/verify/statik" // load static assets
 )
 
 func MustNewTemplates() *template.Template {

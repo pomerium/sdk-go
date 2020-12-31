@@ -10,7 +10,7 @@ GO111MODULE=on
 CGO_ENABLED := 0
 # Set any default go build tags
 BUILDTAGS :=
-GOLANGCI_VERSION = v1.21.0 # .... for some reason v1.18.0 misses?
+GOLANGCI_VERSION = v1.34.1
 
 .PHONY: all
 all: clean build-deps cover lint build ## Runs a clean, build, fmt, lint, cover, and vet.
