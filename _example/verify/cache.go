@@ -2,11 +2,13 @@ package verify
 
 import (
 	lru "github.com/hashicorp/golang-lru"
+
 	"github.com/pomerium/sdk-go"
 )
 
 var _ sdk.JSONWebKeyStore = &Cache{}
 
+// Cache is a naive implementation of a JSONWebKeyStore using a LRU cache.
 type Cache struct{ lru *lru.Cache }
 
 func NewCache(size int) (*Cache, error) {
@@ -16,9 +18,11 @@ func NewCache(size int) (*Cache, error) {
 	}
 	return &Cache{c}, nil
 }
+
 func (c *Cache) Get(key interface{}) (value interface{}, ok bool) {
 	return c.lru.Get(key)
 }
+
 func (c *Cache) Add(key, value interface{}) {
 	_ = c.lru.Add(key, value) // we don't care about eviction
 }

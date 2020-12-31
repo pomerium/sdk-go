@@ -63,13 +63,13 @@ func getIdentityFromRequest(a *Verifier, r *http.Request, findTokenFns ...func(r
 	return a.GetIdentity(r.Context(), tokenString)
 }
 
-// TokenFromHeader tries to retreive the token string from the
+// TokenFromHeader tries to retrieve the token string from the
 // ""x-pomerium-jwt-assertion" header.
 func TokenFromHeader(r *http.Request) string {
 	return r.Header.Get(defaultAttestationHeader)
 }
 
-// TokenFromQuery tries to retreive the token string from the "jwt" URI
+// TokenFromQuery tries to retrieve the token string from the "jwt" URI
 // query parameter.
 func TokenFromQuery(r *http.Request) string {
 	return r.FormValue(defaultAttestationQueryParam)

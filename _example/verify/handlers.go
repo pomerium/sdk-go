@@ -2,7 +2,6 @@ package verify
 
 import (
 	"bytes"
-	"context"
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
@@ -12,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+
 	sdk "github.com/pomerium/sdk-go"
 )
 
@@ -25,7 +25,7 @@ func New(cacheSize int) (*Verify, error) {
 	if err != nil {
 		return nil, err
 	}
-	att, err := sdk.New(context.Background(), &sdk.Options{Datastore: c})
+	att, err := sdk.New(&sdk.Options{Datastore: c})
 	if err != nil {
 		return nil, err
 	}

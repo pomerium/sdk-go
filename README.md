@@ -12,4 +12,6 @@
 
 See `/_example/` for usage and example webapp. 
 
-todo(bdd): live demo version behind both pomerium and not behind.  
+- A live version of this code can be found at https://verify.pomerium.com
+
+![screenshot](https://github.com/pomerium/sdk-go/blob/master/.github/screenshot.png)
