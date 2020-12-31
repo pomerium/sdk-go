@@ -74,7 +74,7 @@ func New(o *Options) (*Verifier, error) {
 	if v.httpClient == nil {
 		v.httpClient = http.DefaultClient
 	}
-	if o.JWKSEndpoint == "" {
+	if o.JWKSEndpoint != "" {
 		u, err := url.Parse(o.JWKSEndpoint)
 		if err != nil {
 			return nil, err
