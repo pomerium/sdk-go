@@ -20,12 +20,15 @@ type Verify struct {
 	templates *template.Template
 }
 
-func New(cacheSize int) (*Verify, error) {
+func New(cacheSize int, jwksEndpoint string) (*Verify, error) {
 	c, err := NewCache(cacheSize)
 	if err != nil {
 		return nil, err
 	}
-	att, err := sdk.New(&sdk.Options{Datastore: c})
+	att, err := sdk.New(&sdk.Options{
+		Datastore:    c,
+		JWKSEndpoint: jwksEndpoint,
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -25,12 +25,13 @@ func run() (err error) {
 	flag.StringVar(&certFile, "https-cert-file", "", "HTTPS Server certificate file")
 	flag.StringVar(&keyFile, "https-key-file", "", "HTTPS Server private key file")
 	flag.StringVar(&jwksEndpoint, "jwks-endpoint", "", "(optional) Location of the JWKS endpoint.")
+	flag.Parse()
 
 	if addr == defaultAddr && os.Getenv("Addr") != "" {
 		addr = os.Getenv("Addr")
 	}
 
-	verifier, err := verify.New(1024)
+	verifier, err := verify.New(1024, jwksEndpoint)
 	if err != nil {
 		return err
 	}
