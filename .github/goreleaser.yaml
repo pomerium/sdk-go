@@ -15,14 +15,12 @@ before:
   hooks:
     - go mod download
     - make build-deps
-    - cd _example && go get
 
 builds:
   - id: verify
     hooks:
       pre:
         - make build-deps
-        - cd _example && go get
     main: ./_example/main.go
     binary: verify
     goarch:

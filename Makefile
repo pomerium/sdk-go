@@ -28,6 +28,7 @@ build-deps: ## Install build dependencies
 	@cd /tmp; GO111MODULE=on go get github.com/hashicorp/golang-lru
 	@cd /tmp; GO111MODULE=on go get github.com/gorilla/mux
 	@cd /tmp; GO111MODULE=on go get github.com/rakyll/statik/fs
+	@cd _example; go get
 
 
 .PHONY: build
