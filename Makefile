@@ -25,16 +25,12 @@ clean: ## Cleanup any build binaries or packages.
 build-deps: ## Install build dependencies
 	@echo "==> $@"
 	@cd /tmp; GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION}
-	@cd /tmp; GO111MODULE=on go get github.com/hashicorp/golang-lru
-	@cd /tmp; GO111MODULE=on go get github.com/gorilla/mux
-	@cd /tmp; GO111MODULE=on go get github.com/rakyll/statik/fs
 	@cd _example; go get
 
 
 .PHONY: build
 build: ## Builds dynamic executables and/or packages.
 	@echo "==> $@"
-	@go get
 	@CGO_ENABLED=0 GO111MODULE=on go build -tags "$(BUILDTAGS)" ${GO_LDFLAGS} -o $(BINDIR)/$(NAME)
 
 .PHONY: lint
