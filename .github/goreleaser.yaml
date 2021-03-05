@@ -27,8 +27,8 @@ builds:
     goos:
       - linux
       - darwin
-      - windows
-      - freebsd
+      # - windows
+      # - freebsd
     goarm:
       - 6
       - 7
