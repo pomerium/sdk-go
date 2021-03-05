@@ -26,8 +26,8 @@ build-deps: ## Install build dependencies
 	@echo "==> $@"
 	@cd /tmp; GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION}
 	@cd /tmp; GO111MODULE=on go get github.com/hashicorp/golang-lru
-	@cd /tmp; GO111MODULE=go get github.com/gorilla/mux
-	@cd /tmp; GO111MODULE=go get github.com/rakyll/statik/fs
+	@cd /tmp; GO111MODULE=on go get github.com/gorilla/mux
+	@cd /tmp; GO111MODULE=on go get github.com/rakyll/statik/fs
 
 
 .PHONY: build
