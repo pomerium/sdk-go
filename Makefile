@@ -25,6 +25,7 @@ clean: ## Cleanup any build binaries or packages.
 build-deps: ## Install build dependencies
 	@echo "==> $@"
 	@cd /tmp; GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION}
+	@cd _example; go get
 
 
 .PHONY: build

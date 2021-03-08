@@ -18,6 +18,9 @@ before:
 
 builds:
   - id: verify
+    hooks:
+      pre:
+        - make build-deps
     main: ./_example/main.go
     binary: verify
     goarch:

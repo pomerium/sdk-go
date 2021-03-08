@@ -41,6 +41,7 @@ type Verifier struct {
 	datastore          JSONWebKeyStore
 	logger             *log.Logger
 	httpClient         *http.Client
+	expected           *jwt.Expected
 }
 
 // Options are the configurations for an attestation.
@@ -55,6 +56,9 @@ type Options struct {
 	HTTPClient *http.Client
 	// Logger is an optional custom logger which you provide.
 	Logger *log.Logger
+	// Expected defines values used for protected claims validation.
+	// If field has zero value then validation is skipped.
+	Expected *jwt.Expected
 }
 
 // New creates a new pomerium Verifier which can be used to verify a JWT token against a
@@ -80,6 +84,9 @@ func New(o *Options) (*Verifier, error) {
 			return nil, err
 		}
 		v.staticJWKSEndpoint = u.String()
+	}
+	if o.Expected != nil {
+		v.expected = o.Expected
 	}
 
 	return &v, nil
@@ -124,6 +131,12 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 	if err != nil {
 		return nil, fmt.Errorf("couldn't unmarshal JWT signature: %w", err)
 	}
+	if v.expected != nil {
+		err = id.Validate(*v.expected)
+		if err != nil {
+			return nil, fmt.Errorf("unexpected claim: %w", err)
+		}
+	}
 	return &id, nil
 }
 
@@ -147,11 +160,17 @@ func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*
 		if err := tok.UnsafeClaimsWithoutVerification(&out); err != nil {
 			return nil, fmt.Errorf("couldn't get json web key: %w", err)
 		}
-		u := url.URL{
-			Scheme: "https",
-			Host:   out.Issuer,
-			Path:   defaultJWKSPath,
+		u, err := url.Parse(out.Issuer)
+		if err != nil {
+			return nil, err
 		}
+		if u.Scheme == "" {
+			u.Scheme = "https"
+		}
+		if u.Path == "" {
+			u.Path = defaultJWKSPath
+		}
+
 		verifyEndpoint = u.String()
 		v.logger.Printf("KeyID: %s not found, fetching jwks endpoint: %s", h.KeyID, verifyEndpoint)
 	}
