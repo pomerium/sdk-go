@@ -11,8 +11,8 @@ In addition to being able centralize identity-aware access, [Pomerium](https://p
 
 This packges aims to make verifying that attestation token easier and includes:
 
-- http middleware (works with any `http.Handler` compatible router)
-- SDK
+- [SDK](https://pkg.go.dev/github.com/pomerium/sdk-go?utm_source=godoc#Verifier)
+- [Middleware](https://pkg.go.dev/github.com/pomerium/sdk-go?utm_source=godoc#AddIdentityToRequest) (works with any `http.Handler` compatible router)
 - An example web app ( live @ https://verify.pomerium.com)
 
 For more details, see the docs on [Getting the user's identity](https://www.pomerium.com/docs/topics/getting-users-identity.html#prerequisites). 
