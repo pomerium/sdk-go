@@ -7,11 +7,16 @@
 
 # Pomerium's Go (Golang) SDK
 
+In addition to being able centralize identity-aware access, [Pomerium](https://pomerium.com/) can be used to pass request, and user context to upstream applications as JSON Web Tokens (JWT). 
 
-## TL;DR
+This packges aims to make verifying that attestation token easier and includes:
 
-See `/_example/` for usage and example webapp. 
+- http middleware (works with any `http.Handler` compatible router)
+- SDK
+- An example web app ( live @ https://verify.pomerium.com)
 
-- A live version of this code can be found at https://verify.pomerium.com
+For more details, see the docs on [Getting the user's identity](https://www.pomerium.com/docs/topics/getting-users-identity.html#prerequisites). 
+
+## TL;DR show me 
 
 ![screenshot](https://github.com/pomerium/sdk-go/blob/master/.github/screenshot.png)

@@ -48,10 +48,6 @@ func (h *Verify) Handler() http.Handler {
 	return mux
 }
 
-func (h *Verify) healthCheck(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, http.StatusText(http.StatusOK))
-}
-
 func (h *Verify) html(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -64,10 +60,6 @@ func (h *Verify) headers(w http.ResponseWriter, r *http.Request) {
 
 func (h *Verify) json(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, h.allDetails(r))
-}
-
-func (h *Verify) serverInfo(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, r.Header)
 }
 
 func (h *Verify) allDetails(r *http.Request) map[string]interface{} {
