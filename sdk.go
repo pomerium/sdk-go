@@ -121,7 +121,7 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 		return nil, fmt.Errorf("couldn't marshal json web key: %w", err)
 	}
 
-	id.PublicKey = fmt.Sprintf("%s", jwkBytes)
+	id.PublicKey = string(jwkBytes)
 
 	b, err := sig.Verify(jsonWebKey)
 	if err != nil {
