@@ -39,14 +39,6 @@ lint: ## Verifies `golint` passes.
 	@golangci-lint run ./...
 
 
-.PHONY: run
-run: ## Runs the verify example directly
-	@echo "==> generate"
-	@cd _example; go generate ./...
-	@echo "==> $@"
-	@go run _example/main.go
-
-
 .PHONY: cover
 cover: ## Runs go test with coverage
 	@echo "" > coverage.txt
