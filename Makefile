@@ -10,7 +10,7 @@ GO111MODULE=on
 CGO_ENABLED := 0
 # Set any default go build tags
 BUILDTAGS :=
-GOLANGCI_VERSION = v1.34.1
+GOLANGCI_VERSION = v1.43.0
 
 .PHONY: all
 all: clean build-deps cover lint build ## Runs a clean, build, fmt, lint, cover, and vet.
@@ -24,9 +24,7 @@ clean: ## Cleanup any build binaries or packages.
 .PHONY: build-deps
 build-deps: ## Install build dependencies
 	@echo "==> $@"
-	@cd /tmp; GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION}
-	@cd _example; go get
-
+	@cd /tmp; GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION}
 
 .PHONY: build
 build: ## Builds dynamic executables and/or packages.
