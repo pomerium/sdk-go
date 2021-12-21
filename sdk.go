@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -178,7 +176,7 @@ func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*
 }
 
 func (v *Verifier) fetchJWKSFromRemote(ctx context.Context, u, keyID string) (*jose.JSONWebKey, error) {
-	val, err := v.requestJWKS(ctx, u)
+	val, err := FetchJSONWebKeySet(ctx, v.httpClient, u)
 	if err != nil {
 		return nil, err
 	}
@@ -196,45 +194,4 @@ func (v *Verifier) fetchJWKSFromRemote(ctx context.Context, u, keyID string) (*j
 		return nil, ErrJWKNotFound
 	}
 	return &foundKey, nil
-}
-
-func (v *Verifier) requestJWKS(ctx context.Context, endpoint string) (*jose.JSONWebKeySet, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := v.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() { _ = res.Body.Close() }()
-	bs, err := ioutil.ReadAll(io.LimitReader(res.Body, defaultMaxBodySize))
-	if err != nil {
-		return nil, err
-	}
-
-	return parseJWKS(bs, true)
-}
-
-func parseJWKS(bs []byte, pub bool) (*jose.JSONWebKeySet, error) {
-	var jwks jose.JSONWebKeySet
-	if err := json.Unmarshal(bs, &jwks); err != nil {
-		return nil, err
-	}
-	if len(jwks.Keys) < 1 {
-		return nil, ErrJWKSNotFound
-	}
-
-	for _, j := range jwks.Keys {
-		if !j.Valid() {
-			return nil, ErrJWKSInvalid
-		}
-		if j.IsPublic() != pub {
-			return nil, ErrJWKSTypeMismatch
-		}
-	}
-
-	return &jwks, nil
 }
