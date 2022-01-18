@@ -19,6 +19,7 @@ import (
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestVerifier_GetIdentity(t *testing.T) {
@@ -123,6 +124,42 @@ func TestVerifier_GetIdentity(t *testing.T) {
 
 			assert.Equalf(t, tt.want, string(body), "expected body")
 		})
+	}
+}
+
+func TestVerifier_getVerifyEndpoint(t *testing.T) {
+	testCases := []struct {
+		issuer string
+		expect string
+	}{
+		{"example.com", "https://example.com/.well-known/pomerium/jwks.json"},
+		{"https://example.com", "https://example.com/.well-known/pomerium/jwks.json"},
+		{"http://example.com", "http://example.com/.well-known/pomerium/jwks.json"},
+		{"example.com:1234", "https://example.com:1234/.well-known/pomerium/jwks.json"},
+		{"example.com/some/path", "https://example.com/some/path"},
+	}
+
+	for _, testCase := range testCases {
+		key := []byte("secret")
+		sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key}, (&jose.SignerOptions{}).WithType("JWT"))
+		require.NoError(t, err)
+
+		raw, err := jwt.Signed(sig).Claims(jwt.Claims{
+			Subject: "subject",
+			Issuer:  testCase.issuer,
+		}).CompactSerialize()
+		require.NoError(t, err)
+
+		tok, err := jwt.ParseSigned(raw)
+		require.NoError(t, err)
+
+		v, err := New(&Options{Datastore: new(10)})
+		require.NoError(t, err)
+
+		actual, err := v.getVerifyEndpoint(tok)
+		require.NoError(t, err)
+
+		assert.Equal(t, testCase.expect, actual)
 	}
 }
 
