@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/go-jose/go-jose/v3"
+	"gopkg.in/square/go-jose.v2"
 )
 
 // EncodeJSONWebKeySetToPEM encodes the key set to PEM format using PKIX, ASN.1 DER form.
