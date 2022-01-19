@@ -201,9 +201,6 @@ func (v *Verifier) getVerifyEndpoint(tok *jwt.JSONWebToken) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("invalid issuer in JWT: %s", out.Issuer)
 		}
-		if u.Scheme == "" {
-			u.Scheme = "https"
-		}
 		if u.Path == "" {
 			u.Path = defaultJWKSPath
 		}
