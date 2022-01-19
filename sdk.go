@@ -1,3 +1,4 @@
+// Package sdk contains code to make verifying the Pomerium attestation token easier.
 package sdk
 
 import (
@@ -15,6 +16,7 @@ import (
 	"gopkg.in/square/go-jose.v2/jwt"
 )
 
+// errors
 var (
 	ErrDatastoreRequired = errors.New("must set a datastore")
 	ErrJWKSNotFound      = errors.New("empty JSON Web Key Set payload")
@@ -22,6 +24,7 @@ var (
 	ErrJWKSInvalid       = errors.New("invalid JSON Web Key")
 	ErrJWKSTypeMismatch  = errors.New("priv/pub JSON Web Key mismatch")
 	ErrMultipleHeaders   = errors.New("JWT signature must have only one header")
+	ErrTokenNotFound     = errors.New("attestation token not found")
 )
 
 // JSONWebKeyStore is the interface to for storing JSON Web Keys.
@@ -35,6 +38,7 @@ const (
 	defaultJWKSPath    = "/.well-known/pomerium/jwks.json"
 )
 
+// A Verifier is used to verify JWT tokens.
 type Verifier struct {
 	staticJWKSEndpoint string
 	datastore          JSONWebKeyStore

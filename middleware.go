@@ -2,7 +2,6 @@ package sdk
 
 import (
 	"context"
-	"errors"
 	"net/http"
 )
 
@@ -10,8 +9,6 @@ const (
 	defaultAttestationHeader     = "x-pomerium-jwt-assertion"
 	defaultAttestationQueryParam = "jwt"
 )
-
-var ErrTokenNotFound = errors.New("attestation token not found")
 
 // AddIdentityToRequest is http middleware handler that -- given an attestation instance -- will
 // find, parse, verify, and inject a Pomerium identity into the request context.
@@ -75,17 +72,20 @@ func TokenFromQuery(r *http.Request) string {
 	return r.FormValue(defaultAttestationQueryParam)
 }
 
+// context keys
 var (
 	IdentityCtxKey = &contextKey{"Token"}
 	ErrorCtxKey    = &contextKey{"Error"}
 )
 
+// NewContext creates a new context with the given identity and error stored as values.
 func NewContext(ctx context.Context, t *Identity, err error) context.Context {
 	ctx = context.WithValue(ctx, IdentityCtxKey, t)
 	ctx = context.WithValue(ctx, ErrorCtxKey, err)
 	return ctx
 }
 
+// FromContext retrieves the identity and error stored in a context.
 func FromContext(ctx context.Context) (id *Identity, err error) {
 	id, _ = ctx.Value(IdentityCtxKey).(*Identity)
 	err, _ = ctx.Value(ErrorCtxKey).(error)
