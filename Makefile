@@ -6,20 +6,17 @@ PKG := github.com/pomerium/$(NAME)
 
 BUILDDIR := ${PREFIX}/dist
 BINDIR := ${PREFIX}/bin
-GO111MODULE=on
-CGO_ENABLED := 0
-# Set any default go build tags
-BUILDTAGS :=
 GOLANGCI_VERSION = v1.43.0
 
+
 .PHONY: all
-all: clean build-deps cover lint build ## Runs a clean, build, fmt, lint, cover, and vet.
+all: clean cover lint build
 
 .PHONY: clean
 clean: ## Cleanup any build binaries or packages.
 	@echo "==> $@"
 	$(RM) -r $(BINDIR)
-
+	$(RM) coverage.txt
 
 .PHONY: build-deps
 build-deps: ## Install build dependencies
@@ -29,24 +26,18 @@ build-deps: ## Install build dependencies
 .PHONY: build
 build: ## Builds dynamic executables and/or packages.
 	@echo "==> $@"
-	@CGO_ENABLED=0 GO111MODULE=on go build -tags "$(BUILDTAGS)" ${GO_LDFLAGS} -o $(BINDIR)/$(NAME)
+	@go build -o $(BINDIR)/$(NAME)
 
 .PHONY: lint
-lint: ## Verifies `golint` passes.
+lint: build-deps ## Verifies `golint` passes.
 	@echo "==> $@"
 	@golangci-lint run ./...
 
-
 .PHONY: cover
 cover: ## Runs go test with coverage
-	@echo "" > coverage.txt
-	@for d in $(shell go list ./... | grep -v vendor); do \
-		go test -race -coverprofile=profile.out -covermode=atomic "$$d"; \
-		if [ -f profile.out ]; then \
-			cat profile.out >> coverage.txt; \
-			rm profile.out; \
-		fi; \
-	done;
+	@echo "==> $@"
+	@go test -race -coverprofile=coverage.txt -tags "$(BUILDTAGS)" ./...
+	@sort -o coverage.txt coverage.txt
 
 .PHONY: help
 help:
