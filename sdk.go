@@ -9,13 +9,14 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 
-	"github.com/go-jose/go-jose/v3"
-	"github.com/go-jose/go-jose/v3/jwt"
+	"gopkg.in/square/go-jose.v2"
+	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 var (
-	ErrDatastoreRequired = errors.New("must set a datstore")
+	ErrDatastoreRequired = errors.New("must set a datastore")
 	ErrJWKSNotFound      = errors.New("empty JSON Web Key Set payload")
 	ErrJWKNotFound       = errors.New("no JSON Web Key found with matching KeyID (`kid`)")
 	ErrJWKSInvalid       = errors.New("invalid JSON Web Key")
@@ -152,26 +153,13 @@ func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*
 		return val.(*jose.JSONWebKey), nil
 	}
 
-	verifyEndpoint := v.staticJWKSEndpoint
-	if verifyEndpoint == "" {
-		out := jwt.Claims{}
-		if err := tok.UnsafeClaimsWithoutVerification(&out); err != nil {
-			return nil, fmt.Errorf("couldn't get json web key: %w", err)
-		}
-		u, err := url.Parse(out.Issuer)
-		if err != nil {
-			return nil, err
-		}
-		if u.Scheme == "" {
-			u.Scheme = "https"
-		}
-		if u.Path == "" {
-			u.Path = defaultJWKSPath
-		}
-
-		verifyEndpoint = u.String()
-		v.logger.Printf("KeyID: %s not found, fetching jwks endpoint: %s", h.KeyID, verifyEndpoint)
+	verifyEndpoint, err := v.getVerifyEndpoint(tok)
+	if err != nil {
+		return nil, err
 	}
+
+	v.logger.Printf("KeyID: %s not found, fetching jwks endpoint: %s", h.KeyID, verifyEndpoint)
+
 	return v.fetchJWKSFromRemote(ctx, verifyEndpoint, h.KeyID)
 }
 
@@ -194,4 +182,30 @@ func (v *Verifier) fetchJWKSFromRemote(ctx context.Context, u, keyID string) (*j
 		return nil, ErrJWKNotFound
 	}
 	return &foundKey, nil
+}
+
+func (v *Verifier) getVerifyEndpoint(tok *jwt.JSONWebToken) (string, error) {
+	verifyEndpoint := v.staticJWKSEndpoint
+	if verifyEndpoint == "" {
+		out := jwt.Claims{}
+		if err := tok.UnsafeClaimsWithoutVerification(&out); err != nil {
+			return "", fmt.Errorf("couldn't get json web key: %w", err)
+		}
+
+		rawURL := out.Issuer
+		if !strings.HasPrefix(rawURL, "https://") && !strings.HasPrefix(rawURL, "http://") {
+			rawURL = "https://" + rawURL
+		}
+
+		u, err := url.Parse(rawURL)
+		if err != nil {
+			return "", fmt.Errorf("invalid issuer in JWT: %s", out.Issuer)
+		}
+		if u.Path == "" {
+			u.Path = defaultJWKSPath
+		}
+
+		verifyEndpoint = u.String()
+	}
+	return verifyEndpoint, nil
 }
