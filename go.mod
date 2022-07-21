@@ -1,6 +1,6 @@
 module github.com/pomerium/sdk-go
 
-go 1.15
+go 1.18
 
 require (
 	github.com/google/go-cmp v0.5.5 // indirect
