@@ -6,7 +6,7 @@ PKG := github.com/pomerium/$(NAME)
 
 BUILDDIR := ${PREFIX}/dist
 BINDIR := ${PREFIX}/bin
-GOLANGCI_VERSION = v1.43.0
+GOLANGCI_VERSION = v1.47.2
 
 
 .PHONY: all
@@ -21,7 +21,6 @@ clean: ## Cleanup any build binaries or packages.
 .PHONY: build-deps
 build-deps: ## Install build dependencies
 	@echo "==> $@"
-	@cd /tmp; GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION}
 
 .PHONY: build
 build: ## Builds dynamic executables and/or packages.
@@ -31,7 +30,7 @@ build: ## Builds dynamic executables and/or packages.
 .PHONY: lint
 lint: build-deps ## Verifies `golint` passes.
 	@echo "==> $@"
-	@golangci-lint run ./...
+	@go run github.com/golangci/golangci-lint/cmd/golangci-lint run ./...
 
 .PHONY: cover
 cover: ## Runs go test with coverage
