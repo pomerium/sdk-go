@@ -1,13 +1,18 @@
 package sdk
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rsa"
 	"encoding/base64"
+	"io"
 	"math/big"
 	"math/rand"
+	"net/http"
+	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -15,6 +20,39 @@ import (
 )
 
 func TestFetchJSONWebKeySet(t *testing.T) {
+	t.Parallel()
+
+	ctx, clearTimeout := context.WithTimeout(context.Background(), time.Second*10)
+	t.Cleanup(clearTimeout)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, `{
+			"keys": [
+			  {
+				"use": "sig",
+				"kty": "RSA",
+				"kid": "40070f467899bbe8222a48464406962c25c5c423c87dc821bdc654905a8a9959",
+				"alg": "RS256",
+				"n": "zoVqWZ-fXV21psl8Yn5llUspwxrsrJuktWJHBaW-6QSrh1pGlI9dsmUOxJu_dZ6jPxI5VGb7PddvZ4YfHSOs3yC6WnKGJrOGM6TsvAYfYdeNxiCSW67FdhSdlIYZ7r_cLzwEszUJpavrbSeG4vMJnWcjOsUenHsHWmQmxAtTQe5XAFcAJEI597JF4iIpf7lUT-9HgLi6MjamUC8aE01CAfJNm-y3du7Xm3oIxeRzwH9ibTy-iZuDhKvCZ61OzPpBAxcMbGWEqXFxohITgbGQQ4ojichAOvxAZra2697GvceAdS6fhsuGnueN7WrV49ngSzB7VScJtUSg6AZB79Nrzw",
+				"e": "AQAB"
+			  },
+			  {
+				"kty": "OKP",
+				"kid": "pomerium/hpke",
+				"crv": "X25519",
+				"x": "o-NXwluf5sf33YOVBMrD4f3oQFrbEF4E_WiBOtEx71M"
+			  }
+			]
+		  }`)
+	}))
+	defer srv.Close()
+
+	jwks, err := FetchJSONWebKeySet(ctx, http.DefaultClient, srv.URL)
+	assert.NoError(t, err)
+	assert.Len(t, jwks.Keys, 1)
+}
+
+func TestEncodeJSONWebKeySetToPEM(t *testing.T) {
 	random := rand.New(rand.NewSource(1))
 	k1, err := ecdsa.GenerateKey(elliptic.P256(), random)
 	require.NoError(t, err)

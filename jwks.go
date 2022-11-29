@@ -54,22 +54,30 @@ func FetchJSONWebKeySet(ctx context.Context, client *http.Client, endpoint strin
 }
 
 func parseJWKS(bs []byte, pub bool) (*jose.JSONWebKeySet, error) {
-	var jwks jose.JSONWebKeySet
-	if err := json.Unmarshal(bs, &jwks); err != nil {
+	var result struct {
+		Keys []json.RawMessage `json:"keys"`
+	}
+	if err := json.Unmarshal(bs, &result); err != nil {
 		return nil, err
 	}
-	if len(jwks.Keys) < 1 {
+
+	var keys []jose.JSONWebKey
+	for _, rawKey := range result.Keys {
+		var key jose.JSONWebKey
+		if err := json.Unmarshal(rawKey, &key); err != nil {
+			// ignore invalid keys
+			continue
+		}
+
+		if key.Valid() && key.IsPublic() == pub {
+			keys = append(keys, key)
+		}
+	}
+
+	if len(keys) < 1 {
 		return nil, ErrJWKSNotFound
 	}
-
-	for _, j := range jwks.Keys {
-		if !j.Valid() {
-			return nil, ErrJWKSInvalid
-		}
-		if j.IsPublic() != pub {
-			return nil, ErrJWKSTypeMismatch
-		}
-	}
-
-	return &jwks, nil
+	return &jose.JSONWebKeySet{
+		Keys: keys,
+	}, nil
 }
