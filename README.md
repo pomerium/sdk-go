@@ -20,4 +20,4 @@ For more details, see the docs on [Getting the user's identity](https://www.pome
 
 ## TL;DR show me 
 
-![screenshot](https://github.com/pomerium/sdk-go/blob/master/.github/screenshot.png)
+![screenshot](https://github.com/pomerium/sdk-go/raw/main/.github/screenshot.png)
