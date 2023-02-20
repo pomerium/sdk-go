@@ -17,8 +17,8 @@ const (
 //
 // This middleware will search for a JWT token in a http request, in the order:
 //
-//   1. 'x-pomerium-jwt-assertion' request header injected by pomerium
-//   2. 'jwt' URI query parameter
+//  1. 'x-pomerium-jwt-assertion' request header injected by pomerium
+//  2. 'jwt' URI query parameter
 //
 // The first JWT string that is found as a query parameter or authorization header
 // is then decoded and an **Identity** struct (or any error) is then set on the request context.
