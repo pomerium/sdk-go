@@ -111,33 +111,33 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 	// get the web signature of the raw jwt
 	sig, err := jose.ParseSigned(rawJWT)
 	if err != nil {
-		return nil, fmt.Errorf("couldn't parse raw JWT: %w", err)
+		return nil, fmt.Errorf("failed to parse Pomerium JWT assertion: %w", err)
 	}
 
 	jsonWebKey, err := v.getJSONWebKeyFromToken(ctx, rawJWT)
 	if err != nil {
-		return nil, fmt.Errorf("couldn't get json web key: %w", err)
+		return nil, fmt.Errorf("failed to retrieve signature key for Pomerium JWT assertion: %w", err)
 	}
 
 	jwkBytes, err := jsonWebKey.MarshalJSON()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't marshal json web key: %w", err)
+		return nil, fmt.Errorf("failed to marshal signature key for Pomerium JWT assertion: %w", err)
 	}
 
 	id.PublicKey = string(jwkBytes)
 
 	b, err := sig.Verify(jsonWebKey)
 	if err != nil {
-		return nil, fmt.Errorf("invalid JWT signature: %w", err)
+		return nil, fmt.Errorf("invalid Pomerium JWT assertion signature: %w", err)
 	}
 	err = json.Unmarshal(b, &id)
 	if err != nil {
-		return nil, fmt.Errorf("couldn't unmarshal JWT signature: %w", err)
+		return nil, fmt.Errorf("failed to unmarshal Pomerium JWT assertion: %w", err)
 	}
 	if v.expected != nil {
 		err = id.Validate(*v.expected)
 		if err != nil {
-			return nil, fmt.Errorf("unexpected claim: %w", err)
+			return nil, fmt.Errorf("unexpected Pomerium JWT assertion claim: %w", err)
 		}
 	}
 	return &id, nil
