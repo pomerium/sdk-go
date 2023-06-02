@@ -134,11 +134,13 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal Pomerium JWT assertion: %w", err)
 	}
+	var expected jwt.Expected
 	if v.expected != nil {
-		err = id.Validate(*v.expected)
-		if err != nil {
-			return nil, fmt.Errorf("unexpected Pomerium JWT assertion claim: %w", err)
-		}
+		expected = *v.expected
+	}
+	err = id.Validate(expected)
+	if err != nil {
+		return nil, fmt.Errorf("unexpected Pomerium JWT assertion claim: %w", err)
 	}
 	return &id, nil
 }
