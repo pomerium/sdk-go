@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"context"
 	"crypto"
 	"crypto/ecdsa"
 	"crypto/elliptic"
@@ -65,8 +64,6 @@ func TestVerifier_GetIdentity(t *testing.T) {
 		logger      *log.Logger
 		httpClient  *http.Client
 		expected    *jwt.Expected
-		ctx         context.Context
-		rawJWT      string
 		headerKey   string
 		signer      jose.Signer
 		identity    *Identity
@@ -74,16 +71,16 @@ func TestVerifier_GetIdentity(t *testing.T) {
 		wantNewErr  bool
 		want        string
 	}{
-		{"nil datastore should fail", "", nil, nil, nil, nil, context.TODO(), "", defaultAttestationHeader, nil, nil, "", true, ""},
-		{"bad datastore url", "http://user:abc{DEf1=ghi@example.com", new(10), nil, nil, nil, context.TODO(), "", defaultAttestationHeader, nil, nil, "", true, ""},
-		{"can't parse empty JWT", "", new(10), nil, nil, nil, context.TODO(), "", defaultAttestationHeader, nil, nil, "", false, `{"error":"attestation token not found"}`},
-		{"can't parse malformed JWT", "", new(10), nil, nil, nil, context.TODO(), "", defaultAttestationHeader, nil, nil, "malformed", false, `{"error":"failed to parse Pomerium JWT assertion: square/go-jose: compact JWS format must have three parts"}`},
-		{"bad signing key", ts.URL, new(10), nil, nil, nil, context.TODO(), "", defaultAttestationHeader, badSigner, &Identity{Email: "user@pomerium.com"}, "", false, `{"error":"invalid Pomerium JWT assertion signature: square/go-jose: error in cryptographic primitive"}`},
-		{"good", ts.URL, new(10), nil, nil, nil, context.TODO(), "", defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "user@pomerium.com"},
-		{"good inferred verify endpoint", "", new(10), nil, nil, nil, context.TODO(), "", defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
-		{"does not pass iss validation", ts.URL, new(10), nil, nil, &jwt.Expected{Issuer: "pomerium"}, context.TODO(), "", defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "{\"error\":\"unexpected Pomerium JWT assertion claim: square/go-jose/jwt: validation failed, invalid issuer claim (iss)\"}"},
-		{"does pass iss validation", ts.URL, new(10), nil, nil, &jwt.Expected{Issuer: ts.URL}, context.TODO(), "", defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
-		{"good enforces sub validation", ts.URL, new(10), nil, nil, &jwt.Expected{Subject: "1234"}, context.TODO(), "", defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Subject: "1234"}}, "", false, "user@pomerium.com"},
+		{"nil datastore should fail", "", nil, nil, nil, nil, defaultAttestationHeader, nil, nil, "", true, ""},
+		{"bad datastore url", "http://user:abc{DEf1=ghi@example.com", new(10), nil, nil, nil, defaultAttestationHeader, nil, nil, "", true, ""},
+		{"can't parse empty JWT", "", new(10), nil, nil, nil, defaultAttestationHeader, nil, nil, "", false, `{"error":"attestation token not found"}`},
+		{"can't parse malformed JWT", "", new(10), nil, nil, nil, defaultAttestationHeader, nil, nil, "malformed", false, `{"error":"failed to parse Pomerium JWT assertion: square/go-jose: compact JWS format must have three parts"}`},
+		{"bad signing key", ts.URL, new(10), nil, nil, nil, defaultAttestationHeader, badSigner, &Identity{Email: "user@pomerium.com"}, "", false, `{"error":"invalid Pomerium JWT assertion signature: square/go-jose: error in cryptographic primitive"}`},
+		{"good", ts.URL, new(10), nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "user@pomerium.com"},
+		{"good inferred verify endpoint", "", new(10), nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
+		{"does not pass iss validation", ts.URL, new(10), nil, nil, &jwt.Expected{Issuer: "pomerium"}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "{\"error\":\"unexpected Pomerium JWT assertion claim: square/go-jose/jwt: validation failed, invalid issuer claim (iss)\"}"},
+		{"does pass iss validation", ts.URL, new(10), nil, nil, &jwt.Expected{Issuer: ts.URL}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
+		{"good enforces sub validation", ts.URL, new(10), nil, nil, &jwt.Expected{Subject: "1234"}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Subject: "1234"}}, "", false, "user@pomerium.com"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
