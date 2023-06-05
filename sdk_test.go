@@ -71,16 +71,16 @@ func TestVerifier_GetIdentity(t *testing.T) {
 		wantNewErr  bool
 		want        string
 	}{
-		{"nil datastore should fail", "", nil, nil, nil, nil, defaultAttestationHeader, nil, nil, "", true, ""},
-		{"bad datastore url", "http://user:abc{DEf1=ghi@example.com", new(10), nil, nil, nil, defaultAttestationHeader, nil, nil, "", true, ""},
-		{"can't parse empty JWT", "", new(10), nil, nil, nil, defaultAttestationHeader, nil, nil, "", false, `{"error":"attestation token not found"}`},
-		{"can't parse malformed JWT", "", new(10), nil, nil, nil, defaultAttestationHeader, nil, nil, "malformed", false, `{"error":"failed to parse Pomerium JWT assertion: square/go-jose: compact JWS format must have three parts"}`},
-		{"bad signing key", ts.URL, new(10), nil, nil, nil, defaultAttestationHeader, badSigner, &Identity{Email: "user@pomerium.com"}, "", false, `{"error":"invalid Pomerium JWT assertion signature: square/go-jose: error in cryptographic primitive"}`},
-		{"good", ts.URL, new(10), nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "user@pomerium.com"},
-		{"good inferred verify endpoint", "", new(10), nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
-		{"does not pass iss validation", ts.URL, new(10), nil, nil, &jwt.Expected{Issuer: "pomerium"}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "{\"error\":\"unexpected Pomerium JWT assertion claim: square/go-jose/jwt: validation failed, invalid issuer claim (iss)\"}"},
-		{"does pass iss validation", ts.URL, new(10), nil, nil, &jwt.Expected{Issuer: ts.URL}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
-		{"good enforces sub validation", ts.URL, new(10), nil, nil, &jwt.Expected{Subject: "1234"}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Subject: "1234"}}, "", false, "user@pomerium.com"},
+		{"custom datastore", ts.URL, newMockCache(10), nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "user@pomerium.com"},
+		{"bad JWKS url", "http://user:abc{DEf1=ghi@example.com", nil, nil, nil, nil, defaultAttestationHeader, nil, nil, "", true, ""},
+		{"can't parse empty JWT", "", nil, nil, nil, nil, defaultAttestationHeader, nil, nil, "", false, `{"error":"attestation token not found"}`},
+		{"can't parse malformed JWT", "", nil, nil, nil, nil, defaultAttestationHeader, nil, nil, "malformed", false, `{"error":"failed to parse Pomerium JWT assertion: square/go-jose: compact JWS format must have three parts"}`},
+		{"bad signing key", ts.URL, nil, nil, nil, nil, defaultAttestationHeader, badSigner, &Identity{Email: "user@pomerium.com"}, "", false, `{"error":"invalid Pomerium JWT assertion signature: square/go-jose: error in cryptographic primitive"}`},
+		{"good", ts.URL, nil, nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "user@pomerium.com"},
+		{"good inferred verify endpoint", "", nil, nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
+		{"does not pass iss validation", ts.URL, nil, nil, nil, &jwt.Expected{Issuer: "pomerium"}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com"}, "", false, "{\"error\":\"unexpected Pomerium JWT assertion claim: square/go-jose/jwt: validation failed, invalid issuer claim (iss)\"}"},
+		{"does pass iss validation", ts.URL, nil, nil, nil, &jwt.Expected{Issuer: ts.URL}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
+		{"good enforces sub validation", ts.URL, nil, nil, nil, &jwt.Expected{Subject: "1234"}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Subject: "1234"}}, "", false, "user@pomerium.com"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -150,7 +150,7 @@ func TestVerifier_getVerifyEndpoint(t *testing.T) {
 		tok, err := jwt.ParseSigned(raw)
 		require.NoError(t, err)
 
-		v, err := New(&Options{Datastore: new(10)})
+		v, err := New(&Options{})
 		require.NoError(t, err)
 
 		actual, err := v.getVerifyEndpoint(tok)
@@ -168,7 +168,7 @@ type mockCache struct {
 	keys     []string
 }
 
-func new(capacity int) *mockCache {
+func newMockCache(capacity int) *mockCache {
 	return &mockCache{
 		capacity: capacity,
 		data:     make(map[string]interface{}),
