@@ -60,7 +60,8 @@ type Options struct {
 	// Logger is an optional custom logger which you provide.
 	Logger *log.Logger
 	// Expected defines values used for protected claims validation.
-	// If field has zero value then validation is skipped.
+	// If field has zero value then validation is skipped, with the exception
+	// of Time, where the zero value means "now."
 	Expected *jwt.Expected
 }
 
