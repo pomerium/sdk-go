@@ -12,8 +12,8 @@ import (
 	"os"
 	"strings"
 
-	jose "gopkg.in/square/go-jose.v2"
-	"gopkg.in/square/go-jose.v2/jwt"
+	"github.com/go-jose/go-jose/v3"
+	"github.com/go-jose/go-jose/v3/jwt"
 )
 
 // errors
@@ -60,7 +60,8 @@ type Options struct {
 	// Logger is an optional custom logger which you provide.
 	Logger *log.Logger
 	// Expected defines values used for protected claims validation.
-	// If field has zero value then validation is skipped.
+	// If field has zero value then validation is skipped, with the exception
+	// of Time, where the zero value means "now."
 	Expected *jwt.Expected
 }
 
@@ -134,11 +135,13 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal Pomerium JWT assertion: %w", err)
 	}
+	var expected jwt.Expected
 	if v.expected != nil {
-		err = id.Validate(*v.expected)
-		if err != nil {
-			return nil, fmt.Errorf("unexpected Pomerium JWT assertion claim: %w", err)
-		}
+		expected = *v.expected
+	}
+	err = id.Validate(expected)
+	if err != nil {
+		return nil, fmt.Errorf("unexpected Pomerium JWT assertion claim: %w", err)
 	}
 	return &id, nil
 }
