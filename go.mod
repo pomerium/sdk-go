@@ -3,10 +3,10 @@ module github.com/pomerium/sdk-go
 go 1.20
 
 require (
+	github.com/go-jose/go-jose/v3 v3.0.0
 	github.com/golangci/golangci-lint v1.52.2
 	github.com/hashicorp/golang-lru v0.5.4
 	github.com/stretchr/testify v1.8.3
-	gopkg.in/square/go-jose.v2 v2.6.0
 )
 
 require (
