@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/go-jose/go-jose/v3 v3.0.0
 	github.com/golangci/golangci-lint v1.52.2
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 )
 
 require (
