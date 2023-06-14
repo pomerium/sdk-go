@@ -29,8 +29,8 @@ var (
 
 // JSONWebKeyStore is the interface to for storing JSON Web Keys.
 type JSONWebKeyStore interface {
-	Get(key interface{}) (value interface{}, ok bool)
-	Add(key, value interface{})
+	Get(keyID string) (value *jose.JSONWebKey, ok bool)
+	Add(keyID string, value *jose.JSONWebKey)
 }
 
 const (
@@ -157,7 +157,7 @@ func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*
 	}
 	h := tok.Headers[0]
 	if val, ok := v.datastore.Get(h.KeyID); ok {
-		return val.(*jose.JSONWebKey), nil
+		return val, nil
 	}
 
 	verifyEndpoint, err := v.getVerifyEndpoint(tok)
