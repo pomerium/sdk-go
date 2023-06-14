@@ -102,6 +102,7 @@ type Identity struct {
 	Groups     []string `json:"groups,omitempty"`
 	User       string   `json:"user,omitempty"`
 	Email      string   `json:"email,omitempty"`
+	Name       string   `json:"name,omitempty"`
 	RawJWT     string   `json:"raw_jwt,omitempty"`
 	PublicKey  string   `json:"public_key,omitempty"`
 }
