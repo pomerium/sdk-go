@@ -172,30 +172,29 @@ var _ JSONWebKeyStore = &mockCache{}
 
 type mockCache struct {
 	capacity int
-	data     map[string]interface{}
-	keys     []string
+	data     map[string]*jose.JSONWebKey
+	keyIDs   []string
 }
 
 func new(capacity int) *mockCache {
 	return &mockCache{
 		capacity: capacity,
-		data:     make(map[string]interface{}),
-		keys:     make([]string, capacity),
+		data:     make(map[string]*jose.JSONWebKey),
+		keyIDs:   make([]string, capacity),
 	}
 }
 
-func (c *mockCache) Get(key interface{}) (interface{}, bool) {
-	val, ok := c.data[fmt.Sprintf("%s", key)]
+func (c *mockCache) Get(keyID string) (*jose.JSONWebKey, bool) {
+	val, ok := c.data[keyID]
 	return val, ok
 }
 
-func (c *mockCache) Add(key, value interface{}) {
+func (c *mockCache) Add(keyID string, value *jose.JSONWebKey) {
 	slot := len(c.data)
 	if len(c.data) == c.capacity {
 		slot = rand.Intn(c.capacity)
-		delete(c.data, c.keys[slot])
+		delete(c.data, c.keyIDs[slot])
 	}
-	keyString := fmt.Sprintf("%s", key)
-	c.keys[slot] = keyString
-	c.data[keyString] = value
+	c.keyIDs[slot] = keyID
+	c.data[keyID] = value
 }
