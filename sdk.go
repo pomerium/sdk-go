@@ -18,13 +18,12 @@ import (
 
 // errors
 var (
-	ErrDatastoreRequired = errors.New("must set a datastore")
-	ErrJWKSNotFound      = errors.New("empty JSON Web Key Set payload")
-	ErrJWKNotFound       = errors.New("no JSON Web Key found with matching KeyID (`kid`)")
-	ErrJWKSInvalid       = errors.New("invalid JSON Web Key")
-	ErrJWKSTypeMismatch  = errors.New("priv/pub JSON Web Key mismatch")
-	ErrMultipleHeaders   = errors.New("JWT signature must have only one header")
-	ErrTokenNotFound     = errors.New("attestation token not found")
+	ErrJWKSNotFound     = errors.New("empty JSON Web Key Set payload")
+	ErrJWKNotFound      = errors.New("no JSON Web Key found with matching KeyID (`kid`)")
+	ErrJWKSInvalid      = errors.New("invalid JSON Web Key")
+	ErrJWKSTypeMismatch = errors.New("priv/pub JSON Web Key mismatch")
+	ErrMultipleHeaders  = errors.New("JWT signature must have only one header")
+	ErrTokenNotFound    = errors.New("attestation token not found")
 )
 
 // JSONWebKeyStore is the interface to for storing JSON Web Keys.
@@ -53,7 +52,8 @@ type Options struct {
 	// If unset, the JWKS endpoint will be inferred from the audience claim on the
 	// unverified JWT. Any discovered keys will be trusted on first used (TOFU).
 	JWKSEndpoint string
-	// Datastore is required and is where JSON Web Keys will be cached.
+	// Datastore is used to cache JSON Web Keys. If nil, a default in-memory
+	// implementation will be used.
 	Datastore JSONWebKeyStore
 	// HTTPClient is an optional custom http client which you can provide.
 	HTTPClient *http.Client
@@ -68,13 +68,13 @@ type Options struct {
 // New creates a new pomerium Verifier which can be used to verify a JWT token against a
 // public JWKS endpoint(s).
 func New(o *Options) (*Verifier, error) {
-	if o.Datastore == nil {
-		return nil, ErrDatastoreRequired
-	}
 	v := Verifier{
 		datastore:  o.Datastore,
 		logger:     o.Logger,
 		httpClient: o.HTTPClient,
+	}
+	if v.datastore == nil {
+		v.datastore, _ = NewLRUKeyStore(10)
 	}
 	if v.logger == nil {
 		v.logger = log.New(os.Stderr, "", log.LstdFlags)
