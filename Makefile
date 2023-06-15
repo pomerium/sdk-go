@@ -30,7 +30,8 @@ build: ## Builds dynamic executables and/or packages.
 .PHONY: lint
 lint: build-deps ## Verifies `golint` passes.
 	@echo "==> $@"
-	@go run github.com/golangci/golangci-lint/cmd/golangci-lint run ./...
+	@VERSION=$$(go run github.com/mikefarah/yq/v4@v4.34.1 '.jobs.lint.steps[] | select(.uses == "golangci/golangci-lint-action*") | .with.version' .github/workflows/lint.yaml) && \
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@$$VERSION run ./...
 
 .PHONY: cover
 cover: ## Runs go test with coverage
