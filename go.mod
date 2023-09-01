@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/go-jose/go-jose/v3 v3.0.0
-	github.com/hashicorp/golang-lru/v2 v2.0.4
+	github.com/hashicorp/golang-lru/v2 v2.0.6
 	github.com/stretchr/testify v1.8.4
 )
 
