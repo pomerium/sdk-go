@@ -49,7 +49,6 @@ linters:
   disable-all: true
   enable:
     - bodyclose
-    - depguard
     - dogsled
     - errcheck
     - gofmt
@@ -70,29 +69,6 @@ linters:
     - unconvert
     - unparam
     - unused
-    # - asciicheck
-    # - dupl
-    # - exhaustive
-    # - funlen
-    # - gochecknoglobals
-    # - gochecknoinits
-    # - gocognit
-    # - goconst
-    # - gocritic
-    # - gocyclo
-    # - godot
-    # - godox
-    # - goerr113
-    # - gomnd
-    # - interfacer
-    # - maligned
-    # - nestif
-    # - noctx
-    # - prealloc
-    # - scopelint
-    # - testpackage
-    # - whitespace
-    # - wsl
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.

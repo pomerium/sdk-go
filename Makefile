@@ -18,17 +18,13 @@ clean: ## Cleanup any build binaries or packages.
 	$(RM) -r $(BINDIR)
 	$(RM) coverage.txt
 
-.PHONY: build-deps
-build-deps: ## Install build dependencies
-	@echo "==> $@"
-
 .PHONY: build
 build: ## Builds dynamic executables and/or packages.
 	@echo "==> $@"
 	@go build -o $(BINDIR)/$(NAME)
 
 .PHONY: lint
-lint: build-deps ## Verifies `golint` passes.
+lint:
 	@echo "==> $@"
 	@VERSION=$$(go run github.com/mikefarah/yq/v4@v4.34.1 '.jobs.lint.steps[] | select(.uses == "golangci/golangci-lint-action*") | .with.version' .github/workflows/lint.yaml) && \
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@$$VERSION run ./...
