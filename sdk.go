@@ -49,7 +49,7 @@ type Verifier struct {
 // Options are the configurations for an attestation.
 type Options struct {
 	// JWKSEndpoint is the static JWKS endpoint to use.
-	// If unset, the JWKS endpoint will be inferred from the audience claim on the
+	// If unset, the JWKS endpoint will be inferred from the issuer claim on the
 	// unverified JWT. Any discovered keys will be trusted on first used (TOFU).
 	JWKSEndpoint string
 	// Datastore is used to cache JSON Web Keys. If nil, a default in-memory
