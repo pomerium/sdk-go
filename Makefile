@@ -6,7 +6,6 @@ PKG := github.com/pomerium/$(NAME)
 
 BUILDDIR := ${PREFIX}/dist
 BINDIR := ${PREFIX}/bin
-GOLANGCI_VERSION = v1.47.2
 
 
 .PHONY: all
