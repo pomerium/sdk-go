@@ -51,7 +51,7 @@ func TestVerifier_GetIdentity(t *testing.T) {
 		}
 		fmt.Fprint(w, a.Email)
 	})
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		b, err := json.Marshal(jwks)
 		assert.NoError(t, err)
 		fmt.Fprint(w, string(b))
