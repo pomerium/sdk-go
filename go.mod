@@ -3,7 +3,7 @@ module github.com/pomerium/sdk-go
 go 1.20
 
 require (
-	github.com/go-jose/go-jose/v3 v3.0.3
+	github.com/go-jose/go-jose/v3 v3.0.4
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/stretchr/testify v1.10.0
 )
