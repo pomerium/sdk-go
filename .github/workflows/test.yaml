@@ -14,12 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b
         with:
-          go-version: 1.21.x
+          go-version: 1.24.x
 
       - name: test
         run: make cover
@@ -28,4 +26,4 @@ jobs:
         uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.txt
+          files: ./coverage.txt
