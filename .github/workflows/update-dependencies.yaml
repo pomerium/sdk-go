@@ -18,9 +18,6 @@ jobs:
       - name: Update Tools
         run: ./scripts/update-dependencies tools
 
-      - name: Generate
-        run: make generate
-
       - name: Check for Changes
         id: git-diff
         run: |
