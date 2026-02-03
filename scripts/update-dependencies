@@ -12,6 +12,14 @@ require-command() {
 	fi
 }
 
+update-pomerium() {
+	pushd "$_project_root"
+
+	git submodule update --remote deps/github.com/pomerium
+
+	popd
+}
+
 update-tools() {
 	pushd "$_project_root"
 
@@ -21,6 +29,8 @@ update-tools() {
 	asdf set golang latest:1.25
 	asdf install golangci-lint latest:2
 	asdf set golangci-lint latest:2
+	asdf install protoc latest
+	asdf set protoc latest
 
 	popd
 }
@@ -28,6 +38,9 @@ update-tools() {
 run() {
 	local _command="$1"
 	case "$_command" in
+	pomerium)
+		update-pomerium
+		;;
 	tools)
 		update-tools
 		;;

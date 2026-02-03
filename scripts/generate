@@ -1,0 +1,19 @@
+#!/bin/bash
+set -euo pipefail
+
+_scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+_root_dir="$(dirname "$_scripts_dir")"
+_deps_dir="$_root_dir/deps"
+
+protoc \
+	--plugin="protoc-gen-connect-go=$_scripts_dir/protoc-gen-connect-go" \
+	--plugin="protoc-gen-go=$_scripts_dir/protoc-gen-go" \
+	--proto_path="$(go list -m -f '{{.Dir}}' github.com/envoyproxy/protoc-gen-validate)" \
+	--proto_path="$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/config" \
+	--go_out="./proto" \
+	--go_opt="Mconfig.proto=./pomerium;pomerium" \
+	--connect-go_out="./proto/pomerium" \
+	--connect-go_opt="Mconfig.proto=./pomerium;pomerium" \
+	--connect-go_opt="package_suffix" \
+	--connect-go_opt="paths=source_relative" \
+	config.proto
