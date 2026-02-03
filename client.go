@@ -6,12 +6,12 @@ import (
 
 	"connectrpc.com/connect"
 
-	"github.com/pomerium/sdk-go/internal/configconnect"
+	"github.com/pomerium/sdk-go/proto/pomerium"
 )
 
 // A Client interacts with the config service.
 type Client interface {
-	configconnect.ConfigServiceClient
+	pomerium.ConfigServiceClient
 }
 
 type clientConfig struct {
@@ -67,7 +67,7 @@ func getClientConfig(options ...ClientOption) *clientConfig {
 // NewClient creates a new client.
 func NewClient(options ...ClientOption) Client {
 	cfg := getClientConfig(options...)
-	return configconnect.NewConfigServiceClient(cfg.httpClient, cfg.url,
+	return pomerium.NewConfigServiceClient(cfg.httpClient, cfg.url,
 		connect.WithInterceptors(connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 			return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 				if cfg.apiToken != "" {

@@ -4,7 +4,7 @@
 // 	protoc        v6.33.5
 // source: config.proto
 
-package config
+package pomerium
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
