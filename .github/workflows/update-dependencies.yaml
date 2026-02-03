@@ -18,6 +18,9 @@ jobs:
       - name: Update Tools
         run: ./scripts/update-dependencies tools
 
+      - name: Update Pomerium
+        run: ./scripts/update-dependencies pomerium
+
       - name: Check for Changes
         id: git-diff
         run: |
