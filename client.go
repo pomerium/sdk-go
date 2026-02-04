@@ -157,7 +157,7 @@ func (c *client) loadZeroToken(ctx context.Context) (zeroToken, error) {
 		return zeroToken{}, fmt.Errorf("error marshaling refresh token: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.cfg.url+"/api/v0/token", bytes.NewReader(data))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.cfg.url+"/api/v0/token", bytes.NewBuffer(data))
 	if err != nil {
 		return zeroToken{}, fmt.Errorf("error creating token request: %w", err)
 	}
