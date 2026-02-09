@@ -41,6 +41,9 @@ const (
 	// ConfigServiceCreateRouteProcedure is the fully-qualified name of the ConfigService's CreateRoute
 	// RPC.
 	ConfigServiceCreateRouteProcedure = "/pomerium.config.ConfigService/CreateRoute"
+	// ConfigServiceCreateServiceAccountProcedure is the fully-qualified name of the ConfigService's
+	// CreateServiceAccount RPC.
+	ConfigServiceCreateServiceAccountProcedure = "/pomerium.config.ConfigService/CreateServiceAccount"
 	// ConfigServiceDeleteKeyPairProcedure is the fully-qualified name of the ConfigService's
 	// DeleteKeyPair RPC.
 	ConfigServiceDeleteKeyPairProcedure = "/pomerium.config.ConfigService/DeleteKeyPair"
@@ -50,6 +53,9 @@ const (
 	// ConfigServiceDeleteRouteProcedure is the fully-qualified name of the ConfigService's DeleteRoute
 	// RPC.
 	ConfigServiceDeleteRouteProcedure = "/pomerium.config.ConfigService/DeleteRoute"
+	// ConfigServiceDeleteServiceAccountProcedure is the fully-qualified name of the ConfigService's
+	// DeleteServiceAccount RPC.
+	ConfigServiceDeleteServiceAccountProcedure = "/pomerium.config.ConfigService/DeleteServiceAccount"
 	// ConfigServiceGetKeyPairProcedure is the fully-qualified name of the ConfigService's GetKeyPair
 	// RPC.
 	ConfigServiceGetKeyPairProcedure = "/pomerium.config.ConfigService/GetKeyPair"
@@ -60,6 +66,9 @@ const (
 	// ConfigServiceGetServerInfoProcedure is the fully-qualified name of the ConfigService's
 	// GetServerInfo RPC.
 	ConfigServiceGetServerInfoProcedure = "/pomerium.config.ConfigService/GetServerInfo"
+	// ConfigServiceGetServiceAccountProcedure is the fully-qualified name of the ConfigService's
+	// GetServiceAccount RPC.
+	ConfigServiceGetServiceAccountProcedure = "/pomerium.config.ConfigService/GetServiceAccount"
 	// ConfigServiceGetSettingsProcedure is the fully-qualified name of the ConfigService's GetSettings
 	// RPC.
 	ConfigServiceGetSettingsProcedure = "/pomerium.config.ConfigService/GetSettings"
@@ -72,6 +81,9 @@ const (
 	// ConfigServiceListRoutesProcedure is the fully-qualified name of the ConfigService's ListRoutes
 	// RPC.
 	ConfigServiceListRoutesProcedure = "/pomerium.config.ConfigService/ListRoutes"
+	// ConfigServiceListServiceAccountsProcedure is the fully-qualified name of the ConfigService's
+	// ListServiceAccounts RPC.
+	ConfigServiceListServiceAccountsProcedure = "/pomerium.config.ConfigService/ListServiceAccounts"
 	// ConfigServiceListSettingsProcedure is the fully-qualified name of the ConfigService's
 	// ListSettings RPC.
 	ConfigServiceListSettingsProcedure = "/pomerium.config.ConfigService/ListSettings"
@@ -84,6 +96,9 @@ const (
 	// ConfigServiceUpdateRouteProcedure is the fully-qualified name of the ConfigService's UpdateRoute
 	// RPC.
 	ConfigServiceUpdateRouteProcedure = "/pomerium.config.ConfigService/UpdateRoute"
+	// ConfigServiceUpdateServiceAccountProcedure is the fully-qualified name of the ConfigService's
+	// UpdateServiceAccount RPC.
+	ConfigServiceUpdateServiceAccountProcedure = "/pomerium.config.ConfigService/UpdateServiceAccount"
 	// ConfigServiceUpdateSettingsProcedure is the fully-qualified name of the ConfigService's
 	// UpdateSettings RPC.
 	ConfigServiceUpdateSettingsProcedure = "/pomerium.config.ConfigService/UpdateSettings"
@@ -94,21 +109,26 @@ type ConfigServiceClient interface {
 	CreateKeyPair(context.Context, *connect.Request[CreateKeyPairRequest]) (*connect.Response[CreateKeyPairResponse], error)
 	CreatePolicy(context.Context, *connect.Request[CreatePolicyRequest]) (*connect.Response[CreatePolicyResponse], error)
 	CreateRoute(context.Context, *connect.Request[CreateRouteRequest]) (*connect.Response[CreateRouteResponse], error)
+	CreateServiceAccount(context.Context, *connect.Request[CreateServiceAccountRequest]) (*connect.Response[CreateServiceAccountResponse], error)
 	DeleteKeyPair(context.Context, *connect.Request[DeleteKeyPairRequest]) (*connect.Response[DeleteKeyPairResponse], error)
 	DeletePolicy(context.Context, *connect.Request[DeletePolicyRequest]) (*connect.Response[DeletePolicyResponse], error)
 	DeleteRoute(context.Context, *connect.Request[DeleteRouteRequest]) (*connect.Response[DeleteRouteResponse], error)
+	DeleteServiceAccount(context.Context, *connect.Request[DeleteServiceAccountRequest]) (*connect.Response[DeleteServiceAccountResponse], error)
 	GetKeyPair(context.Context, *connect.Request[GetKeyPairRequest]) (*connect.Response[GetKeyPairResponse], error)
 	GetPolicy(context.Context, *connect.Request[GetPolicyRequest]) (*connect.Response[GetPolicyResponse], error)
 	GetRoute(context.Context, *connect.Request[GetRouteRequest]) (*connect.Response[GetRouteResponse], error)
 	GetServerInfo(context.Context, *connect.Request[GetServerInfoRequest]) (*connect.Response[GetServerInfoResponse], error)
+	GetServiceAccount(context.Context, *connect.Request[GetServiceAccountRequest]) (*connect.Response[GetServiceAccountResponse], error)
 	GetSettings(context.Context, *connect.Request[GetSettingsRequest]) (*connect.Response[GetSettingsResponse], error)
 	ListKeyPairs(context.Context, *connect.Request[ListKeyPairsRequest]) (*connect.Response[ListKeyPairsResponse], error)
 	ListPolicies(context.Context, *connect.Request[ListPoliciesRequest]) (*connect.Response[ListPoliciesResponse], error)
 	ListRoutes(context.Context, *connect.Request[ListRoutesRequest]) (*connect.Response[ListRoutesResponse], error)
+	ListServiceAccounts(context.Context, *connect.Request[ListServiceAccountsRequest]) (*connect.Response[ListServiceAccountsResponse], error)
 	ListSettings(context.Context, *connect.Request[ListSettingsRequest]) (*connect.Response[ListSettingsResponse], error)
 	UpdateKeyPair(context.Context, *connect.Request[UpdateKeyPairRequest]) (*connect.Response[UpdateKeyPairResponse], error)
 	UpdatePolicy(context.Context, *connect.Request[UpdatePolicyRequest]) (*connect.Response[UpdatePolicyResponse], error)
 	UpdateRoute(context.Context, *connect.Request[UpdateRouteRequest]) (*connect.Response[UpdateRouteResponse], error)
+	UpdateServiceAccount(context.Context, *connect.Request[UpdateServiceAccountRequest]) (*connect.Response[UpdateServiceAccountResponse], error)
 	UpdateSettings(context.Context, *connect.Request[UpdateSettingsRequest]) (*connect.Response[UpdateSettingsResponse], error)
 }
 
@@ -141,6 +161,12 @@ func NewConfigServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(configServiceMethods.ByName("CreateRoute")),
 			connect.WithClientOptions(opts...),
 		),
+		createServiceAccount: connect.NewClient[CreateServiceAccountRequest, CreateServiceAccountResponse](
+			httpClient,
+			baseURL+ConfigServiceCreateServiceAccountProcedure,
+			connect.WithSchema(configServiceMethods.ByName("CreateServiceAccount")),
+			connect.WithClientOptions(opts...),
+		),
 		deleteKeyPair: connect.NewClient[DeleteKeyPairRequest, DeleteKeyPairResponse](
 			httpClient,
 			baseURL+ConfigServiceDeleteKeyPairProcedure,
@@ -157,6 +183,12 @@ func NewConfigServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			httpClient,
 			baseURL+ConfigServiceDeleteRouteProcedure,
 			connect.WithSchema(configServiceMethods.ByName("DeleteRoute")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteServiceAccount: connect.NewClient[DeleteServiceAccountRequest, DeleteServiceAccountResponse](
+			httpClient,
+			baseURL+ConfigServiceDeleteServiceAccountProcedure,
+			connect.WithSchema(configServiceMethods.ByName("DeleteServiceAccount")),
 			connect.WithClientOptions(opts...),
 		),
 		getKeyPair: connect.NewClient[GetKeyPairRequest, GetKeyPairResponse](
@@ -184,6 +216,13 @@ func NewConfigServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			httpClient,
 			baseURL+ConfigServiceGetServerInfoProcedure,
 			connect.WithSchema(configServiceMethods.ByName("GetServerInfo")),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		getServiceAccount: connect.NewClient[GetServiceAccountRequest, GetServiceAccountResponse](
+			httpClient,
+			baseURL+ConfigServiceGetServiceAccountProcedure,
+			connect.WithSchema(configServiceMethods.ByName("GetServiceAccount")),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
@@ -215,6 +254,13 @@ func NewConfigServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
+		listServiceAccounts: connect.NewClient[ListServiceAccountsRequest, ListServiceAccountsResponse](
+			httpClient,
+			baseURL+ConfigServiceListServiceAccountsProcedure,
+			connect.WithSchema(configServiceMethods.ByName("ListServiceAccounts")),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 		listSettings: connect.NewClient[ListSettingsRequest, ListSettingsResponse](
 			httpClient,
 			baseURL+ConfigServiceListSettingsProcedure,
@@ -240,6 +286,12 @@ func NewConfigServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(configServiceMethods.ByName("UpdateRoute")),
 			connect.WithClientOptions(opts...),
 		),
+		updateServiceAccount: connect.NewClient[UpdateServiceAccountRequest, UpdateServiceAccountResponse](
+			httpClient,
+			baseURL+ConfigServiceUpdateServiceAccountProcedure,
+			connect.WithSchema(configServiceMethods.ByName("UpdateServiceAccount")),
+			connect.WithClientOptions(opts...),
+		),
 		updateSettings: connect.NewClient[UpdateSettingsRequest, UpdateSettingsResponse](
 			httpClient,
 			baseURL+ConfigServiceUpdateSettingsProcedure,
@@ -251,25 +303,30 @@ func NewConfigServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 
 // configServiceClient implements ConfigServiceClient.
 type configServiceClient struct {
-	createKeyPair  *connect.Client[CreateKeyPairRequest, CreateKeyPairResponse]
-	createPolicy   *connect.Client[CreatePolicyRequest, CreatePolicyResponse]
-	createRoute    *connect.Client[CreateRouteRequest, CreateRouteResponse]
-	deleteKeyPair  *connect.Client[DeleteKeyPairRequest, DeleteKeyPairResponse]
-	deletePolicy   *connect.Client[DeletePolicyRequest, DeletePolicyResponse]
-	deleteRoute    *connect.Client[DeleteRouteRequest, DeleteRouteResponse]
-	getKeyPair     *connect.Client[GetKeyPairRequest, GetKeyPairResponse]
-	getPolicy      *connect.Client[GetPolicyRequest, GetPolicyResponse]
-	getRoute       *connect.Client[GetRouteRequest, GetRouteResponse]
-	getServerInfo  *connect.Client[GetServerInfoRequest, GetServerInfoResponse]
-	getSettings    *connect.Client[GetSettingsRequest, GetSettingsResponse]
-	listKeyPairs   *connect.Client[ListKeyPairsRequest, ListKeyPairsResponse]
-	listPolicies   *connect.Client[ListPoliciesRequest, ListPoliciesResponse]
-	listRoutes     *connect.Client[ListRoutesRequest, ListRoutesResponse]
-	listSettings   *connect.Client[ListSettingsRequest, ListSettingsResponse]
-	updateKeyPair  *connect.Client[UpdateKeyPairRequest, UpdateKeyPairResponse]
-	updatePolicy   *connect.Client[UpdatePolicyRequest, UpdatePolicyResponse]
-	updateRoute    *connect.Client[UpdateRouteRequest, UpdateRouteResponse]
-	updateSettings *connect.Client[UpdateSettingsRequest, UpdateSettingsResponse]
+	createKeyPair        *connect.Client[CreateKeyPairRequest, CreateKeyPairResponse]
+	createPolicy         *connect.Client[CreatePolicyRequest, CreatePolicyResponse]
+	createRoute          *connect.Client[CreateRouteRequest, CreateRouteResponse]
+	createServiceAccount *connect.Client[CreateServiceAccountRequest, CreateServiceAccountResponse]
+	deleteKeyPair        *connect.Client[DeleteKeyPairRequest, DeleteKeyPairResponse]
+	deletePolicy         *connect.Client[DeletePolicyRequest, DeletePolicyResponse]
+	deleteRoute          *connect.Client[DeleteRouteRequest, DeleteRouteResponse]
+	deleteServiceAccount *connect.Client[DeleteServiceAccountRequest, DeleteServiceAccountResponse]
+	getKeyPair           *connect.Client[GetKeyPairRequest, GetKeyPairResponse]
+	getPolicy            *connect.Client[GetPolicyRequest, GetPolicyResponse]
+	getRoute             *connect.Client[GetRouteRequest, GetRouteResponse]
+	getServerInfo        *connect.Client[GetServerInfoRequest, GetServerInfoResponse]
+	getServiceAccount    *connect.Client[GetServiceAccountRequest, GetServiceAccountResponse]
+	getSettings          *connect.Client[GetSettingsRequest, GetSettingsResponse]
+	listKeyPairs         *connect.Client[ListKeyPairsRequest, ListKeyPairsResponse]
+	listPolicies         *connect.Client[ListPoliciesRequest, ListPoliciesResponse]
+	listRoutes           *connect.Client[ListRoutesRequest, ListRoutesResponse]
+	listServiceAccounts  *connect.Client[ListServiceAccountsRequest, ListServiceAccountsResponse]
+	listSettings         *connect.Client[ListSettingsRequest, ListSettingsResponse]
+	updateKeyPair        *connect.Client[UpdateKeyPairRequest, UpdateKeyPairResponse]
+	updatePolicy         *connect.Client[UpdatePolicyRequest, UpdatePolicyResponse]
+	updateRoute          *connect.Client[UpdateRouteRequest, UpdateRouteResponse]
+	updateServiceAccount *connect.Client[UpdateServiceAccountRequest, UpdateServiceAccountResponse]
+	updateSettings       *connect.Client[UpdateSettingsRequest, UpdateSettingsResponse]
 }
 
 // CreateKeyPair calls pomerium.config.ConfigService.CreateKeyPair.
@@ -287,6 +344,11 @@ func (c *configServiceClient) CreateRoute(ctx context.Context, req *connect.Requ
 	return c.createRoute.CallUnary(ctx, req)
 }
 
+// CreateServiceAccount calls pomerium.config.ConfigService.CreateServiceAccount.
+func (c *configServiceClient) CreateServiceAccount(ctx context.Context, req *connect.Request[CreateServiceAccountRequest]) (*connect.Response[CreateServiceAccountResponse], error) {
+	return c.createServiceAccount.CallUnary(ctx, req)
+}
+
 // DeleteKeyPair calls pomerium.config.ConfigService.DeleteKeyPair.
 func (c *configServiceClient) DeleteKeyPair(ctx context.Context, req *connect.Request[DeleteKeyPairRequest]) (*connect.Response[DeleteKeyPairResponse], error) {
 	return c.deleteKeyPair.CallUnary(ctx, req)
@@ -300,6 +362,11 @@ func (c *configServiceClient) DeletePolicy(ctx context.Context, req *connect.Req
 // DeleteRoute calls pomerium.config.ConfigService.DeleteRoute.
 func (c *configServiceClient) DeleteRoute(ctx context.Context, req *connect.Request[DeleteRouteRequest]) (*connect.Response[DeleteRouteResponse], error) {
 	return c.deleteRoute.CallUnary(ctx, req)
+}
+
+// DeleteServiceAccount calls pomerium.config.ConfigService.DeleteServiceAccount.
+func (c *configServiceClient) DeleteServiceAccount(ctx context.Context, req *connect.Request[DeleteServiceAccountRequest]) (*connect.Response[DeleteServiceAccountResponse], error) {
+	return c.deleteServiceAccount.CallUnary(ctx, req)
 }
 
 // GetKeyPair calls pomerium.config.ConfigService.GetKeyPair.
@@ -322,6 +389,11 @@ func (c *configServiceClient) GetServerInfo(ctx context.Context, req *connect.Re
 	return c.getServerInfo.CallUnary(ctx, req)
 }
 
+// GetServiceAccount calls pomerium.config.ConfigService.GetServiceAccount.
+func (c *configServiceClient) GetServiceAccount(ctx context.Context, req *connect.Request[GetServiceAccountRequest]) (*connect.Response[GetServiceAccountResponse], error) {
+	return c.getServiceAccount.CallUnary(ctx, req)
+}
+
 // GetSettings calls pomerium.config.ConfigService.GetSettings.
 func (c *configServiceClient) GetSettings(ctx context.Context, req *connect.Request[GetSettingsRequest]) (*connect.Response[GetSettingsResponse], error) {
 	return c.getSettings.CallUnary(ctx, req)
@@ -340,6 +412,11 @@ func (c *configServiceClient) ListPolicies(ctx context.Context, req *connect.Req
 // ListRoutes calls pomerium.config.ConfigService.ListRoutes.
 func (c *configServiceClient) ListRoutes(ctx context.Context, req *connect.Request[ListRoutesRequest]) (*connect.Response[ListRoutesResponse], error) {
 	return c.listRoutes.CallUnary(ctx, req)
+}
+
+// ListServiceAccounts calls pomerium.config.ConfigService.ListServiceAccounts.
+func (c *configServiceClient) ListServiceAccounts(ctx context.Context, req *connect.Request[ListServiceAccountsRequest]) (*connect.Response[ListServiceAccountsResponse], error) {
+	return c.listServiceAccounts.CallUnary(ctx, req)
 }
 
 // ListSettings calls pomerium.config.ConfigService.ListSettings.
@@ -362,6 +439,11 @@ func (c *configServiceClient) UpdateRoute(ctx context.Context, req *connect.Requ
 	return c.updateRoute.CallUnary(ctx, req)
 }
 
+// UpdateServiceAccount calls pomerium.config.ConfigService.UpdateServiceAccount.
+func (c *configServiceClient) UpdateServiceAccount(ctx context.Context, req *connect.Request[UpdateServiceAccountRequest]) (*connect.Response[UpdateServiceAccountResponse], error) {
+	return c.updateServiceAccount.CallUnary(ctx, req)
+}
+
 // UpdateSettings calls pomerium.config.ConfigService.UpdateSettings.
 func (c *configServiceClient) UpdateSettings(ctx context.Context, req *connect.Request[UpdateSettingsRequest]) (*connect.Response[UpdateSettingsResponse], error) {
 	return c.updateSettings.CallUnary(ctx, req)
@@ -372,21 +454,26 @@ type ConfigServiceHandler interface {
 	CreateKeyPair(context.Context, *connect.Request[CreateKeyPairRequest]) (*connect.Response[CreateKeyPairResponse], error)
 	CreatePolicy(context.Context, *connect.Request[CreatePolicyRequest]) (*connect.Response[CreatePolicyResponse], error)
 	CreateRoute(context.Context, *connect.Request[CreateRouteRequest]) (*connect.Response[CreateRouteResponse], error)
+	CreateServiceAccount(context.Context, *connect.Request[CreateServiceAccountRequest]) (*connect.Response[CreateServiceAccountResponse], error)
 	DeleteKeyPair(context.Context, *connect.Request[DeleteKeyPairRequest]) (*connect.Response[DeleteKeyPairResponse], error)
 	DeletePolicy(context.Context, *connect.Request[DeletePolicyRequest]) (*connect.Response[DeletePolicyResponse], error)
 	DeleteRoute(context.Context, *connect.Request[DeleteRouteRequest]) (*connect.Response[DeleteRouteResponse], error)
+	DeleteServiceAccount(context.Context, *connect.Request[DeleteServiceAccountRequest]) (*connect.Response[DeleteServiceAccountResponse], error)
 	GetKeyPair(context.Context, *connect.Request[GetKeyPairRequest]) (*connect.Response[GetKeyPairResponse], error)
 	GetPolicy(context.Context, *connect.Request[GetPolicyRequest]) (*connect.Response[GetPolicyResponse], error)
 	GetRoute(context.Context, *connect.Request[GetRouteRequest]) (*connect.Response[GetRouteResponse], error)
 	GetServerInfo(context.Context, *connect.Request[GetServerInfoRequest]) (*connect.Response[GetServerInfoResponse], error)
+	GetServiceAccount(context.Context, *connect.Request[GetServiceAccountRequest]) (*connect.Response[GetServiceAccountResponse], error)
 	GetSettings(context.Context, *connect.Request[GetSettingsRequest]) (*connect.Response[GetSettingsResponse], error)
 	ListKeyPairs(context.Context, *connect.Request[ListKeyPairsRequest]) (*connect.Response[ListKeyPairsResponse], error)
 	ListPolicies(context.Context, *connect.Request[ListPoliciesRequest]) (*connect.Response[ListPoliciesResponse], error)
 	ListRoutes(context.Context, *connect.Request[ListRoutesRequest]) (*connect.Response[ListRoutesResponse], error)
+	ListServiceAccounts(context.Context, *connect.Request[ListServiceAccountsRequest]) (*connect.Response[ListServiceAccountsResponse], error)
 	ListSettings(context.Context, *connect.Request[ListSettingsRequest]) (*connect.Response[ListSettingsResponse], error)
 	UpdateKeyPair(context.Context, *connect.Request[UpdateKeyPairRequest]) (*connect.Response[UpdateKeyPairResponse], error)
 	UpdatePolicy(context.Context, *connect.Request[UpdatePolicyRequest]) (*connect.Response[UpdatePolicyResponse], error)
 	UpdateRoute(context.Context, *connect.Request[UpdateRouteRequest]) (*connect.Response[UpdateRouteResponse], error)
+	UpdateServiceAccount(context.Context, *connect.Request[UpdateServiceAccountRequest]) (*connect.Response[UpdateServiceAccountResponse], error)
 	UpdateSettings(context.Context, *connect.Request[UpdateSettingsRequest]) (*connect.Response[UpdateSettingsResponse], error)
 }
 
@@ -415,6 +502,12 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(configServiceMethods.ByName("CreateRoute")),
 		connect.WithHandlerOptions(opts...),
 	)
+	configServiceCreateServiceAccountHandler := connect.NewUnaryHandler(
+		ConfigServiceCreateServiceAccountProcedure,
+		svc.CreateServiceAccount,
+		connect.WithSchema(configServiceMethods.ByName("CreateServiceAccount")),
+		connect.WithHandlerOptions(opts...),
+	)
 	configServiceDeleteKeyPairHandler := connect.NewUnaryHandler(
 		ConfigServiceDeleteKeyPairProcedure,
 		svc.DeleteKeyPair,
@@ -431,6 +524,12 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 		ConfigServiceDeleteRouteProcedure,
 		svc.DeleteRoute,
 		connect.WithSchema(configServiceMethods.ByName("DeleteRoute")),
+		connect.WithHandlerOptions(opts...),
+	)
+	configServiceDeleteServiceAccountHandler := connect.NewUnaryHandler(
+		ConfigServiceDeleteServiceAccountProcedure,
+		svc.DeleteServiceAccount,
+		connect.WithSchema(configServiceMethods.ByName("DeleteServiceAccount")),
 		connect.WithHandlerOptions(opts...),
 	)
 	configServiceGetKeyPairHandler := connect.NewUnaryHandler(
@@ -458,6 +557,13 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 		ConfigServiceGetServerInfoProcedure,
 		svc.GetServerInfo,
 		connect.WithSchema(configServiceMethods.ByName("GetServerInfo")),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	configServiceGetServiceAccountHandler := connect.NewUnaryHandler(
+		ConfigServiceGetServiceAccountProcedure,
+		svc.GetServiceAccount,
+		connect.WithSchema(configServiceMethods.ByName("GetServiceAccount")),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
@@ -489,6 +595,13 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
+	configServiceListServiceAccountsHandler := connect.NewUnaryHandler(
+		ConfigServiceListServiceAccountsProcedure,
+		svc.ListServiceAccounts,
+		connect.WithSchema(configServiceMethods.ByName("ListServiceAccounts")),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	configServiceListSettingsHandler := connect.NewUnaryHandler(
 		ConfigServiceListSettingsProcedure,
 		svc.ListSettings,
@@ -514,6 +627,12 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(configServiceMethods.ByName("UpdateRoute")),
 		connect.WithHandlerOptions(opts...),
 	)
+	configServiceUpdateServiceAccountHandler := connect.NewUnaryHandler(
+		ConfigServiceUpdateServiceAccountProcedure,
+		svc.UpdateServiceAccount,
+		connect.WithSchema(configServiceMethods.ByName("UpdateServiceAccount")),
+		connect.WithHandlerOptions(opts...),
+	)
 	configServiceUpdateSettingsHandler := connect.NewUnaryHandler(
 		ConfigServiceUpdateSettingsProcedure,
 		svc.UpdateSettings,
@@ -528,12 +647,16 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 			configServiceCreatePolicyHandler.ServeHTTP(w, r)
 		case ConfigServiceCreateRouteProcedure:
 			configServiceCreateRouteHandler.ServeHTTP(w, r)
+		case ConfigServiceCreateServiceAccountProcedure:
+			configServiceCreateServiceAccountHandler.ServeHTTP(w, r)
 		case ConfigServiceDeleteKeyPairProcedure:
 			configServiceDeleteKeyPairHandler.ServeHTTP(w, r)
 		case ConfigServiceDeletePolicyProcedure:
 			configServiceDeletePolicyHandler.ServeHTTP(w, r)
 		case ConfigServiceDeleteRouteProcedure:
 			configServiceDeleteRouteHandler.ServeHTTP(w, r)
+		case ConfigServiceDeleteServiceAccountProcedure:
+			configServiceDeleteServiceAccountHandler.ServeHTTP(w, r)
 		case ConfigServiceGetKeyPairProcedure:
 			configServiceGetKeyPairHandler.ServeHTTP(w, r)
 		case ConfigServiceGetPolicyProcedure:
@@ -542,6 +665,8 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 			configServiceGetRouteHandler.ServeHTTP(w, r)
 		case ConfigServiceGetServerInfoProcedure:
 			configServiceGetServerInfoHandler.ServeHTTP(w, r)
+		case ConfigServiceGetServiceAccountProcedure:
+			configServiceGetServiceAccountHandler.ServeHTTP(w, r)
 		case ConfigServiceGetSettingsProcedure:
 			configServiceGetSettingsHandler.ServeHTTP(w, r)
 		case ConfigServiceListKeyPairsProcedure:
@@ -550,6 +675,8 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 			configServiceListPoliciesHandler.ServeHTTP(w, r)
 		case ConfigServiceListRoutesProcedure:
 			configServiceListRoutesHandler.ServeHTTP(w, r)
+		case ConfigServiceListServiceAccountsProcedure:
+			configServiceListServiceAccountsHandler.ServeHTTP(w, r)
 		case ConfigServiceListSettingsProcedure:
 			configServiceListSettingsHandler.ServeHTTP(w, r)
 		case ConfigServiceUpdateKeyPairProcedure:
@@ -558,6 +685,8 @@ func NewConfigServiceHandler(svc ConfigServiceHandler, opts ...connect.HandlerOp
 			configServiceUpdatePolicyHandler.ServeHTTP(w, r)
 		case ConfigServiceUpdateRouteProcedure:
 			configServiceUpdateRouteHandler.ServeHTTP(w, r)
+		case ConfigServiceUpdateServiceAccountProcedure:
+			configServiceUpdateServiceAccountHandler.ServeHTTP(w, r)
 		case ConfigServiceUpdateSettingsProcedure:
 			configServiceUpdateSettingsHandler.ServeHTTP(w, r)
 		default:
@@ -581,6 +710,10 @@ func (UnimplementedConfigServiceHandler) CreateRoute(context.Context, *connect.R
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.CreateRoute is not implemented"))
 }
 
+func (UnimplementedConfigServiceHandler) CreateServiceAccount(context.Context, *connect.Request[CreateServiceAccountRequest]) (*connect.Response[CreateServiceAccountResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.CreateServiceAccount is not implemented"))
+}
+
 func (UnimplementedConfigServiceHandler) DeleteKeyPair(context.Context, *connect.Request[DeleteKeyPairRequest]) (*connect.Response[DeleteKeyPairResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.DeleteKeyPair is not implemented"))
 }
@@ -591,6 +724,10 @@ func (UnimplementedConfigServiceHandler) DeletePolicy(context.Context, *connect.
 
 func (UnimplementedConfigServiceHandler) DeleteRoute(context.Context, *connect.Request[DeleteRouteRequest]) (*connect.Response[DeleteRouteResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.DeleteRoute is not implemented"))
+}
+
+func (UnimplementedConfigServiceHandler) DeleteServiceAccount(context.Context, *connect.Request[DeleteServiceAccountRequest]) (*connect.Response[DeleteServiceAccountResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.DeleteServiceAccount is not implemented"))
 }
 
 func (UnimplementedConfigServiceHandler) GetKeyPair(context.Context, *connect.Request[GetKeyPairRequest]) (*connect.Response[GetKeyPairResponse], error) {
@@ -609,6 +746,10 @@ func (UnimplementedConfigServiceHandler) GetServerInfo(context.Context, *connect
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.GetServerInfo is not implemented"))
 }
 
+func (UnimplementedConfigServiceHandler) GetServiceAccount(context.Context, *connect.Request[GetServiceAccountRequest]) (*connect.Response[GetServiceAccountResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.GetServiceAccount is not implemented"))
+}
+
 func (UnimplementedConfigServiceHandler) GetSettings(context.Context, *connect.Request[GetSettingsRequest]) (*connect.Response[GetSettingsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.GetSettings is not implemented"))
 }
@@ -625,6 +766,10 @@ func (UnimplementedConfigServiceHandler) ListRoutes(context.Context, *connect.Re
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.ListRoutes is not implemented"))
 }
 
+func (UnimplementedConfigServiceHandler) ListServiceAccounts(context.Context, *connect.Request[ListServiceAccountsRequest]) (*connect.Response[ListServiceAccountsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.ListServiceAccounts is not implemented"))
+}
+
 func (UnimplementedConfigServiceHandler) ListSettings(context.Context, *connect.Request[ListSettingsRequest]) (*connect.Response[ListSettingsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.ListSettings is not implemented"))
 }
@@ -639,6 +784,10 @@ func (UnimplementedConfigServiceHandler) UpdatePolicy(context.Context, *connect.
 
 func (UnimplementedConfigServiceHandler) UpdateRoute(context.Context, *connect.Request[UpdateRouteRequest]) (*connect.Response[UpdateRouteResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.UpdateRoute is not implemented"))
+}
+
+func (UnimplementedConfigServiceHandler) UpdateServiceAccount(context.Context, *connect.Request[UpdateServiceAccountRequest]) (*connect.Response[UpdateServiceAccountResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("pomerium.config.ConfigService.UpdateServiceAccount is not implemented"))
 }
 
 func (UnimplementedConfigServiceHandler) UpdateSettings(context.Context, *connect.Request[UpdateSettingsRequest]) (*connect.Response[UpdateSettingsResponse], error) {
