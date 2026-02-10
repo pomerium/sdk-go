@@ -2,10 +2,13 @@ package sdk
 
 import (
 	"context"
+	"encoding/base64"
 	"net/http"
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/go-jose/go-jose/v3"
+	"github.com/go-jose/go-jose/v3/jwt"
 
 	"github.com/pomerium/sdk-go/proto/pomerium"
 )
@@ -127,17 +130,31 @@ func (c *client) getToken(ctx context.Context) (string, error) {
 		return "", err
 	}
 
-	// use the api token directly for non-zero servers
-	if serverType != pomerium.ServerType_SERVER_TYPE_ZERO {
+	switch serverType {
+	case pomerium.ServerType_SERVER_TYPE_CORE:
+		// if the api token is a shared key, generate a core JWT
+		if key, ok := parseTokenAsKey(c.cfg.apiToken); ok {
+			return generateCoreJWT(key)
+		}
+		return c.cfg.apiToken, nil
+	case pomerium.ServerType_SERVER_TYPE_ZERO:
+		// retrieve the id token from zero
+		zeroToken, err := c.zeroToken.Get(ctx)
+		if err != nil {
+			return "", err
+		}
+		return zeroToken.idToken, nil
+	case pomerium.ServerType_SERVER_TYPE_ENTERPRISE:
+		// if the api token is a shared key, generate an enterprise JWT
+		if key, ok := parseTokenAsKey(c.cfg.apiToken); ok {
+			return generateEnterpriseJWT(key)
+		}
+		return c.cfg.apiToken, nil
+	case pomerium.ServerType_SERVER_TYPE_UNKNOWN:
+		fallthrough
+	default:
 		return c.cfg.apiToken, nil
 	}
-
-	// retrieve the id token from zero
-	zeroToken, err := c.zeroToken.Get(ctx)
-	if err != nil {
-		return "", err
-	}
-	return zeroToken.idToken, nil
 }
 
 func (c *client) loadServerType(ctx context.Context) (pomerium.ServerType, error) {
@@ -146,4 +163,40 @@ func (c *client) loadServerType(ctx context.Context) (pomerium.ServerType, error
 		return pomerium.ServerType_SERVER_TYPE_UNKNOWN, err
 	}
 	return res.Msg.GetServerType(), nil
+}
+
+func parseTokenAsKey(str string) (key []byte, ok bool) {
+	key, err := base64.StdEncoding.DecodeString(str)
+	if err != nil || len(key) != 32 {
+		return nil, false
+	}
+	return key, true
+}
+
+func generateCoreJWT(key []byte) (string, error) {
+	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key},
+		(&jose.SignerOptions{}).WithType("JWT"))
+	if err != nil {
+		return "", err
+	}
+
+	return jwt.Signed(sig).Claims(jwt.Claims{
+		Expiry: jwt.NewNumericDate(time.Now().Add(time.Hour)),
+	}).CompactSerialize()
+}
+
+func generateEnterpriseJWT(key []byte) (string, error) {
+	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key},
+		(&jose.SignerOptions{}).WithType("JWT"))
+	if err != nil {
+		return "", err
+	}
+
+	now := time.Now()
+	return jwt.Signed(sig).Claims(jwt.Claims{
+		ID:        "014e587b-3f4b-4fcf-90a9-f6ecdf8154af",
+		Subject:   "bootstrap-014e587b-3f4b-4fcf-90a9-f6ecdf8154af.pomerium",
+		IssuedAt:  jwt.NewNumericDate(now),
+		NotBefore: jwt.NewNumericDate(now.Add(-time.Second)),
+	}).CompactSerialize()
 }
