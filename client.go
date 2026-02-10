@@ -105,6 +105,7 @@ func (c *client) authenticationInterceptor(next connect.UnaryFunc) connect.Unary
 	return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 		// skip adding authentication for this endpoint
 		if req.Spec().Procedure == "/pomerium.config.ConfigService/GetServerInfo" {
+			req.Header().Set("Authorization", "Pomerium "+c.cfg.apiToken)
 			return next(ctx, req)
 		}
 
