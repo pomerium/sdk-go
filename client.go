@@ -105,8 +105,9 @@ func NewClient(options ...ClientOption) Client {
 
 func (c *client) authenticationInterceptor(next connect.UnaryFunc) connect.UnaryFunc {
 	return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-		// skip adding authentication for this endpoint
+		// always pass the api token for this endpoint
 		if req.Spec().Procedure == "/pomerium.config.ConfigService/GetServerInfo" {
+			req.Header().Set("Authorization", "Pomerium "+c.cfg.apiToken)
 			return next(ctx, req)
 		}
 
