@@ -1,15 +1,14 @@
 package sdk
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"fmt"
+	"encoding/base64"
 	"net/http"
-	"strconv"
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/go-jose/go-jose/v3"
+	"github.com/go-jose/go-jose/v3/jwt"
 
 	"github.com/pomerium/sdk-go/proto/pomerium"
 )
@@ -97,7 +96,9 @@ func NewClient(options ...ClientOption) Client {
 	c.serverType = newCachedValue(c.loadServerType, func(_ pomerium.ServerType) bool {
 		return true
 	})
-	c.zeroToken = newCachedValue(c.loadZeroToken, func(t zeroToken) bool {
+	c.zeroToken = newCachedValue(func(ctx context.Context) (zeroToken, error) {
+		return loadZeroToken(ctx, c.cfg)
+	}, func(t zeroToken) bool {
 		return t.expiry.After(time.Now().Add(tokenMinTTL))
 	})
 	return c
@@ -105,8 +106,9 @@ func NewClient(options ...ClientOption) Client {
 
 func (c *client) authenticationInterceptor(next connect.UnaryFunc) connect.UnaryFunc {
 	return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-		// skip adding authentication for this endpoint
+		// always pass the api token for this endpoint
 		if req.Spec().Procedure == "/pomerium.config.ConfigService/GetServerInfo" {
+			req.Header().Set("Authorization", "Pomerium "+c.cfg.apiToken)
 			return next(ctx, req)
 		}
 
@@ -128,17 +130,31 @@ func (c *client) getToken(ctx context.Context) (string, error) {
 		return "", err
 	}
 
-	// use the api token directly for non-zero servers
-	if serverType != pomerium.ServerType_SERVER_TYPE_ZERO {
+	switch serverType {
+	case pomerium.ServerType_SERVER_TYPE_CORE:
+		// if the api token is a shared key, generate a core JWT
+		if key, ok := parseTokenAsKey(c.cfg.apiToken); ok {
+			return generateCoreJWT(key)
+		}
+		return c.cfg.apiToken, nil
+	case pomerium.ServerType_SERVER_TYPE_ZERO:
+		// retrieve the id token from zero
+		zeroToken, err := c.zeroToken.Get(ctx)
+		if err != nil {
+			return "", err
+		}
+		return zeroToken.idToken, nil
+	case pomerium.ServerType_SERVER_TYPE_ENTERPRISE:
+		// if the api token is a shared key, generate an enterprise JWT
+		if key, ok := parseTokenAsKey(c.cfg.apiToken); ok {
+			return generateEnterpriseJWT(key)
+		}
+		return c.cfg.apiToken, nil
+	case pomerium.ServerType_SERVER_TYPE_UNKNOWN:
+		fallthrough
+	default:
 		return c.cfg.apiToken, nil
 	}
-
-	// retrieve the id token from zero
-	zeroToken, err := c.zeroToken.Get(ctx)
-	if err != nil {
-		return "", err
-	}
-	return zeroToken.idToken, nil
 }
 
 func (c *client) loadServerType(ctx context.Context) (pomerium.ServerType, error) {
@@ -149,46 +165,38 @@ func (c *client) loadServerType(ctx context.Context) (pomerium.ServerType, error
 	return res.Msg.GetServerType(), nil
 }
 
-func (c *client) loadZeroToken(ctx context.Context) (zeroToken, error) {
+func parseTokenAsKey(str string) (key []byte, ok bool) {
+	key, err := base64.StdEncoding.DecodeString(str)
+	if err != nil || len(key) != 32 {
+		return nil, false
+	}
+	return key, true
+}
+
+func generateCoreJWT(key []byte) (string, error) {
+	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key},
+		(&jose.SignerOptions{}).WithType("JWT"))
+	if err != nil {
+		return "", err
+	}
+
+	return jwt.Signed(sig).Claims(jwt.Claims{
+		Expiry: jwt.NewNumericDate(time.Now().Add(time.Hour)),
+	}).CompactSerialize()
+}
+
+func generateEnterpriseJWT(key []byte) (string, error) {
+	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key},
+		(&jose.SignerOptions{}).WithType("JWT"))
+	if err != nil {
+		return "", err
+	}
+
 	now := time.Now()
-
-	data, err := json.Marshal(map[string]any{"refreshToken": c.cfg.apiToken})
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error marshaling refresh token: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.cfg.url+"/api/v0/token", bytes.NewBuffer(data))
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error creating token request: %w", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	res, err := c.cfg.httpClient.Do(req)
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error executing token request: %w", err)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode/100 != 2 {
-		return zeroToken{}, fmt.Errorf("unexpected status code from zero API: %d", res.StatusCode)
-	}
-
-	var resData struct {
-		ExpiresInSeconds string `json:"expiresInSeconds"`
-		IDToken          string `json:"idToken"`
-	}
-	err = json.NewDecoder(res.Body).Decode(&resData)
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error unmarshaling token response: %w", err)
-	}
-
-	expires, err := strconv.ParseInt(resData.ExpiresInSeconds, 10, 64)
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error parsing token expiry: %w", err)
-	}
-
-	return zeroToken{
-		expiry:  now.Add(time.Second * time.Duration(expires)),
-		idToken: resData.IDToken,
-	}, nil
+	return jwt.Signed(sig).Claims(jwt.Claims{
+		ID:        "014e587b-3f4b-4fcf-90a9-f6ecdf8154af",
+		Subject:   "bootstrap-014e587b-3f4b-4fcf-90a9-f6ecdf8154af.pomerium",
+		IssuedAt:  jwt.NewNumericDate(now),
+		NotBefore: jwt.NewNumericDate(now.Add(-time.Second)),
+	}).CompactSerialize()
 }

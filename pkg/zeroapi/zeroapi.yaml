@@ -1,0 +1,7 @@
+package: zeroapi
+generate:
+  client: true
+  models: true
+output: zeroapi.gen.go
+output-options:
+  response-type-suffix: APIResponse
