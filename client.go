@@ -1,17 +1,12 @@
 package sdk
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
-	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"connectrpc.com/connect"
-
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
 
@@ -101,7 +96,9 @@ func NewClient(options ...ClientOption) Client {
 	c.serverType = newCachedValue(c.loadServerType, func(_ pomerium.ServerType) bool {
 		return true
 	})
-	c.zeroToken = newCachedValue(c.loadZeroToken, func(t zeroToken) bool {
+	c.zeroToken = newCachedValue(func(ctx context.Context) (zeroToken, error) {
+		return loadZeroToken(ctx, c.cfg)
+	}, func(t zeroToken) bool {
 		return t.expiry.After(time.Now().Add(tokenMinTTL))
 	})
 	return c
@@ -166,50 +163,6 @@ func (c *client) loadServerType(ctx context.Context) (pomerium.ServerType, error
 		return pomerium.ServerType_SERVER_TYPE_UNKNOWN, err
 	}
 	return res.Msg.GetServerType(), nil
-}
-
-func (c *client) loadZeroToken(ctx context.Context) (zeroToken, error) {
-	now := time.Now()
-
-	data, err := json.Marshal(map[string]any{"refreshToken": c.cfg.apiToken})
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error marshaling refresh token: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.cfg.url+"/api/v0/token", bytes.NewBuffer(data))
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error creating token request: %w", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	res, err := c.cfg.httpClient.Do(req)
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error executing token request: %w", err)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode/100 != 2 {
-		return zeroToken{}, fmt.Errorf("unexpected status code from zero API: %d", res.StatusCode)
-	}
-
-	var resData struct {
-		ExpiresInSeconds string `json:"expiresInSeconds"`
-		IDToken          string `json:"idToken"`
-	}
-	err = json.NewDecoder(res.Body).Decode(&resData)
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error unmarshaling token response: %w", err)
-	}
-
-	expires, err := strconv.ParseInt(resData.ExpiresInSeconds, 10, 64)
-	if err != nil {
-		return zeroToken{}, fmt.Errorf("error parsing token expiry: %w", err)
-	}
-
-	return zeroToken{
-		expiry:  now.Add(time.Second * time.Duration(expires)),
-		idToken: resData.IDToken,
-	}, nil
 }
 
 func parseTokenAsKey(str string) (key []byte, ok bool) {
