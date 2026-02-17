@@ -3,6 +3,7 @@ package sdk
 import (
 	"context"
 	"encoding/base64"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -106,55 +107,63 @@ func NewClient(options ...ClientOption) Client {
 
 func (c *client) authenticationInterceptor(next connect.UnaryFunc) connect.UnaryFunc {
 	return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-		// always pass the api token for this endpoint
+		var serverType pomerium.ServerType
 		if req.Spec().Procedure == "/pomerium.config.ConfigService/GetServerInfo" {
-			req.Header().Set("Authorization", "Pomerium "+c.cfg.apiToken)
-			return next(ctx, req)
+			// for the GetServerInfo endpoint we always use the unknown server type
+			serverType = pomerium.ServerType_SERVER_TYPE_UNKNOWN
+		} else {
+			// for all other endpoints we call GetServerInfo to determine the server type
+			var err error
+			serverType, err = c.serverType.Get(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("error determining server type: %w", err)
+			}
 		}
 
-		token, err := c.getToken(ctx)
+		err := c.setAuthorizationHeaders(ctx, req.Header(), serverType)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error setting authorization headers: %w", err)
 		}
-		if token != "" {
-			req.Header().Set("Authorization", "Pomerium "+token)
-		}
+
 		return next(ctx, req)
 	}
 }
 
-func (c *client) getToken(ctx context.Context) (string, error) {
-	// determine what kind of server we're dealing with
-	serverType, err := c.serverType.Get(ctx)
-	if err != nil {
-		return "", err
-	}
-
-	switch serverType {
-	case pomerium.ServerType_SERVER_TYPE_CORE:
-		// if the api token is a shared key, generate a core JWT
-		if key, ok := parseTokenAsKey(c.cfg.apiToken); ok {
-			return generateCoreJWT(key)
-		}
-		return c.cfg.apiToken, nil
-	case pomerium.ServerType_SERVER_TYPE_ZERO:
-		// retrieve the id token from zero
+func (c *client) setAuthorizationHeaders(ctx context.Context, headers http.Header, serverType pomerium.ServerType) error {
+	// if this is a zero server, swap the token for an id token and add that header
+	if serverType == pomerium.ServerType_SERVER_TYPE_ZERO {
 		zeroToken, err := c.zeroToken.Get(ctx)
 		if err != nil {
-			return "", err
+			return err
 		}
-		return zeroToken.idToken, nil
-	case pomerium.ServerType_SERVER_TYPE_ENTERPRISE:
-		// if the api token is a shared key, generate an enterprise JWT
-		if key, ok := parseTokenAsKey(c.cfg.apiToken); ok {
-			return generateEnterpriseJWT(key)
-		}
-		return c.cfg.apiToken, nil
-	case pomerium.ServerType_SERVER_TYPE_UNKNOWN:
-		fallthrough
-	default:
-		return c.cfg.apiToken, nil
+		headers.Set("Authorization", "Pomerium "+zeroToken.idToken)
+		return nil
 	}
+
+	// if the token is a shared key, generate JWTs and pass those to the API
+	if sharedKey, ok := parseTokenAsKey(c.cfg.apiToken); ok {
+		// the enterprise console and an authenticated route to the databroker will
+		// use a special bootstrap user for authentication
+		bootstrapJWT, err := generateBootstrapJWT(sharedKey)
+		if err != nil {
+			return fmt.Errorf("error generating bootstrap JWT from shared key: %w", err)
+		}
+		headers.Set("Authorization", "Pomerium "+bootstrapJWT)
+
+		// the databroker expects a jwt header
+		if serverType == pomerium.ServerType_SERVER_TYPE_CORE || serverType == pomerium.ServerType_SERVER_TYPE_UNKNOWN {
+			coreJWT, err := generateGRPCJWT(sharedKey)
+			if err != nil {
+				return fmt.Errorf("error generating core JWT from shared key: %w", err)
+			}
+			headers["jwt"] = []string{coreJWT}
+		}
+	} else {
+		headers.Set("Authorization", "Pomerium "+c.cfg.apiToken)
+		headers["jwt"] = []string{c.cfg.apiToken}
+	}
+
+	return nil
 }
 
 func (c *client) loadServerType(ctx context.Context) (pomerium.ServerType, error) {
@@ -173,7 +182,7 @@ func parseTokenAsKey(str string) (key []byte, ok bool) {
 	return key, true
 }
 
-func generateCoreJWT(key []byte) (string, error) {
+func generateGRPCJWT(key []byte) (string, error) {
 	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key},
 		(&jose.SignerOptions{}).WithType("JWT"))
 	if err != nil {
@@ -185,7 +194,7 @@ func generateCoreJWT(key []byte) (string, error) {
 	}).CompactSerialize()
 }
 
-func generateEnterpriseJWT(key []byte) (string, error) {
+func generateBootstrapJWT(key []byte) (string, error) {
 	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key},
 		(&jose.SignerOptions{}).WithType("JWT"))
 	if err != nil {
