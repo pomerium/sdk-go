@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"net/netip"
 	"net/url"
 
 	"google.golang.org/grpc"
@@ -36,23 +35,6 @@ func NewCoreClient(options ...ClientOption) (CoreClient, error) {
 		return nil, fmt.Errorf("invalid api url: %w", err)
 	}
 
-	var target string
-	if addrPort, err := netip.ParseAddrPort(apiURL.Host); err == nil {
-		if addrPort.Addr().Is4() {
-			target = fmt.Sprintf("ipv4:%s:%d", addrPort.Addr().String(), addrPort.Port())
-		} else {
-			target = fmt.Sprintf("ipv6:%s:%d", addrPort.Addr().String(), addrPort.Port())
-		}
-	} else if addr, err := netip.ParseAddr(apiURL.Host); err == nil {
-		if addr.Is4() {
-			target = fmt.Sprintf("ipv4:%s", addr.String())
-		} else {
-			target = fmt.Sprintf("ipv6:%s", addr.String())
-		}
-	} else {
-		target = fmt.Sprintf("dns:%s", apiURL.Host)
-	}
-
 	dialOptions := []grpc.DialOption{
 		grpc.WithStreamInterceptor(c.authenticationStreamInterceptor),
 		grpc.WithUnaryInterceptor(c.authenticationUnaryInterceptor),
@@ -69,7 +51,7 @@ func NewCoreClient(options ...ClientOption) (CoreClient, error) {
 		dialOptions = append(dialOptions, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	cc, err := grpc.NewClient(target, dialOptions...)
+	cc, err := grpc.NewClient(apiURL.Host, dialOptions...)
 	if err != nil {
 		return nil, err
 	}
