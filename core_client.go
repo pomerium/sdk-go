@@ -4,8 +4,13 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/netip"
+	"net/url"
 
-	"connectrpc.com/connect"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 
 	"github.com/pomerium/sdk-go/proto/pomerium"
 )
@@ -25,24 +30,93 @@ func NewCoreClient(options ...ClientOption) (CoreClient, error) {
 	c := &coreClient{
 		cfg: getClientConfig(options...),
 	}
-	c.DataBrokerServiceClient = pomerium.NewDataBrokerServiceClient(c.cfg.httpClient, c.cfg.url,
-		connect.WithInterceptors(connect.UnaryInterceptorFunc(c.authenticationInterceptor)),
-		connect.WithClientOptions(append([]connect.ClientOption{
-			connect.WithGRPC(), // always use gRPC
-		}, c.cfg.clientOptions...)...),
-	)
+
+	apiURL, err := url.Parse(c.cfg.url)
+	if err != nil {
+		return nil, fmt.Errorf("invalid api url: %w", err)
+	}
+
+	var target string
+	if addrPort, err := netip.ParseAddrPort(apiURL.Host); err == nil {
+		if addrPort.Addr().Is4() {
+			target = fmt.Sprintf("ipv4:%s:%d", addrPort.Addr().String(), addrPort.Port())
+		} else {
+			target = fmt.Sprintf("ipv6:%s:%d", addrPort.Addr().String(), addrPort.Port())
+		}
+	} else if addr, err := netip.ParseAddr(apiURL.Host); err == nil {
+		if addr.Is4() {
+			target = fmt.Sprintf("ipv4:%s", addr.String())
+		} else {
+			target = fmt.Sprintf("ipv6:%s", addr.String())
+		}
+	} else {
+		target = fmt.Sprintf("dns:%s", apiURL.Host)
+	}
+
+	dialOptions := []grpc.DialOption{
+		grpc.WithStreamInterceptor(c.authenticationStreamInterceptor),
+		grpc.WithUnaryInterceptor(c.authenticationUnaryInterceptor),
+	}
+
+	if apiURL.Scheme == "https" {
+		t, ok := c.cfg.httpClient.Transport.(*http.Transport)
+		if ok && t.TLSClientConfig != nil {
+			dialOptions = append(dialOptions, grpc.WithTransportCredentials(credentials.NewTLS(t.TLSClientConfig)))
+		} else {
+			dialOptions = append(dialOptions, grpc.WithTransportCredentials(credentials.NewTLS(nil)))
+		}
+	} else {
+		dialOptions = append(dialOptions, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	}
+
+	cc, err := grpc.NewClient(target, dialOptions...)
+	if err != nil {
+		return nil, err
+	}
+	c.DataBrokerServiceClient = pomerium.NewDataBrokerServiceClient(cc)
 	return c, nil
 }
 
-func (c *coreClient) authenticationInterceptor(next connect.UnaryFunc) connect.UnaryFunc {
-	return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-		err := c.setAuthorizationHeaders(req.Header())
-		if err != nil {
-			return nil, fmt.Errorf("error setting authorization headers: %w", err)
-		}
-
-		return next(ctx, req)
+func (c *coreClient) authenticationStreamInterceptor(
+	ctx context.Context,
+	desc *grpc.StreamDesc,
+	cc *grpc.ClientConn,
+	method string,
+	streamer grpc.Streamer,
+	opts ...grpc.CallOption,
+) (grpc.ClientStream, error) {
+	headers := make(http.Header)
+	err := c.setAuthorizationHeaders(headers)
+	if err != nil {
+		return nil, err
 	}
+	for k, vs := range headers {
+		for _, v := range vs {
+			ctx = metadata.AppendToOutgoingContext(ctx, k, v)
+		}
+	}
+	return streamer(ctx, desc, cc, method, opts...)
+}
+
+func (c *coreClient) authenticationUnaryInterceptor(
+	ctx context.Context,
+	method string,
+	req, reply any,
+	cc *grpc.ClientConn,
+	invoker grpc.UnaryInvoker,
+	opts ...grpc.CallOption,
+) error {
+	headers := make(http.Header)
+	err := c.setAuthorizationHeaders(headers)
+	if err != nil {
+		return err
+	}
+	for k, vs := range headers {
+		for _, v := range vs {
+			ctx = metadata.AppendToOutgoingContext(ctx, k, v)
+		}
+	}
+	return invoker(ctx, method, req, reply, cc, opts...)
 }
 
 func (c *coreClient) setAuthorizationHeaders(headers http.Header) error {

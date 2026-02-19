@@ -30,7 +30,7 @@ type Client interface {
 type clientConfig struct {
 	apiToken      string
 	clientOptions []connect.ClientOption
-	httpClient    connect.HTTPClient
+	httpClient    *http.Client
 	url           string
 }
 
@@ -53,7 +53,7 @@ func WithConnectClientOptions(options ...connect.ClientOption) ClientOption {
 
 // WithHTTPClient sets the HTTP client to use in the client config. It defaults
 // to the default HTTP client.
-func WithHTTPClient(httpClient connect.HTTPClient) ClientOption {
+func WithHTTPClient(httpClient *http.Client) ClientOption {
 	return func(cfg *clientConfig) {
 		cfg.httpClient = httpClient
 	}
