@@ -17,3 +17,16 @@ protoc \
 	--connect-go_opt="package_suffix" \
 	--connect-go_opt="paths=source_relative" \
 	config.proto
+
+protoc \
+	--plugin="protoc-gen-connect-go=$_scripts_dir/protoc-gen-connect-go" \
+	--plugin="protoc-gen-go=$_scripts_dir/protoc-gen-go" \
+	--proto_path="$(go list -m -f '{{.Dir}}' github.com/envoyproxy/protoc-gen-validate)" \
+	--proto_path="$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/databroker" \
+	--go_out="./proto" \
+	--go_opt="Mdatabroker.proto=./pomerium;pomerium" \
+	--connect-go_out="./proto/pomerium" \
+	--connect-go_opt="Mdatabroker.proto=./pomerium;pomerium" \
+	--connect-go_opt="package_suffix" \
+	--connect-go_opt="paths=source_relative" \
+	databroker.proto
