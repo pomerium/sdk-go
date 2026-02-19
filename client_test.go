@@ -25,6 +25,7 @@ func TestClient(t *testing.T) {
 		mux := http.NewServeMux()
 		mux.HandleFunc("POST /pomerium.config.ConfigService/GetServerInfo", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "Pomerium API_TOKEN", r.Header.Get("Authorization"))
+			assert.Equal(t, "API_TOKEN", r.Header.Get("jwt"))
 			w.Header().Set("Content-Type", "application/proto")
 			bs, err := proto.Marshal(&pomerium.GetServerInfoResponse{
 				ServerType: pomerium.ServerType_SERVER_TYPE_ENTERPRISE,
