@@ -563,6 +563,12 @@ type BillingUsage struct {
 	Users    int       `json:"users"`
 }
 
+// BlobStorage defines model for BlobStorage.
+type BlobStorage struct {
+	BucketUri     *string `json:"bucket_uri,omitempty"`
+	ManagedPrefix *string `json:"managed_prefix,omitempty"`
+}
+
 // CertificateExtKeyUsage defines model for CertificateExtKeyUsage.
 type CertificateExtKeyUsage struct {
 	Any                            bool `json:"any"`
@@ -1445,6 +1451,8 @@ type MCPClient = struct{}
 
 // MCPServer MCP Server configuration
 type MCPServer struct {
+	AuthorizationServerUrl *string `json:"authorizationServerUrl,omitempty"`
+
 	// MaxRequestBytes Maximum request size in bytes
 	MaxRequestBytes *uint32 `json:"maxRequestBytes,omitempty"`
 
@@ -1996,6 +2004,7 @@ type Settings struct {
 	AuthorizeLogFields     *StringList        `json:"authorizeLogFields,omitempty"`
 	AutoApplyChangesets    bool               `json:"autoApplyChangesets"`
 	BearerTokenFormat      *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
+	BlobStorage            *BlobStorage       `json:"blobStorage,omitempty"`
 
 	// CertificateAuthorityKeyPairId ID of CA's public and private key pair.
 	CertificateAuthorityKeyPairId *string                   `json:"certificateAuthorityKeyPairId,omitempty"`
@@ -2061,8 +2070,9 @@ type Settings struct {
 	JwtClaimsHeaders               *StringMap  `json:"jwtClaimsHeaders,omitempty"`
 
 	// LogLevel Sets the global logging level for Pomerium. Only logs of the desired level and above will be logged.
-	LogLevel                  string      `json:"logLevel"`
-	McpAllowedClientIdDomains *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
+	LogLevel                    string      `json:"logLevel"`
+	McpAllowedAsMetadataDomains *StringList `json:"mcpAllowedAsMetadataDomains,omitempty"`
+	McpAllowedClientIdDomains   *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
@@ -2102,8 +2112,11 @@ type Settings struct {
 	PassIdentityHeaders  bool     `json:"passIdentityHeaders"`
 
 	// ProxyLogLevel Sets the logging level for the Pomerium Proxy service access logs. Only logs of the desired level and above will be logged.
-	ProxyLogLevel      *string    `json:"proxyLogLevel,omitempty"`
-	SetResponseHeaders *StringMap `json:"setResponseHeaders,omitempty"`
+	ProxyLogLevel *string `json:"proxyLogLevel,omitempty"`
+
+	// SessionRecordingEnabled Sets the session recording enabled setting.
+	SessionRecordingEnabled *bool      `json:"sessionRecordingEnabled,omitempty"`
+	SetResponseHeaders      *StringMap `json:"setResponseHeaders,omitempty"`
 
 	// SkipXffAppend If true, the incoming X-Forwarded-For HTTP header would not be modified.
 	SkipXffAppend bool `json:"skipXffAppend"`
@@ -2132,6 +2145,7 @@ type SettingsProperties struct {
 	AuthorizeLogFields     *StringList        `json:"authorizeLogFields,omitempty"`
 	AutoApplyChangesets    bool               `json:"autoApplyChangesets"`
 	BearerTokenFormat      *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
+	BlobStorage            *BlobStorage       `json:"blobStorage,omitempty"`
 
 	// CertificateAuthorityKeyPairId ID of CA's public and private key pair.
 	CertificateAuthorityKeyPairId *string                   `json:"certificateAuthorityKeyPairId,omitempty"`
@@ -2195,8 +2209,9 @@ type SettingsProperties struct {
 	JwtClaimsHeaders               *StringMap  `json:"jwtClaimsHeaders,omitempty"`
 
 	// LogLevel Sets the global logging level for Pomerium. Only logs of the desired level and above will be logged.
-	LogLevel                  string      `json:"logLevel"`
-	McpAllowedClientIdDomains *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
+	LogLevel                    string      `json:"logLevel"`
+	McpAllowedAsMetadataDomains *StringList `json:"mcpAllowedAsMetadataDomains,omitempty"`
+	McpAllowedClientIdDomains   *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
@@ -2236,8 +2251,11 @@ type SettingsProperties struct {
 	PassIdentityHeaders  bool     `json:"passIdentityHeaders"`
 
 	// ProxyLogLevel Sets the logging level for the Pomerium Proxy service access logs. Only logs of the desired level and above will be logged.
-	ProxyLogLevel      *string    `json:"proxyLogLevel,omitempty"`
-	SetResponseHeaders *StringMap `json:"setResponseHeaders,omitempty"`
+	ProxyLogLevel *string `json:"proxyLogLevel,omitempty"`
+
+	// SessionRecordingEnabled Sets the session recording enabled setting.
+	SessionRecordingEnabled *bool      `json:"sessionRecordingEnabled,omitempty"`
+	SetResponseHeaders      *StringMap `json:"setResponseHeaders,omitempty"`
 
 	// SkipXffAppend If true, the incoming X-Forwarded-For HTTP header would not be modified.
 	SkipXffAppend bool `json:"skipXffAppend"`
