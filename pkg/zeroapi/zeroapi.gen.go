@@ -939,13 +939,14 @@ type CreateServiceAccountRequest = ServiceAccountProperties
 
 // CreateServiceAccountResponse defines model for CreateServiceAccountResponse.
 type CreateServiceAccountResponse struct {
-	CreatedAt   time.Time  `json:"createdAt"`
-	Description string     `json:"description"`
-	ExpiresAt   *time.Time `json:"expiresAt,omitempty"`
-	Id          string     `json:"id"`
-	Token       string     `json:"token"`
-	UpdatedAt   time.Time  `json:"updatedAt"`
-	UserId      string     `json:"userId"`
+	CreatedAt    time.Time  `json:"createdAt"`
+	Description  string     `json:"description"`
+	ExpiresAt    *time.Time `json:"expiresAt,omitempty"`
+	Id           string     `json:"id"`
+	OriginatorId *string    `json:"originatorId,omitempty"`
+	Token        string     `json:"token"`
+	UpdatedAt    time.Time  `json:"updatedAt"`
+	UserId       string     `json:"userId"`
 }
 
 // CustomDomain defines model for CustomDomain.
@@ -1296,15 +1297,16 @@ type JwtIssuerFormat string
 
 // KeyPair defines model for KeyPair.
 type KeyPair struct {
-	Certificate *string       `json:"certificate,omitempty"`
-	CreatedAt   time.Time     `json:"createdAt"`
-	HasKey      bool          `json:"hasKey"`
-	Id          string        `json:"id"`
-	Name        *string       `json:"name,omitempty"`
-	NamespaceId string        `json:"namespaceId"`
-	Origin      KeyPairOrigin `json:"origin"`
-	Status      KeyPairStatus `json:"status"`
-	UpdatedAt   time.Time     `json:"updatedAt"`
+	Certificate  *string       `json:"certificate,omitempty"`
+	CreatedAt    time.Time     `json:"createdAt"`
+	HasKey       bool          `json:"hasKey"`
+	Id           string        `json:"id"`
+	Name         *string       `json:"name,omitempty"`
+	NamespaceId  string        `json:"namespaceId"`
+	Origin       KeyPairOrigin `json:"origin"`
+	OriginatorId *string       `json:"originatorId,omitempty"`
+	Status       KeyPairStatus `json:"status"`
+	UpdatedAt    time.Time     `json:"updatedAt"`
 }
 
 // KeyPairComputedProperties defines model for KeyPairComputedProperties.
@@ -1319,9 +1321,10 @@ type KeyPairOrigin string
 
 // KeyPairProperties defines model for KeyPairProperties.
 type KeyPairProperties struct {
-	Certificate *string `json:"certificate,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	NamespaceId string  `json:"namespaceId"`
+	Certificate  *string `json:"certificate,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	NamespaceId  string  `json:"namespaceId"`
+	OriginatorId *string `json:"originatorId,omitempty"`
 }
 
 // KeyPairStatus defines model for KeyPairStatus.
@@ -1337,16 +1340,18 @@ type KeyPairWithCertificateInfo struct {
 	Name            *string            `json:"name,omitempty"`
 	NamespaceId     string             `json:"namespaceId"`
 	Origin          KeyPairOrigin      `json:"origin"`
+	OriginatorId    *string            `json:"originatorId,omitempty"`
 	Status          KeyPairStatus      `json:"status"`
 	UpdatedAt       time.Time          `json:"updatedAt"`
 }
 
 // KeyPairWithKeyProperties defines model for KeyPairWithKeyProperties.
 type KeyPairWithKeyProperties struct {
-	Certificate *string `json:"certificate,omitempty"`
-	Key         *string `json:"key,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	NamespaceId string  `json:"namespaceId"`
+	Certificate  *string `json:"certificate,omitempty"`
+	Key          *string `json:"key,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	NamespaceId  string  `json:"namespaceId"`
+	OriginatorId *string `json:"originatorId,omitempty"`
 }
 
 // ListActivityLogsOrderByField defines model for ListActivityLogsOrderByField.
@@ -1666,6 +1671,7 @@ type Policy struct {
 	Id             string       `json:"id"`
 	Name           EntityName   `json:"name"`
 	NamespaceId    string       `json:"namespaceId"`
+	OriginatorId   *string      `json:"originatorId,omitempty"`
 	Ppl            Policy_Ppl   `json:"ppl"`
 	Remediation    string       `json:"remediation"`
 	Routes         []EntityInfo `json:"routes"`
@@ -1688,13 +1694,14 @@ type PolicyComputedProperties struct {
 
 // PolicyProperties defines model for PolicyProperties.
 type PolicyProperties struct {
-	Description string               `json:"description"`
-	Enforced    bool                 `json:"enforced"`
-	Explanation string               `json:"explanation"`
-	Name        EntityName           `json:"name"`
-	NamespaceId string               `json:"namespaceId"`
-	Ppl         PolicyProperties_Ppl `json:"ppl"`
-	Remediation string               `json:"remediation"`
+	Description  string               `json:"description"`
+	Enforced     bool                 `json:"enforced"`
+	Explanation  string               `json:"explanation"`
+	Name         EntityName           `json:"name"`
+	NamespaceId  string               `json:"namespaceId"`
+	OriginatorId *string              `json:"originatorId,omitempty"`
+	Ppl          PolicyProperties_Ppl `json:"ppl"`
+	Remediation  string               `json:"remediation"`
 }
 
 // PolicyPropertiesPpl1 defines model for .
@@ -1771,6 +1778,7 @@ type Route struct {
 	Mcp                            *MCP                  `json:"mcp"`
 	Name                           EntityName            `json:"name"`
 	NamespaceId                    string                `json:"namespaceId"`
+	OriginatorId                   *string               `json:"originatorId,omitempty"`
 	PassIdentityHeaders            *bool                 `json:"passIdentityHeaders,omitempty"`
 	Path                           *string               `json:"path,omitempty"`
 	Policies                       []EntityInfo          `json:"policies"`
@@ -1896,6 +1904,7 @@ type RouteProperties struct {
 	Mcp                            *MCP                  `json:"mcp"`
 	Name                           EntityName            `json:"name"`
 	NamespaceId                    string                `json:"namespaceId"`
+	OriginatorId                   *string               `json:"originatorId,omitempty"`
 	PassIdentityHeaders            *bool                 `json:"passIdentityHeaders,omitempty"`
 	Path                           *string               `json:"path,omitempty"`
 	PolicyIds                      []string              `json:"policyIds"`
@@ -1972,19 +1981,21 @@ type RouteTcpHealthCheckType string
 
 // ServiceAccount defines model for ServiceAccount.
 type ServiceAccount struct {
-	CreatedAt   time.Time  `json:"createdAt"`
-	Description string     `json:"description"`
-	ExpiresAt   *time.Time `json:"expiresAt,omitempty"`
-	Id          string     `json:"id"`
-	UpdatedAt   time.Time  `json:"updatedAt"`
-	UserId      string     `json:"userId"`
+	CreatedAt    time.Time  `json:"createdAt"`
+	Description  string     `json:"description"`
+	ExpiresAt    *time.Time `json:"expiresAt,omitempty"`
+	Id           string     `json:"id"`
+	OriginatorId *string    `json:"originatorId,omitempty"`
+	UpdatedAt    time.Time  `json:"updatedAt"`
+	UserId       string     `json:"userId"`
 }
 
 // ServiceAccountProperties defines model for ServiceAccountProperties.
 type ServiceAccountProperties struct {
-	Description string     `json:"description"`
-	ExpiresAt   *time.Time `json:"expiresAt,omitempty"`
-	UserId      string     `json:"userId"`
+	Description  string     `json:"description"`
+	ExpiresAt    *time.Time `json:"expiresAt,omitempty"`
+	OriginatorId *string    `json:"originatorId,omitempty"`
+	UserId       string     `json:"userId"`
 }
 
 // ServiceAccountToken defines model for ServiceAccountToken.
@@ -2076,6 +2087,7 @@ type Settings struct {
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
+	OriginatorId   *string `json:"originatorId,omitempty"`
 
 	// OtelAttributeValueLengthLimit Maximum allowed attribute value size
 	OtelAttributeValueLengthLimit *int32 `json:"otelAttributeValueLengthLimit,omitempty"`
@@ -2215,6 +2227,7 @@ type SettingsProperties struct {
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
+	OriginatorId   *string `json:"originatorId,omitempty"`
 
 	// OtelAttributeValueLengthLimit Maximum allowed attribute value size
 	OtelAttributeValueLengthLimit *int32 `json:"otelAttributeValueLengthLimit,omitempty"`
