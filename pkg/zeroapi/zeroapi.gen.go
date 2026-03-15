@@ -2402,7 +2402,9 @@ type UpstreamOAuth2 struct {
 }
 
 // UpstreamTunnel Upstream tunnel configuration
-type UpstreamTunnel = struct{}
+type UpstreamTunnel struct {
+	SshPolicyId *string `json:"sshPolicyId,omitempty"`
+}
 
 // User defines model for User.
 type User struct {
