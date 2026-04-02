@@ -13,7 +13,7 @@
           "name": "BearerTokenFormat",
           "longName": "BearerTokenFormat",
           "fullName": "pomerium.config.BearerTokenFormat",
-          "description": "",
+          "description": "Controls how HTTP bearer token authentication is handled.",
           "values": [
             {
               "name": "BEARER_TOKEN_FORMAT_UNKNOWN",
@@ -23,17 +23,17 @@
             {
               "name": "BEARER_TOKEN_FORMAT_DEFAULT",
               "number": "1",
-              "description": ""
+              "description": "The default behavior is to pass bearer tokens to upstream applications\nwithout interpreting them."
             },
             {
               "name": "BEARER_TOKEN_FORMAT_IDP_ACCESS_TOKEN",
               "number": "2",
-              "description": ""
+              "description": "The bearer token will be interpreted as an IdP-issued access token."
             },
             {
               "name": "BEARER_TOKEN_FORMAT_IDP_IDENTITY_TOKEN",
               "number": "3",
-              "description": ""
+              "description": "The bearer token will be interpreted as an IdP-issued identity token."
             }
           ]
         },
@@ -712,7 +712,7 @@
           "name": "Config",
           "longName": "Config",
           "fullName": "pomerium.config.Config",
-          "description": "",
+          "description": "A bundle of Pomerium configuration including routes and settings.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": false,
@@ -720,7 +720,7 @@
           "fields": [
             {
               "name": "name",
-              "description": "",
+              "description": "The name of the configuration.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -732,7 +732,7 @@
             },
             {
               "name": "routes",
-              "description": "",
+              "description": "All of the routes in the configuration bundle.",
               "label": "repeated",
               "type": "Route",
               "longType": "Route",
@@ -744,7 +744,7 @@
             },
             {
               "name": "settings",
-              "description": "",
+              "description": "All of the settings for the configuration bundle.",
               "label": "",
               "type": "Settings",
               "longType": "Settings",
@@ -1196,7 +1196,7 @@
           "fields": [
             {
               "name": "id",
-              "description": "",
+              "description": "The ID of the entity.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1208,7 +1208,7 @@
             },
             {
               "name": "name",
-              "description": "",
+              "description": "The name of the entity.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1220,7 +1220,7 @@
             },
             {
               "name": "modified_at",
-              "description": "",
+              "description": "When the entity was last modified.",
               "label": "optional",
               "type": "Timestamp",
               "longType": "google.protobuf.Timestamp",
@@ -2891,7 +2891,7 @@
           "name": "MCP",
           "longName": "MCP",
           "fullName": "pomerium.config.MCP",
-          "description": "",
+          "description": "Configuration for an MCP route.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -2899,7 +2899,7 @@
           "fields": [
             {
               "name": "server",
-              "description": "",
+              "description": "Indicates that this route fronts an MCP server.",
               "label": "",
               "type": "MCPServer",
               "longType": "MCPServer",
@@ -2911,7 +2911,7 @@
             },
             {
               "name": "client",
-              "description": "",
+              "description": "Provides an application with external tokens for MCP server access.",
               "label": "",
               "type": "MCPClient",
               "longType": "MCPClient",
@@ -2927,7 +2927,7 @@
           "name": "MCPClient",
           "longName": "MCPClient",
           "fullName": "pomerium.config.MCPClient",
-          "description": "",
+          "description": "Configuration for an MCP client route.",
           "hasExtensions": false,
           "hasFields": false,
           "hasOneofs": false,
@@ -2938,7 +2938,7 @@
           "name": "MCPServer",
           "longName": "MCPServer",
           "fullName": "pomerium.config.MCPServer",
-          "description": "",
+          "description": "Configuration for an MCP server route.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -2946,7 +2946,7 @@
           "fields": [
             {
               "name": "upstream_oauth2",
-              "description": "",
+              "description": "Specifies that before the request reaches the MCP upstream server,\nit should acquire an OAuth2 token.",
               "label": "optional",
               "type": "UpstreamOAuth2",
               "longType": "UpstreamOAuth2",
@@ -2958,7 +2958,7 @@
             },
             {
               "name": "max_request_bytes",
-              "description": "",
+              "description": "The maximum request body size in bytes that can be sent to the MCP\nserver (default: 4KiB).",
               "label": "optional",
               "type": "uint32",
               "longType": "uint32",
@@ -2970,7 +2970,7 @@
             },
             {
               "name": "path",
-              "description": "",
+              "description": "The path to append to the URL when returning the server URL in the\n.mcp/routes endpoint. Defaults to \"/\".",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -2982,7 +2982,7 @@
             },
             {
               "name": "authorization_server_url",
-              "description": "",
+              "description": "The issuer URL of the upstream authorization server. Used as a fallback\nwhen PRM (RFC 9728) discovery fails, per the MCP spec's \"abort or use\npre-configured values\" guidance.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -3118,7 +3118,7 @@
           "name": "OAuth2Endpoint",
           "longName": "OAuth2Endpoint",
           "fullName": "pomerium.config.OAuth2Endpoint",
-          "description": "",
+          "description": "Configuration for an OAuth2 server endpoint.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -3126,7 +3126,7 @@
           "fields": [
             {
               "name": "auth_url",
-              "description": "",
+              "description": "The authorization URL.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -3138,7 +3138,7 @@
             },
             {
               "name": "token_url",
-              "description": "",
+              "description": "The token URL.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -3490,7 +3490,7 @@
           "name": "Policy",
           "longName": "Policy",
           "fullName": "pomerium.config.Policy",
-          "description": "Next ID: 20.",
+          "description": "Configuration for a policy.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -3754,7 +3754,7 @@
           "name": "Route",
           "longName": "Route",
           "fullName": "pomerium.config.Route",
-          "description": "Next ID: 94.",
+          "description": "Configuration for a route.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -3846,7 +3846,7 @@
             },
             {
               "name": "from",
-              "description": "",
+              "description": "The externally accessible URL for a proxied HTTP request.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -3858,7 +3858,7 @@
             },
             {
               "name": "to",
-              "description": "",
+              "description": "The destination(s) of a proxied request.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -3870,7 +3870,7 @@
             },
             {
               "name": "redirect",
-              "description": "",
+              "description": "Indicates that a route should be redirected.",
               "label": "",
               "type": "RouteRedirect",
               "longType": "RouteRedirect",
@@ -3882,7 +3882,7 @@
             },
             {
               "name": "response",
-              "description": "",
+              "description": "Indicates that a route should return a direct response.",
               "label": "",
               "type": "RouteDirectResponse",
               "longType": "RouteDirectResponse",
@@ -3894,7 +3894,7 @@
             },
             {
               "name": "load_balancing_weights",
-              "description": "https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-lbendpoint\noptional load balancing weights assigned to upstream servers defined in TO\nif not specified, all upstream servers would be assigned the same weight\nif provided, load_balancing_weights[i] \u003e= 1 and len(to) ==\nlen(load_balancing_weights)",
+              "description": "Optional load balancing weights for upstream servers defined in to.\nIf not specified, all upstream servers are assigned the same weight.\nIf provided, len(to) must equal len(load_balancing_weights).",
               "label": "repeated",
               "type": "uint32",
               "longType": "uint32",
@@ -3906,7 +3906,7 @@
             },
             {
               "name": "allowed_users",
-              "description": "",
+              "description": "Grants access to the route if the logged-in user's ID matches one of the\ngiven values. Deprecated in favor of the PPL user criterion.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -3921,7 +3921,7 @@
             },
             {
               "name": "allowed_domains",
-              "description": "",
+              "description": "Grants access to the route if the logged-in user's email address is for\none of the given values. Deprecated in favor of the PPL domain criterion.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -3936,7 +3936,7 @@
             },
             {
               "name": "allowed_idp_claims",
-              "description": "",
+              "description": "Grants access to the route if the logged-in user's session/user claims\nmatch one of the given values. Deprecated in favor of the PPL claim\ncriterion.",
               "label": "repeated",
               "type": "AllowedIdpClaimsEntry",
               "longType": "Route.AllowedIdpClaimsEntry",
@@ -3951,7 +3951,7 @@
             },
             {
               "name": "prefix",
-              "description": "",
+              "description": "Only match requests that have a path that begins with the given prefix.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -3963,7 +3963,7 @@
             },
             {
               "name": "path",
-              "description": "",
+              "description": "Only match requests whose path is an exact match for the given path.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -3975,7 +3975,7 @@
             },
             {
               "name": "regex",
-              "description": "",
+              "description": "Only match requests whose path matches the given regular expression.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -3987,7 +3987,7 @@
             },
             {
               "name": "prefix_rewrite",
-              "description": "",
+              "description": "Indicates that when a request is forwarded, the matched prefix (or path)\nwill be swapped with this value.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -3999,7 +3999,7 @@
             },
             {
               "name": "regex_rewrite_pattern",
-              "description": "",
+              "description": "A regular expression used to rewrite the path of a forwarded request.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4011,7 +4011,7 @@
             },
             {
               "name": "regex_rewrite_substitution",
-              "description": "",
+              "description": "When a regular expression pattern is set, what the matched pattern will\nbe replaced with.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4023,7 +4023,7 @@
             },
             {
               "name": "regex_priority_order",
-              "description": "",
+              "description": "Determines the ordering of routes that use regular expressions.",
               "label": "optional",
               "type": "int64",
               "longType": "int64",
@@ -4035,7 +4035,7 @@
             },
             {
               "name": "cors_allow_preflight",
-              "description": "",
+              "description": "Indicates that OPTIONS requests used for CORS can pass through\nunauthenticated.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4047,7 +4047,7 @@
             },
             {
               "name": "allow_public_unauthenticated_access",
-              "description": "",
+              "description": "Grants access to a route without requiring any authentication.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4059,7 +4059,7 @@
             },
             {
               "name": "allow_any_authenticated_user",
-              "description": "",
+              "description": "Grants access to a route for any logged-in user.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4071,7 +4071,7 @@
             },
             {
               "name": "timeout",
-              "description": "",
+              "description": "The per-route request timeout option. Cannot exceed global values.",
               "label": "",
               "type": "Duration",
               "longType": "google.protobuf.Duration",
@@ -4083,7 +4083,7 @@
             },
             {
               "name": "idle_timeout",
-              "description": "",
+              "description": "The per-route request timeout for a connection that is idle with\nno data exchange.",
               "label": "",
               "type": "Duration",
               "longType": "google.protobuf.Duration",
@@ -4095,7 +4095,7 @@
             },
             {
               "name": "allow_websockets",
-              "description": "",
+              "description": "Allow websocket requests. Also disables the default route timeout.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4107,7 +4107,7 @@
             },
             {
               "name": "allow_spdy",
-              "description": "",
+              "description": "Allow SPDY protocol upgrade requests.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4119,7 +4119,7 @@
             },
             {
               "name": "tls_skip_verify",
-              "description": "",
+              "description": "Indicates that pomerium should perform no verification on upstream\nTLS connections. Any certificate for any hostname will be accepted.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4131,7 +4131,7 @@
             },
             {
               "name": "tls_server_name",
-              "description": "",
+              "description": "The server name indication (SNI) for upstream TLS connections. If\nboth tls_server_name and tls_upstream_server_name are set,\ntls_upstream_server_name will take precedence.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4139,11 +4139,14 @@
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
-              "defaultValue": ""
+              "defaultValue": "",
+              "options": {
+                "deprecated": true
+              }
             },
             {
               "name": "tls_upstream_server_name",
-              "description": "",
+              "description": "The server name indication (SNI) for upstream TLS connections. If\nboth tls_server_name and tls_upstream_server_name are set,\ntls_upstream_server_name will take precedence.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4155,7 +4158,7 @@
             },
             {
               "name": "tls_downstream_server_name",
-              "description": "",
+              "description": "The server name indication (SNI) for downstream TLS connections.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4167,7 +4170,7 @@
             },
             {
               "name": "tls_custom_ca",
-              "description": "",
+              "description": "The root certificate authorities (in PEM format) used to verify\ncertificates of upstream TLS connections.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4179,7 +4182,7 @@
             },
             {
               "name": "tls_custom_ca_file",
-              "description": "",
+              "description": "A file containing root certificate authorities (in PEM format)\nused to verify certificates of upstream TLS connections.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4191,7 +4194,7 @@
             },
             {
               "name": "tls_custom_ca_key_pair_id",
-              "description": "",
+              "description": "A reference to a key pair containing root certificate authorities (in PEM\nformat) used to verify certificates of upstream TLS connections.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4203,7 +4206,7 @@
             },
             {
               "name": "tls_client_cert",
-              "description": "",
+              "description": "The client certificate to present to upstream TLS connections for\nmTLS.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4215,7 +4218,7 @@
             },
             {
               "name": "tls_client_key",
-              "description": "",
+              "description": "The private key for the client certificate to present to upstream\nTLS connections for mTLS.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4227,7 +4230,7 @@
             },
             {
               "name": "tls_client_cert_file",
-              "description": "",
+              "description": "A file containing the client certificate to present to upstream TLS\nconnections for mTLS.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4239,7 +4242,7 @@
             },
             {
               "name": "tls_client_key_file",
-              "description": "",
+              "description": "A file containing the private key for the client certificate to\npresent to upstream TLS connections for mTLS.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4251,7 +4254,7 @@
             },
             {
               "name": "tls_client_key_pair_id",
-              "description": "",
+              "description": "A reference to the key pair containing the client certificate\nand private key to present to upstream TLS connections for mTLS.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4263,7 +4266,7 @@
             },
             {
               "name": "tls_downstream_client_ca",
-              "description": "",
+              "description": "The root certificate authorities (in PEM format) used to verify\ncertificates for downstream TLS connections. If specified\ndownstream clients will be required to provide a valid client TLS\ncertificate.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4271,11 +4274,14 @@
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
-              "defaultValue": ""
+              "defaultValue": "",
+              "options": {
+                "deprecated": true
+              }
             },
             {
               "name": "tls_downstream_client_ca_file",
-              "description": "",
+              "description": "A file containing the root certificate authorities (in PEM format) used to\nverify certificates for downstream TLS connections. If specified\ndownstream clients will be required to provide a valid client TLS\ncertificate.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4283,11 +4289,14 @@
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
-              "defaultValue": ""
+              "defaultValue": "",
+              "options": {
+                "deprecated": true
+              }
             },
             {
               "name": "tls_downstream_client_ca_key_pair_id",
-              "description": "",
+              "description": "A reference to a key pair containing the root certificate authorities (in\nPEM format) used to verify certificates for downstream TLS connections. If\nspecified downstream clients will be required to provide a valid client TLS\ncertificate.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4295,11 +4304,14 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_tls_downstream_client_ca_key_pair_id",
-              "defaultValue": ""
+              "defaultValue": "",
+              "options": {
+                "deprecated": true
+              }
             },
             {
               "name": "tls_upstream_allow_renegotiation",
-              "description": "",
+              "description": "Controls whether server-initiated TLS renegotiation is allowed for\nupstream servers.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4311,7 +4323,7 @@
             },
             {
               "name": "set_request_headers",
-              "description": "",
+              "description": "Allows you to set both static and dynamic headers for upstream requests.\nStatic values can be useful if you want to pass along additional\ninformation to upstream applications as headers, or to set a fixed\nauthentication header on the request. Dynamic values enable you to pass\nID and Access tokens from your identity provider to upstream\napplications. The following dynamic header values are supported:\n\n- ${pomerium.access_token}: OAuth access token from the identity provider.\n- ${pomerium.client_cert_fingerprint}: Short-form SHA-256 fingerprint of the presented client certificate.\n- ${pomerium.id_token}: OIDC ID token from the identity provider.\n- ${pomerium.jwt}: The Pomerium assertion JWT for the logged-in user.",
               "label": "repeated",
               "type": "SetRequestHeadersEntry",
               "longType": "Route.SetRequestHeadersEntry",
@@ -4323,7 +4335,7 @@
             },
             {
               "name": "remove_request_headers",
-              "description": "",
+              "description": "Headers to remove from upstream requests. This can be useful if you want to\nprevent privacy information from being passed to upstream applications.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -4335,7 +4347,7 @@
             },
             {
               "name": "set_response_headers",
-              "description": "",
+              "description": "Allows you to set static values for the given downstream response headers.\nThese headers will take precedence over the global set_response_headers.",
               "label": "repeated",
               "type": "SetResponseHeadersEntry",
               "longType": "Route.SetResponseHeadersEntry",
@@ -4347,7 +4359,7 @@
             },
             {
               "name": "rewrite_response_headers",
-              "description": "",
+              "description": "Used to modify downstream response headers.",
               "label": "repeated",
               "type": "RouteRewriteHeader",
               "longType": "RouteRewriteHeader",
@@ -4359,7 +4371,7 @@
             },
             {
               "name": "preserve_host_header",
-              "description": "",
+              "description": "Passes the Host (or :authority) header from the incoming request to the\nupstream service, instead of the Host header from the route's to URL.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4371,7 +4383,7 @@
             },
             {
               "name": "pass_identity_headers",
-              "description": "",
+              "description": "Sends identity headers to all upstream applications. Identity headers\ninclude:\n\n- X-Pomerium-Jwt-Assertion: The pomerium assertion JWT for the logged-in user.\n- X-Pomerium-Claim-*: Each of the claim values specified by the jwt_claim_headers option.\n\nWhen not set explicitly, the global pass_identity_headers option will be used.",
               "label": "optional",
               "type": "bool",
               "longType": "bool",
@@ -4383,7 +4395,7 @@
             },
             {
               "name": "kubernetes_service_account_token",
-              "description": "",
+              "description": "A Kubernetes service account token used to authenticate to the\nKubernetes API via Authorization: Bearer and Impersonate-User/Group\nheaders.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4395,7 +4407,7 @@
             },
             {
               "name": "kubernetes_service_account_token_file",
-              "description": "",
+              "description": "A file containing a Kubernetes service account token.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4407,7 +4419,7 @@
             },
             {
               "name": "kubernetes_service_account_token_key_pair_id",
-              "description": "",
+              "description": "A key pair reference for a Kubernetes service account token.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4419,7 +4431,7 @@
             },
             {
               "name": "enable_google_cloud_serverless_authentication",
-              "description": "",
+              "description": "Adds an Authorization: Bearer ID_TOKEN header for Google Cloud\nserverless upstream requests.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4431,7 +4443,7 @@
             },
             {
               "name": "jwt_issuer_format",
-              "description": "",
+              "description": "Controls the format of the iss claim in JWTs passed to upstream\nservices by this route.",
               "label": "optional",
               "type": "IssuerFormat",
               "longType": "IssuerFormat",
@@ -4443,7 +4455,7 @@
             },
             {
               "name": "jwt_groups_filter",
-              "description": "",
+              "description": "Allowlist of group names or IDs to include in the Pomerium JWT for\nthis route.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -4467,7 +4479,7 @@
             },
             {
               "name": "bearer_token_format",
-              "description": "",
+              "description": "Controls how authorization bearer tokens are interpreted for this\nroute. When unset, the global bearer_token_format option is used.",
               "label": "optional",
               "type": "BearerTokenFormat",
               "longType": "BearerTokenFormat",
@@ -4479,7 +4491,7 @@
             },
             {
               "name": "depends_on",
-              "description": "",
+              "description": "Additional hosts that participate in chained login redirects for\nthis route. Up to five hosts are supported.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -4491,7 +4503,7 @@
             },
             {
               "name": "policies",
-              "description": "",
+              "description": "Structured sub-policies attached to this route.",
               "label": "repeated",
               "type": "Policy",
               "longType": "Policy",
@@ -4503,7 +4515,7 @@
             },
             {
               "name": "ppl_policies",
-              "description": "",
+              "description": "PPL policies attached to this route.",
               "label": "repeated",
               "type": "PPLPolicy",
               "longType": "PPLPolicy",
@@ -4515,7 +4527,7 @@
             },
             {
               "name": "policy_ids",
-              "description": "",
+              "description": "IDs of policies assigned to this route.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -4527,7 +4539,7 @@
             },
             {
               "name": "host_rewrite",
-              "description": "",
+              "description": "Rewrites the Host or :authority header to a fixed value.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4539,7 +4551,7 @@
             },
             {
               "name": "host_rewrite_header",
-              "description": "",
+              "description": "Rewrites the Host or :authority header using the value of another\nrequest header.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4551,7 +4563,7 @@
             },
             {
               "name": "host_path_regex_rewrite_pattern",
-              "description": "",
+              "description": "A regular expression used to rewrite the Host or :authority header\nfrom the request path.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4563,7 +4575,7 @@
             },
             {
               "name": "host_path_regex_rewrite_substitution",
-              "description": "",
+              "description": "When host_path_regex_rewrite_pattern is set, what the matched\npattern will be replaced with to produce the Host header.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4575,7 +4587,7 @@
             },
             {
               "name": "idp_client_id",
-              "description": "",
+              "description": "Overrides the global identity provider client ID for this route.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4587,7 +4599,7 @@
             },
             {
               "name": "idp_client_secret",
-              "description": "",
+              "description": "Overrides the global identity provider client secret for this route.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4599,7 +4611,7 @@
             },
             {
               "name": "idp_access_token_allowed_audiences",
-              "description": "",
+              "description": "Allowed audiences for validating IdP-issued access tokens for this\nroute.",
               "label": "optional",
               "type": "StringList",
               "longType": "Route.StringList",
@@ -4611,7 +4623,7 @@
             },
             {
               "name": "show_error_details",
-              "description": "",
+              "description": "If true, include policy explanation and remediation details in\nauthorization error responses.",
               "label": "",
               "type": "bool",
               "longType": "bool",
@@ -4623,7 +4635,7 @@
             },
             {
               "name": "mcp",
-              "description": "",
+              "description": "Model Context Protocol configuration for this route. Requires the\nruntime_flags.mcp feature flag.",
               "label": "optional",
               "type": "MCP",
               "longType": "MCP",
@@ -4635,7 +4647,7 @@
             },
             {
               "name": "circuit_breaker_thresholds",
-              "description": "",
+              "description": "Circuit breaker thresholds for upstream requests on this route.",
               "label": "optional",
               "type": "CircuitBreakerThresholds",
               "longType": "CircuitBreakerThresholds",
@@ -4647,7 +4659,7 @@
             },
             {
               "name": "upstream_tunnel",
-              "description": "",
+              "description": "Configuration for reverse tunneling to upstreams for this route.",
               "label": "optional",
               "type": "UpstreamTunnel",
               "longType": "UpstreamTunnel",
@@ -4659,7 +4671,7 @@
             },
             {
               "name": "outlier_detection",
-              "description": "",
+              "description": "Passive health checking via outlier detection for upstream hosts on\nthis route.",
               "label": "optional",
               "type": "OutlierDetection",
               "longType": "OutlierDetection",
@@ -4671,7 +4683,7 @@
             },
             {
               "name": "health_checks",
-              "description": "",
+              "description": "Active health checks to run against upstream hosts for this route.",
               "label": "repeated",
               "type": "HealthCheck",
               "longType": "HealthCheck",
@@ -4683,7 +4695,7 @@
             },
             {
               "name": "load_balancing_policy",
-              "description": "",
+              "description": "The load balancing algorithm for upstream endpoints. Options:\nROUND_ROBIN, RING_HASH, LEAST_REQUEST, RANDOM, MAGLEV.",
               "label": "optional",
               "type": "LoadBalancingPolicy",
               "longType": "LoadBalancingPolicy",
@@ -4695,7 +4707,7 @@
             },
             {
               "name": "healthy_panic_threshold",
-              "description": "",
+              "description": "If the percentage of healthy upstream hosts drops below this value,\ntraffic will be sent to all hosts regardless of health status.",
               "label": "optional",
               "type": "int32",
               "longType": "int32",
@@ -4915,7 +4927,7 @@
           "name": "RouteDirectResponse",
           "longName": "RouteDirectResponse",
           "fullName": "pomerium.config.RouteDirectResponse",
-          "description": "",
+          "description": "Configuration for a route direct response.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": false,
@@ -4923,7 +4935,7 @@
           "fields": [
             {
               "name": "status",
-              "description": "",
+              "description": "The status code that Pomerium returns for a static HTTP response.\nFor example, 200.",
               "label": "",
               "type": "uint32",
               "longType": "uint32",
@@ -4935,7 +4947,7 @@
             },
             {
               "name": "body",
-              "description": "",
+              "description": "The response body that Pomerium returns for a static HTTP\nresponse.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -4951,7 +4963,7 @@
           "name": "RouteRedirect",
           "longName": "RouteRedirect",
           "fullName": "pomerium.config.RouteRedirect",
-          "description": "",
+          "description": "Configuration for a route that redirects to a new URL.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -4959,7 +4971,7 @@
           "fields": [
             {
               "name": "https_redirect",
-              "description": "",
+              "description": "Indicates that the incoming scheme of a request will be swapped with\n\"https\".",
               "label": "optional",
               "type": "bool",
               "longType": "bool",
@@ -4971,7 +4983,7 @@
             },
             {
               "name": "scheme_redirect",
-              "description": "",
+              "description": "Indicates that the incoming scheme of a request will be swapped with\nthe given value.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4983,7 +4995,7 @@
             },
             {
               "name": "host_redirect",
-              "description": "",
+              "description": "Indicates that the incoming host of a request will be swapped with\nthe given value.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -4995,7 +5007,7 @@
             },
             {
               "name": "port_redirect",
-              "description": "",
+              "description": "Indicates that the incoming port of a request will be swapped with\nthe given value.",
               "label": "optional",
               "type": "uint32",
               "longType": "uint32",
@@ -5007,7 +5019,7 @@
             },
             {
               "name": "path_redirect",
-              "description": "",
+              "description": "Indicates that the incoming path portion of a request URL will be\nswapped with the given value.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -5019,7 +5031,7 @@
             },
             {
               "name": "prefix_rewrite",
-              "description": "",
+              "description": "Indicates that the incoming matched path prefix portion of a request\nURL will be swapped with the given value.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -5031,7 +5043,7 @@
             },
             {
               "name": "response_code",
-              "description": "",
+              "description": "The response code used for the redirect. Defaults to 301.",
               "label": "optional",
               "type": "int32",
               "longType": "int32",
@@ -5043,7 +5055,7 @@
             },
             {
               "name": "strip_query",
-              "description": "",
+              "description": "Indicates that during redirection, the query portion of the URL will\nbe removed. Defaults to false.",
               "label": "optional",
               "type": "bool",
               "longType": "bool",
@@ -5303,7 +5315,7 @@
           "name": "Settings",
           "longName": "Settings",
           "fullName": "pomerium.config.Settings",
-          "description": "Next ID: 182",
+          "description": "Global Pomerium configuration settings.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -7547,7 +7559,7 @@
           "name": "UpstreamOAuth2",
           "longName": "UpstreamOAuth2",
           "fullName": "pomerium.config.UpstreamOAuth2",
-          "description": "",
+          "description": "Configuration for OAuth2 authorization for an upstream service behind\nPomerium.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": false,
@@ -7555,7 +7567,7 @@
           "fields": [
             {
               "name": "client_id",
-              "description": "",
+              "description": "The public identifier for an application.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -7567,7 +7579,7 @@
             },
             {
               "name": "client_secret",
-              "description": "",
+              "description": "The secret known only to the application and the authorization server.",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -7579,7 +7591,7 @@
             },
             {
               "name": "oauth2_endpoint",
-              "description": "",
+              "description": "The OAuth2 endpoint configuration.",
               "label": "",
               "type": "OAuth2Endpoint",
               "longType": "OAuth2Endpoint",
@@ -7591,7 +7603,7 @@
             },
             {
               "name": "scopes",
-              "description": "",
+              "description": "Scope to control what data the OAuth2 server returns.",
               "label": "repeated",
               "type": "string",
               "longType": "string",
@@ -7603,7 +7615,7 @@
             },
             {
               "name": "authorization_url_params",
-              "description": "",
+              "description": "Additional parameters to add to authorization requests.",
               "label": "repeated",
               "type": "AuthorizationUrlParamsEntry",
               "longType": "UpstreamOAuth2.AuthorizationUrlParamsEntry",
@@ -7655,7 +7667,7 @@
           "name": "UpstreamTunnel",
           "longName": "UpstreamTunnel",
           "fullName": "pomerium.config.UpstreamTunnel",
-          "description": "",
+          "description": "Configuration for an upstream tunnel.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": true,
@@ -7703,7 +7715,7 @@
           "name": "VersionedConfig",
           "longName": "VersionedConfig",
           "fullName": "pomerium.config.VersionedConfig",
-          "description": "",
+          "description": "A Config along with versioning conditions for when it should be applied.",
           "hasExtensions": false,
           "hasFields": true,
           "hasOneofs": false,
@@ -7711,7 +7723,7 @@
           "fields": [
             {
               "name": "config",
-              "description": "",
+              "description": "The Config that will be applied if the versioning conditions are met.",
               "label": "",
               "type": "Config",
               "longType": "Config",
