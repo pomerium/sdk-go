@@ -2460,10 +2460,10 @@ type OAuth2Endpoint struct {
 	AuthStyle *OAuth2AuthStyle `json:"authStyle,omitempty"`
 
 	// AuthUrl Authorization URL
-	AuthUrl string `json:"authUrl"`
+	AuthUrl *string `json:"authUrl,omitempty"`
 
 	// TokenUrl Token URL
-	TokenUrl string `json:"tokenUrl"`
+	TokenUrl *string `json:"tokenUrl,omitempty"`
 }
 
 // Organization defines model for Organization.
@@ -3347,8 +3347,8 @@ type UpstreamOAuth2 struct {
 	ClientSecret string `json:"clientSecret"`
 
 	// Oauth2Endpoint OAuth2 endpoint configuration
-	Oauth2Endpoint OAuth2Endpoint `json:"oauth2Endpoint"`
-	Scopes         *StringList    `json:"scopes,omitempty"`
+	Oauth2Endpoint *OAuth2Endpoint `json:"oauth2Endpoint,omitempty"`
+	Scopes         *StringList     `json:"scopes,omitempty"`
 }
 
 // UpstreamTunnel Upstream tunnel configuration
