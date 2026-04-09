@@ -93,7 +93,7 @@ func loadZeroToken(ctx context.Context, cfg *clientConfig) (zeroToken, error) {
 	}
 
 	return zeroToken{
-		expiry:  now.Add(time.Second * time.Duration(expires)),
+		expiry:  now.Add(time.Second * time.Duration(expires)).Round(0),
 		idToken: resData.IDToken,
 	}, nil
 }
