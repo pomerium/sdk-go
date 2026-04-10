@@ -92,8 +92,14 @@ func loadZeroToken(ctx context.Context, cfg *clientConfig) (zeroToken, error) {
 		return zeroToken{}, fmt.Errorf("error parsing token expiry: %w", err)
 	}
 
+	// Strip the monotonic clock reading from the expiry, so that any time
+	// comparison will use only the wall clock time. (On some systems, the
+	// monotonic clock does not advance during system sleep, which could
+	// lead to incorrect expiration time checks.)
+	expiry := now.Add(time.Second * time.Duration(expires)).Round(0)
+
 	return zeroToken{
-		expiry:  now.Add(time.Second * time.Duration(expires)),
+		expiry:  expiry,
 		idToken: resData.IDToken,
 	}, nil
 }
