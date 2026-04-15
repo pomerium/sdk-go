@@ -2694,6 +2694,7 @@ type RenewApiUserRefreshTokenResponse = RefreshTokenProperties
 // Route defines model for Route.
 type Route struct {
 	AllowSpdy                bool                      `json:"allowSpdy"`
+	AllowUpgrades            *StringList               `json:"allowUpgrades,omitempty"`
 	AllowWebsockets          bool                      `json:"allowWebsockets"`
 	BearerTokenFormat        *BearerTokenFormat        `json:"bearerTokenFormat,omitempty"`
 	CircuitBreakerThresholds *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
@@ -2824,6 +2825,7 @@ type RouteLoadBalancingPolicy string
 // RouteProperties defines model for RouteProperties.
 type RouteProperties struct {
 	AllowSpdy                bool                      `json:"allowSpdy"`
+	AllowUpgrades            *StringList               `json:"allowUpgrades,omitempty"`
 	AllowWebsockets          bool                      `json:"allowWebsockets"`
 	BearerTokenFormat        *BearerTokenFormat        `json:"bearerTokenFormat,omitempty"`
 	CircuitBreakerThresholds *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
@@ -2958,7 +2960,8 @@ type Settings struct {
 	AccessLogFields *StringList `json:"accessLogFields,omitempty"`
 
 	// Address Specifies the IP Address and Port to serve HTTP requests from. If empty, `:443` is used.
-	Address string `json:"address"`
+	Address       string      `json:"address"`
+	AllowUpgrades *StringList `json:"allowUpgrades,omitempty"`
 
 	// AuthenticateServiceUrl Specifies the URL to use for the authenticate service, if not using the Hosted Authenticate Service. (This URL should resolve to your Pomerium deployment.)
 	AuthenticateServiceUrl *string            `json:"authenticateServiceUrl,omitempty"`
@@ -3100,7 +3103,8 @@ type SettingsProperties struct {
 	AccessLogFields *StringList `json:"accessLogFields,omitempty"`
 
 	// Address Specifies the IP Address and Port to serve HTTP requests from. If empty, `:443` is used.
-	Address string `json:"address"`
+	Address       string      `json:"address"`
+	AllowUpgrades *StringList `json:"allowUpgrades,omitempty"`
 
 	// AuthenticateServiceUrl Specifies the URL to use for the authenticate service, if not using the Hosted Authenticate Service. (This URL should resolve to your Pomerium deployment.)
 	AuthenticateServiceUrl *string            `json:"authenticateServiceUrl,omitempty"`
