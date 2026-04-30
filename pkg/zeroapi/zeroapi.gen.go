@@ -3344,6 +3344,8 @@ type UpdateUserResponse = User
 
 // UpstreamOAuth2 OAuth2 configuration for upstream authentication
 type UpstreamOAuth2 struct {
+	AuthorizationUrlParams *StringMap `json:"authorizationUrlParams,omitempty"`
+
 	// ClientId OAuth2 client ID
 	ClientId string `json:"clientId"`
 
