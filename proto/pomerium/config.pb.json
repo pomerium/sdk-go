@@ -7073,6 +7073,18 @@
               "defaultValue": ""
             },
             {
+              "name": "plugins_envoy",
+              "description": "File paths to the plugins to be loaded by envoy.",
+              "label": "",
+              "type": "StringList",
+              "longType": "Settings.StringList",
+              "fullType": "pomerium.config.Settings.StringList",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
               "name": "created_at",
               "description": "When the settings were created.",
               "label": "",
