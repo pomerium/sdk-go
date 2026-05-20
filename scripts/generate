@@ -5,29 +5,58 @@ _scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 _root_dir="$(dirname "$_scripts_dir")"
 _deps_dir="$_root_dir/deps"
 
-protoc \
-	--plugin="protoc-gen-connect-go=$_scripts_dir/protoc-gen-connect-go" \
-	--plugin="protoc-gen-doc=$_scripts_dir/protoc-gen-doc" \
-	--plugin="protoc-gen-go=$_scripts_dir/protoc-gen-go" \
-	--proto_path="$(go list -m -f '{{.Dir}}' github.com/envoyproxy/protoc-gen-validate)" \
-	--proto_path="$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/config" \
-	--go_out="./proto" \
-	--go_opt="Mconfig.proto=./pomerium;pomerium" \
-	--connect-go_out="./proto/pomerium" \
-	--connect-go_opt="Mconfig.proto=./pomerium;pomerium" \
-	--connect-go_opt="package_suffix" \
-	--connect-go_opt="paths=source_relative" \
-	--doc_out="./proto/pomerium" \
-	--doc_opt="json,config.pb.json" \
-	config.proto
+generate-config() {
+	local -a _args
+	_args=()
+	_args+=('--plugin=protoc-gen-connect-go='"$_scripts_dir"'/protoc-gen-connect-go')
+	_args+=('--plugin=protoc-gen-doc='"$_scripts_dir"'/protoc-gen-doc')
+	_args+=('--plugin=protoc-gen-go='"$_scripts_dir"'/protoc-gen-go')
+	_args+=('--proto_path='"$(go list -m -f '{{.Dir}}' github.com/envoyproxy/protoc-gen-validate)")
+	_args+=('--proto_path='"$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/config")
+	_args+=('--go_out=./proto')
+	_args+=('--connect-go_out=./proto/pomerium')
+	_args+=('--connect-go_opt=package_suffix')
+	_args+=('--connect-go_opt=paths=source_relative')
+	_args+=('--doc_out=./proto/pomerium')
+	_args+=('--doc_opt=json,config.pb.json')
+	local -a _files
+	_files=()
+	for _n in "$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/config/"*.proto; do
+		_files+=("$(basename "$_n")")
+	done
+	for _f in "${_files[@]}"; do
+		_args+=('--go_opt=M'"$_f"'=./pomerium;pomerium')
+		_args+=('--connect-go_opt=M'"$_f"'=./pomerium;pomerium')
+	done
+	for _f in "${_files[@]}"; do
+		_args+=("$_f")
+	done
+	protoc "${_args[@]}"
+}
 
-protoc \
-	--plugin="protoc-gen-go-grpc=$_scripts_dir/protoc-gen-go-grpc" \
-	--plugin="protoc-gen-go=$_scripts_dir/protoc-gen-go" \
-	--proto_path="$(go list -m -f '{{.Dir}}' github.com/envoyproxy/protoc-gen-validate)" \
-	--proto_path="$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/databroker" \
-	--go_out="./proto" \
-	--go_opt="Mdatabroker.proto=./pomerium;pomerium" \
-	--go-grpc_out="./proto" \
-	--go-grpc_opt="Mdatabroker.proto=./pomerium;pomerium" \
-	databroker.proto
+generate-databroker() {
+	local -a _args
+	_args=()
+	_args+=('--plugin=protoc-gen-go-grpc='"$_scripts_dir"'/protoc-gen-go-grpc')
+	_args+=('--plugin=protoc-gen-go='"$_scripts_dir"'/protoc-gen-go')
+	_args+=('--proto_path='"$(go list -m -f '{{.Dir}}' github.com/envoyproxy/protoc-gen-validate)")
+	_args+=('--proto_path='"$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/databroker")
+	_args+=('--go_out=./proto')
+	_args+=('--go-grpc_out=./proto')
+	local -a _files
+	_files=()
+	for _n in "$_deps_dir/github.com/pomerium/pomerium/pkg/grpc/databroker/"*.proto; do
+		_files+=("$(basename "$_n")")
+	done
+	for _f in "${_files[@]}"; do
+		_args+=('--go_opt=M'"$_f"'=./pomerium;pomerium')
+		_args+=('--go-grpc_opt=M'"$_f"'=./pomerium;pomerium')
+	done
+	for _f in "${_files[@]}"; do
+		_args+=("$_f")
+	done
+	protoc "${_args[@]}"
+}
+
+generate-config
+generate-databroker

@@ -8,7 +8,6 @@ package pomerium
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	_ "github.com/pomerium/pomerium/pkg/grpc/config"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -10048,6 +10047,7 @@ func file_config_proto_init() {
 	if File_config_proto != nil {
 		return
 	}
+	file_options_proto_init()
 	file_config_proto_msgTypes[2].OneofWrappers = []any{
 		(*RouteRewriteHeader_Prefix)(nil),
 	}
