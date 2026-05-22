@@ -2726,38 +2726,39 @@ type Route struct {
 	LogoUrl                          *string                   `json:"logoUrl,omitempty"`
 
 	// Mcp Model Context Protocol configuration
-	Mcp                            *MCP                  `json:"mcp,omitempty"`
-	Name                           EntityName            `json:"name"`
-	NamespaceId                    string                `json:"namespaceId"`
-	OriginatorId                   *string               `json:"originatorId,omitempty"`
-	PassIdentityHeaders            *bool                 `json:"passIdentityHeaders,omitempty"`
-	Path                           *string               `json:"path,omitempty"`
-	Policies                       []EntityInfo          `json:"policies"`
-	PolicyIds                      []string              `json:"policyIds"`
-	Prefix                         *string               `json:"prefix,omitempty"`
-	PrefixRewrite                  *string               `json:"prefixRewrite,omitempty"`
-	PreserveHostHeader             bool                  `json:"preserveHostHeader"`
-	Redirect                       *RouteRedirect        `json:"redirect,omitempty"`
-	Regex                          *string               `json:"regex,omitempty"`
-	RegexPriorityOrder             *int64                `json:"regexPriorityOrder,omitempty"`
-	RegexRewritePattern            *string               `json:"regexRewritePattern,omitempty"`
-	RegexRewriteSubstitution       *string               `json:"regexRewriteSubstitution,omitempty"`
-	RemoveRequestHeaders           *[]string             `json:"removeRequestHeaders,omitempty"`
-	Response                       *RouteDirectResponse  `json:"response,omitempty"`
-	RewriteResponseHeaders         *[]RouteRewriteHeader `json:"rewriteResponseHeaders,omitempty"`
-	SetRequestHeaders              *StringMap            `json:"setRequestHeaders,omitempty"`
-	SetResponseHeaders             *StringMap            `json:"setResponseHeaders,omitempty"`
-	ShowErrorDetails               bool                  `json:"showErrorDetails"`
-	Timeout                        *Duration             `json:"timeout,omitempty"`
-	TlsClientKeyPairId             *string               `json:"tlsClientKeyPairId,omitempty"`
-	TlsCustomCaKeyPairId           *string               `json:"tlsCustomCaKeyPairId,omitempty"`
-	TlsDownstreamClientCaKeyPairId *string               `json:"tlsDownstreamClientCaKeyPairId,omitempty"`
-	TlsDownstreamServerName        *string               `json:"tlsDownstreamServerName,omitempty"`
-	TlsSkipVerify                  bool                  `json:"tlsSkipVerify"`
-	TlsUpstreamAllowRenegotiation  bool                  `json:"tlsUpstreamAllowRenegotiation"`
-	TlsUpstreamServerName          *string               `json:"tlsUpstreamServerName,omitempty"`
-	To                             *[]string             `json:"to,omitempty"`
-	UpdatedAt                      time.Time             `json:"updatedAt"`
+	Mcp                            *MCP                   `json:"mcp,omitempty"`
+	Name                           EntityName             `json:"name"`
+	NamespaceId                    string                 `json:"namespaceId"`
+	OriginatorId                   *string                `json:"originatorId,omitempty"`
+	PassIdentityHeaders            *bool                  `json:"passIdentityHeaders,omitempty"`
+	Path                           *string                `json:"path,omitempty"`
+	Policies                       []EntityInfo           `json:"policies"`
+	PolicyIds                      []string               `json:"policyIds"`
+	Prefix                         *string                `json:"prefix,omitempty"`
+	PrefixRewrite                  *string                `json:"prefixRewrite,omitempty"`
+	PreserveHostHeader             bool                   `json:"preserveHostHeader"`
+	Redirect                       *RouteRedirect         `json:"redirect,omitempty"`
+	Regex                          *string                `json:"regex,omitempty"`
+	RegexPriorityOrder             *int64                 `json:"regexPriorityOrder,omitempty"`
+	RegexRewritePattern            *string                `json:"regexRewritePattern,omitempty"`
+	RegexRewriteSubstitution       *string                `json:"regexRewriteSubstitution,omitempty"`
+	RemoveRequestHeaders           *[]string              `json:"removeRequestHeaders,omitempty"`
+	Response                       *RouteDirectResponse   `json:"response,omitempty"`
+	RewriteResponseHeaders         *[]RouteRewriteHeader  `json:"rewriteResponseHeaders,omitempty"`
+	SessionRecording               *RouteSessionRecording `json:"sessionRecording,omitempty"`
+	SetRequestHeaders              *StringMap             `json:"setRequestHeaders,omitempty"`
+	SetResponseHeaders             *StringMap             `json:"setResponseHeaders,omitempty"`
+	ShowErrorDetails               bool                   `json:"showErrorDetails"`
+	Timeout                        *Duration              `json:"timeout,omitempty"`
+	TlsClientKeyPairId             *string                `json:"tlsClientKeyPairId,omitempty"`
+	TlsCustomCaKeyPairId           *string                `json:"tlsCustomCaKeyPairId,omitempty"`
+	TlsDownstreamClientCaKeyPairId *string                `json:"tlsDownstreamClientCaKeyPairId,omitempty"`
+	TlsDownstreamServerName        *string                `json:"tlsDownstreamServerName,omitempty"`
+	TlsSkipVerify                  bool                   `json:"tlsSkipVerify"`
+	TlsUpstreamAllowRenegotiation  bool                   `json:"tlsUpstreamAllowRenegotiation"`
+	TlsUpstreamServerName          *string                `json:"tlsUpstreamServerName,omitempty"`
+	To                             *[]string              `json:"to,omitempty"`
+	UpdatedAt                      time.Time              `json:"updatedAt"`
 
 	// UpstreamTunnel Upstream tunnel configuration
 	UpstreamTunnel *UpstreamTunnel `json:"upstreamTunnel,omitempty"`
@@ -2853,36 +2854,37 @@ type RouteProperties struct {
 	LogoUrl                          *string                   `json:"logoUrl,omitempty"`
 
 	// Mcp Model Context Protocol configuration
-	Mcp                            *MCP                  `json:"mcp,omitempty"`
-	Name                           EntityName            `json:"name"`
-	NamespaceId                    string                `json:"namespaceId"`
-	OriginatorId                   *string               `json:"originatorId,omitempty"`
-	PassIdentityHeaders            *bool                 `json:"passIdentityHeaders,omitempty"`
-	Path                           *string               `json:"path,omitempty"`
-	PolicyIds                      []string              `json:"policyIds"`
-	Prefix                         *string               `json:"prefix,omitempty"`
-	PrefixRewrite                  *string               `json:"prefixRewrite,omitempty"`
-	PreserveHostHeader             bool                  `json:"preserveHostHeader"`
-	Redirect                       *RouteRedirect        `json:"redirect,omitempty"`
-	Regex                          *string               `json:"regex,omitempty"`
-	RegexPriorityOrder             *int64                `json:"regexPriorityOrder,omitempty"`
-	RegexRewritePattern            *string               `json:"regexRewritePattern,omitempty"`
-	RegexRewriteSubstitution       *string               `json:"regexRewriteSubstitution,omitempty"`
-	RemoveRequestHeaders           *[]string             `json:"removeRequestHeaders,omitempty"`
-	Response                       *RouteDirectResponse  `json:"response,omitempty"`
-	RewriteResponseHeaders         *[]RouteRewriteHeader `json:"rewriteResponseHeaders,omitempty"`
-	SetRequestHeaders              *StringMap            `json:"setRequestHeaders,omitempty"`
-	SetResponseHeaders             *StringMap            `json:"setResponseHeaders,omitempty"`
-	ShowErrorDetails               bool                  `json:"showErrorDetails"`
-	Timeout                        *Duration             `json:"timeout,omitempty"`
-	TlsClientKeyPairId             *string               `json:"tlsClientKeyPairId,omitempty"`
-	TlsCustomCaKeyPairId           *string               `json:"tlsCustomCaKeyPairId,omitempty"`
-	TlsDownstreamClientCaKeyPairId *string               `json:"tlsDownstreamClientCaKeyPairId,omitempty"`
-	TlsDownstreamServerName        *string               `json:"tlsDownstreamServerName,omitempty"`
-	TlsSkipVerify                  bool                  `json:"tlsSkipVerify"`
-	TlsUpstreamAllowRenegotiation  bool                  `json:"tlsUpstreamAllowRenegotiation"`
-	TlsUpstreamServerName          *string               `json:"tlsUpstreamServerName,omitempty"`
-	To                             *[]string             `json:"to,omitempty"`
+	Mcp                            *MCP                   `json:"mcp,omitempty"`
+	Name                           EntityName             `json:"name"`
+	NamespaceId                    string                 `json:"namespaceId"`
+	OriginatorId                   *string                `json:"originatorId,omitempty"`
+	PassIdentityHeaders            *bool                  `json:"passIdentityHeaders,omitempty"`
+	Path                           *string                `json:"path,omitempty"`
+	PolicyIds                      []string               `json:"policyIds"`
+	Prefix                         *string                `json:"prefix,omitempty"`
+	PrefixRewrite                  *string                `json:"prefixRewrite,omitempty"`
+	PreserveHostHeader             bool                   `json:"preserveHostHeader"`
+	Redirect                       *RouteRedirect         `json:"redirect,omitempty"`
+	Regex                          *string                `json:"regex,omitempty"`
+	RegexPriorityOrder             *int64                 `json:"regexPriorityOrder,omitempty"`
+	RegexRewritePattern            *string                `json:"regexRewritePattern,omitempty"`
+	RegexRewriteSubstitution       *string                `json:"regexRewriteSubstitution,omitempty"`
+	RemoveRequestHeaders           *[]string              `json:"removeRequestHeaders,omitempty"`
+	Response                       *RouteDirectResponse   `json:"response,omitempty"`
+	RewriteResponseHeaders         *[]RouteRewriteHeader  `json:"rewriteResponseHeaders,omitempty"`
+	SessionRecording               *RouteSessionRecording `json:"sessionRecording,omitempty"`
+	SetRequestHeaders              *StringMap             `json:"setRequestHeaders,omitempty"`
+	SetResponseHeaders             *StringMap             `json:"setResponseHeaders,omitempty"`
+	ShowErrorDetails               bool                   `json:"showErrorDetails"`
+	Timeout                        *Duration              `json:"timeout,omitempty"`
+	TlsClientKeyPairId             *string                `json:"tlsClientKeyPairId,omitempty"`
+	TlsCustomCaKeyPairId           *string                `json:"tlsCustomCaKeyPairId,omitempty"`
+	TlsDownstreamClientCaKeyPairId *string                `json:"tlsDownstreamClientCaKeyPairId,omitempty"`
+	TlsDownstreamServerName        *string                `json:"tlsDownstreamServerName,omitempty"`
+	TlsSkipVerify                  bool                   `json:"tlsSkipVerify"`
+	TlsUpstreamAllowRenegotiation  bool                   `json:"tlsUpstreamAllowRenegotiation"`
+	TlsUpstreamServerName          *string                `json:"tlsUpstreamServerName,omitempty"`
+	To                             *[]string              `json:"to,omitempty"`
 
 	// UpstreamTunnel Upstream tunnel configuration
 	UpstreamTunnel *UpstreamTunnel `json:"upstreamTunnel,omitempty"`
@@ -2915,6 +2917,11 @@ type RouteRewriteHeaderMatcher0 struct {
 // RouteRewriteHeader_Matcher defines model for RouteRewriteHeader.Matcher.
 type RouteRewriteHeader_Matcher struct {
 	union json.RawMessage
+}
+
+// RouteSessionRecording defines model for RouteSessionRecording.
+type RouteSessionRecording struct {
+	Enabled *bool `json:"enabled,omitempty"`
 }
 
 // RouteTcpHealthCheck defines model for RouteTcpHealthCheck.
@@ -3010,7 +3017,8 @@ type Settings struct {
 	DnsUseTcp *bool `json:"dnsUseTcp,omitempty"`
 
 	// DownstreamMtlsCaKeyPairId Key pair ID of the downstream client CA. If set, requires mTLS for incoming requests.
-	DownstreamMtlsCaKeyPairId *string `json:"downstreamMtlsCaKeyPairId,omitempty"`
+	DownstreamMtlsCaKeyPairId *string     `json:"downstreamMtlsCaKeyPairId,omitempty"`
+	EnvoyDynamicExtensions    *StringList `json:"envoyDynamicExtensions,omitempty"`
 
 	// GoogleCloudServerlessAuthenticationServiceAccount Specifies the Service Account credentials to support GCP's Authorization Header format.
 	GoogleCloudServerlessAuthenticationServiceAccount *string `json:"googleCloudServerlessAuthenticationServiceAccount,omitempty"`
@@ -3077,11 +3085,9 @@ type Settings struct {
 	PassIdentityHeaders  bool     `json:"passIdentityHeaders"`
 
 	// ProxyLogLevel Sets the logging level for the Pomerium Proxy service access logs. Only logs of the desired level and above will be logged.
-	ProxyLogLevel *string `json:"proxyLogLevel,omitempty"`
-
-	// SessionRecordingEnabled Sets the session recording enabled setting.
-	SessionRecordingEnabled *bool      `json:"sessionRecordingEnabled,omitempty"`
-	SetResponseHeaders      *StringMap `json:"setResponseHeaders,omitempty"`
+	ProxyLogLevel               *string    `json:"proxyLogLevel,omitempty"`
+	SessionRecordingConcurrency *uint32    `json:"sessionRecordingConcurrency,omitempty"`
+	SetResponseHeaders          *StringMap `json:"setResponseHeaders,omitempty"`
 
 	// SkipXffAppend If true, the incoming X-Forwarded-For HTTP header would not be modified.
 	SkipXffAppend bool `json:"skipXffAppend"`
@@ -3152,7 +3158,8 @@ type SettingsProperties struct {
 	DnsUseTcp *bool `json:"dnsUseTcp,omitempty"`
 
 	// DownstreamMtlsCaKeyPairId Key pair ID of the downstream client CA. If set, requires mTLS for incoming requests.
-	DownstreamMtlsCaKeyPairId *string `json:"downstreamMtlsCaKeyPairId,omitempty"`
+	DownstreamMtlsCaKeyPairId *string     `json:"downstreamMtlsCaKeyPairId,omitempty"`
+	EnvoyDynamicExtensions    *StringList `json:"envoyDynamicExtensions,omitempty"`
 
 	// GoogleCloudServerlessAuthenticationServiceAccount Specifies the Service Account credentials to support GCP's Authorization Header format.
 	GoogleCloudServerlessAuthenticationServiceAccount *string `json:"googleCloudServerlessAuthenticationServiceAccount,omitempty"`
@@ -3218,11 +3225,9 @@ type SettingsProperties struct {
 	PassIdentityHeaders  bool     `json:"passIdentityHeaders"`
 
 	// ProxyLogLevel Sets the logging level for the Pomerium Proxy service access logs. Only logs of the desired level and above will be logged.
-	ProxyLogLevel *string `json:"proxyLogLevel,omitempty"`
-
-	// SessionRecordingEnabled Sets the session recording enabled setting.
-	SessionRecordingEnabled *bool      `json:"sessionRecordingEnabled,omitempty"`
-	SetResponseHeaders      *StringMap `json:"setResponseHeaders,omitempty"`
+	ProxyLogLevel               *string    `json:"proxyLogLevel,omitempty"`
+	SessionRecordingConcurrency *uint32    `json:"sessionRecordingConcurrency,omitempty"`
+	SetResponseHeaders          *StringMap `json:"setResponseHeaders,omitempty"`
 
 	// SkipXffAppend If true, the incoming X-Forwarded-For HTTP header would not be modified.
 	SkipXffAppend bool `json:"skipXffAppend"`
