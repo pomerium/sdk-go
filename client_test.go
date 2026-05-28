@@ -12,8 +12,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 
+	"github.com/pomerium/pomerium/pkg/grpc/config"
 	"github.com/pomerium/sdk-go"
-	"github.com/pomerium/sdk-go/proto/pomerium"
 )
 
 func TestClient(t *testing.T) {
@@ -27,8 +27,8 @@ func TestClient(t *testing.T) {
 			assert.Equal(t, "Pomerium API_TOKEN", r.Header.Get("Authorization"))
 			assert.Equal(t, "API_TOKEN", r.Header.Get("jwt"))
 			w.Header().Set("Content-Type", "application/proto")
-			bs, err := proto.Marshal(&pomerium.GetServerInfoResponse{
-				ServerType: pomerium.ServerType_SERVER_TYPE_ENTERPRISE,
+			bs, err := proto.Marshal(&config.GetServerInfoResponse{
+				ServerType: config.ServerType_SERVER_TYPE_ENTERPRISE,
 				Version:    "v1.2.3",
 			})
 			require.NoError(t, err)
@@ -40,9 +40,9 @@ func TestClient(t *testing.T) {
 			sdk.WithAPIToken("API_TOKEN"),
 			sdk.WithURL(srv.URL),
 		)
-		res1, err := client.GetServerInfo(t.Context(), connect.NewRequest(&pomerium.GetServerInfoRequest{}))
+		res1, err := client.GetServerInfo(t.Context(), connect.NewRequest(&config.GetServerInfoRequest{}))
 		if assert.NoError(t, err) {
-			assert.Equal(t, pomerium.ServerType_SERVER_TYPE_ENTERPRISE, res1.Msg.GetServerType())
+			assert.Equal(t, config.ServerType_SERVER_TYPE_ENTERPRISE, res1.Msg.GetServerType())
 			assert.Equal(t, "v1.2.3", res1.Msg.GetVersion())
 		}
 	})
@@ -68,8 +68,8 @@ func TestClient(t *testing.T) {
 		})
 		mux.HandleFunc("POST /pomerium.config.ConfigService/GetServerInfo", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/proto")
-			bs, err := proto.Marshal(&pomerium.GetServerInfoResponse{
-				ServerType: pomerium.ServerType_SERVER_TYPE_ZERO,
+			bs, err := proto.Marshal(&config.GetServerInfoResponse{
+				ServerType: config.ServerType_SERVER_TYPE_ZERO,
 				Version:    "v1.2.3",
 			})
 			require.NoError(t, err)
@@ -79,7 +79,7 @@ func TestClient(t *testing.T) {
 			assert.Equal(t, "Pomerium ID_TOKEN_1", r.Header.Get("Authorization"))
 
 			w.Header().Set("Content-Type", "application/proto")
-			bs, err := proto.Marshal(&pomerium.ListPoliciesResponse{})
+			bs, err := proto.Marshal(&config.ListPoliciesResponse{})
 			require.NoError(t, err)
 			w.Write(bs)
 		})
@@ -87,7 +87,7 @@ func TestClient(t *testing.T) {
 			assert.Equal(t, "Pomerium ID_TOKEN_2", r.Header.Get("Authorization"))
 
 			w.Header().Set("Content-Type", "application/proto")
-			bs, err := proto.Marshal(&pomerium.ListRoutesResponse{})
+			bs, err := proto.Marshal(&config.ListRoutesResponse{})
 			require.NoError(t, err)
 			w.Write(bs)
 		})
@@ -95,7 +95,7 @@ func TestClient(t *testing.T) {
 			assert.Equal(t, "Pomerium ID_TOKEN_2", r.Header.Get("Authorization"))
 
 			w.Header().Set("Content-Type", "application/proto")
-			bs, err := proto.Marshal(&pomerium.ListSettingsResponse{})
+			bs, err := proto.Marshal(&config.ListSettingsResponse{})
 			require.NoError(t, err)
 			w.Write(bs)
 		})
@@ -105,20 +105,20 @@ func TestClient(t *testing.T) {
 			sdk.WithAPIToken("API_TOKEN"),
 			sdk.WithURL(srv.URL),
 		)
-		res1, err := client.GetServerInfo(t.Context(), connect.NewRequest(&pomerium.GetServerInfoRequest{}))
+		res1, err := client.GetServerInfo(t.Context(), connect.NewRequest(&config.GetServerInfoRequest{}))
 		if assert.NoError(t, err) {
-			assert.Equal(t, pomerium.ServerType_SERVER_TYPE_ZERO, res1.Msg.GetServerType())
+			assert.Equal(t, config.ServerType_SERVER_TYPE_ZERO, res1.Msg.GetServerType())
 			assert.Equal(t, "v1.2.3", res1.Msg.GetVersion())
 		}
-		res2, err := client.ListPolicies(t.Context(), connect.NewRequest(&pomerium.ListPoliciesRequest{}))
+		res2, err := client.ListPolicies(t.Context(), connect.NewRequest(&config.ListPoliciesRequest{}))
 		if assert.NoError(t, err) {
 			assert.NotNil(t, res2)
 		}
-		res3, err := client.ListRoutes(t.Context(), connect.NewRequest(&pomerium.ListRoutesRequest{}))
+		res3, err := client.ListRoutes(t.Context(), connect.NewRequest(&config.ListRoutesRequest{}))
 		if assert.NoError(t, err) {
 			assert.NotNil(t, res3)
 		}
-		res4, err := client.ListSettings(t.Context(), connect.NewRequest(&pomerium.ListSettingsRequest{}))
+		res4, err := client.ListSettings(t.Context(), connect.NewRequest(&config.ListSettingsRequest{}))
 		if assert.NoError(t, err) {
 			assert.NotNil(t, res4)
 		}
