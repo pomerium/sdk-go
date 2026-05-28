@@ -11,17 +11,17 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/pomerium/sdk-go/proto/pomerium"
+	"github.com/pomerium/pomerium/pkg/grpc/databroker"
 )
 
 // A CoreClient is a client for a Pomerium core instance.
 type CoreClient interface {
-	pomerium.DataBrokerServiceClient
+	databroker.DataBrokerServiceClient
 }
 
 type coreClient struct {
 	cfg *clientConfig
-	pomerium.DataBrokerServiceClient
+	databroker.DataBrokerServiceClient
 }
 
 // NewCoreClient creates a new CoreClient.
@@ -55,7 +55,7 @@ func NewCoreClient(options ...ClientOption) (CoreClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.DataBrokerServiceClient = pomerium.NewDataBrokerServiceClient(cc)
+	c.DataBrokerServiceClient = databroker.NewDataBrokerServiceClient(cc)
 	return c, nil
 }
 

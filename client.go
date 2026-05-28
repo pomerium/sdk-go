@@ -11,7 +11,8 @@ import (
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
 
-	"github.com/pomerium/sdk-go/proto/pomerium"
+	"github.com/pomerium/pomerium/pkg/grpc/config"
+	"github.com/pomerium/pomerium/pkg/grpc/config/configconnect"
 )
 
 // tokenMinTTL is the minimum TTL needed to re-use a token
@@ -24,7 +25,7 @@ type zeroToken struct {
 
 // A Client interacts with the config service.
 type Client interface {
-	pomerium.ConfigServiceClient
+	configconnect.ConfigServiceClient
 }
 
 type clientConfig struct {
@@ -79,9 +80,9 @@ func getClientConfig(options ...ClientOption) *clientConfig {
 
 type client struct {
 	cfg *clientConfig
-	pomerium.ConfigServiceClient
+	configconnect.ConfigServiceClient
 
-	serverType *cachedValue[pomerium.ServerType]
+	serverType *cachedValue[config.ServerType]
 	zeroToken  *cachedValue[zeroToken]
 }
 
@@ -90,11 +91,11 @@ func NewClient(options ...ClientOption) Client {
 	c := &client{
 		cfg: getClientConfig(options...),
 	}
-	c.ConfigServiceClient = pomerium.NewConfigServiceClient(c.cfg.httpClient, c.cfg.url,
+	c.ConfigServiceClient = configconnect.NewConfigServiceClient(c.cfg.httpClient, c.cfg.url,
 		connect.WithInterceptors(connect.UnaryInterceptorFunc(c.authenticationInterceptor)),
 		connect.WithClientOptions(c.cfg.clientOptions...),
 	)
-	c.serverType = newCachedValue(c.loadServerType, func(_ pomerium.ServerType) bool {
+	c.serverType = newCachedValue(c.loadServerType, func(_ config.ServerType) bool {
 		return true
 	})
 	c.zeroToken = newCachedValue(func(ctx context.Context) (zeroToken, error) {
@@ -107,10 +108,10 @@ func NewClient(options ...ClientOption) Client {
 
 func (c *client) authenticationInterceptor(next connect.UnaryFunc) connect.UnaryFunc {
 	return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-		var serverType pomerium.ServerType
+		var serverType config.ServerType
 		if req.Spec().Procedure == "/pomerium.config.ConfigService/GetServerInfo" {
 			// for the GetServerInfo endpoint we always use the unknown server type
-			serverType = pomerium.ServerType_SERVER_TYPE_UNKNOWN
+			serverType = config.ServerType_SERVER_TYPE_UNKNOWN
 		} else {
 			// for all other endpoints we call GetServerInfo to determine the server type
 			var err error
@@ -129,9 +130,9 @@ func (c *client) authenticationInterceptor(next connect.UnaryFunc) connect.Unary
 	}
 }
 
-func (c *client) setAuthorizationHeaders(ctx context.Context, headers http.Header, serverType pomerium.ServerType) error {
+func (c *client) setAuthorizationHeaders(ctx context.Context, headers http.Header, serverType config.ServerType) error {
 	// if this is a zero server, swap the token for an id token and add that header
-	if serverType == pomerium.ServerType_SERVER_TYPE_ZERO {
+	if serverType == config.ServerType_SERVER_TYPE_ZERO {
 		zeroToken, err := c.zeroToken.Get(ctx)
 		if err != nil {
 			return err
@@ -151,7 +152,7 @@ func (c *client) setAuthorizationHeaders(ctx context.Context, headers http.Heade
 		headers.Set("Authorization", "Pomerium "+bootstrapJWT)
 
 		// the databroker expects a jwt header
-		if serverType == pomerium.ServerType_SERVER_TYPE_CORE || serverType == pomerium.ServerType_SERVER_TYPE_UNKNOWN {
+		if serverType == config.ServerType_SERVER_TYPE_CORE || serverType == config.ServerType_SERVER_TYPE_UNKNOWN {
 			coreJWT, err := generateGRPCJWT(sharedKey)
 			if err != nil {
 				return fmt.Errorf("error generating core JWT from shared key: %w", err)
@@ -166,10 +167,10 @@ func (c *client) setAuthorizationHeaders(ctx context.Context, headers http.Heade
 	return nil
 }
 
-func (c *client) loadServerType(ctx context.Context) (pomerium.ServerType, error) {
-	res, err := c.GetServerInfo(ctx, connect.NewRequest(&pomerium.GetServerInfoRequest{}))
+func (c *client) loadServerType(ctx context.Context) (config.ServerType, error) {
+	res, err := c.GetServerInfo(ctx, connect.NewRequest(&config.GetServerInfoRequest{}))
 	if err != nil {
-		return pomerium.ServerType_SERVER_TYPE_UNKNOWN, err
+		return config.ServerType_SERVER_TYPE_UNKNOWN, err
 	}
 	return res.Msg.GetServerType(), nil
 }

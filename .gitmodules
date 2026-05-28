@@ -1,3 +1,0 @@
-[submodule "deps/github.com/pomerium/pomerium"]
-	path = deps/github.com/pomerium/pomerium
-	url = git@github.com:pomerium/pomerium
