@@ -15,7 +15,8 @@ require-command() {
 update-pomerium() {
 	pushd "$_project_root"
 
-	git submodule update --remote deps/github.com/pomerium
+	go get -u github.com/pomerium/pomerium/pkg/grpc/config@main
+	go get -u github.com/pomerium/pomerium/pkg/grpc/databroker@main
 
 	popd
 }
@@ -29,8 +30,6 @@ update-tools() {
 	asdf set golang latest:1.26
 	asdf install golangci-lint latest:2
 	asdf set golangci-lint latest:2
-	asdf install protoc latest
-	asdf set protoc latest
 
 	popd
 }

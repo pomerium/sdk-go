@@ -37,7 +37,6 @@ cover: ## Runs go test with coverage
 generate:
 	@echo "==> $@"
 	@go generate ./...
-	./scripts/generate
 
 .PHONY: help
 help:

@@ -2570,6 +2570,33 @@ type PPLRuleBody struct {
 	Or  *[]PPLCriteria `json:"or,omitempty"`
 }
 
+// PatchKeyPairRequest defines model for PatchKeyPairRequest.
+type PatchKeyPairRequest = JSONPatch
+
+// PatchKeyPairResponse defines model for PatchKeyPairResponse.
+type PatchKeyPairResponse = KeyPairWithCertificateInfo
+
+// PatchPolicyRequest defines model for PatchPolicyRequest.
+type PatchPolicyRequest = JSONPatch
+
+// PatchPolicyResponse defines model for PatchPolicyResponse.
+type PatchPolicyResponse = Policy
+
+// PatchRouteRequest defines model for PatchRouteRequest.
+type PatchRouteRequest = JSONPatch
+
+// PatchRouteResponse defines model for PatchRouteResponse.
+type PatchRouteResponse = Route
+
+// PatchServiceAccountRequest defines model for PatchServiceAccountRequest.
+type PatchServiceAccountRequest = JSONPatch
+
+// PatchServiceAccountResponse defines model for PatchServiceAccountResponse.
+type PatchServiceAccountResponse = ServiceAccount
+
+// PatchSettingsRequest defines model for PatchSettingsRequest.
+type PatchSettingsRequest = JSONPatch
+
 // PatchSettingsResponse defines model for PatchSettingsResponse.
 type PatchSettingsResponse = Settings
 
@@ -3898,8 +3925,11 @@ type RunHealthChecksJSONRequestBody = ReRunHealthChecksRequest
 // CreateServiceAccountJSONRequestBody defines body for CreateServiceAccount for application/json ContentType.
 type CreateServiceAccountJSONRequestBody = CreateServiceAccountRequest
 
+// PatchServiceAccountJSONRequestBody defines body for PatchServiceAccount for application/json ContentType.
+type PatchServiceAccountJSONRequestBody = PatchServiceAccountRequest
+
 // PatchSettingsJSONRequestBody defines body for PatchSettings for application/json ContentType.
-type PatchSettingsJSONRequestBody = JSONPatch
+type PatchSettingsJSONRequestBody = PatchSettingsRequest
 
 // UpdateSettingsJSONRequestBody defines body for UpdateSettings for application/json ContentType.
 type UpdateSettingsJSONRequestBody = UpdateSettingsRequest
@@ -3913,17 +3943,26 @@ type CreateOrganizationInviteJSONRequestBody = CreateOrganizationInviteRequest
 // CreateKeyPairJSONRequestBody defines body for CreateKeyPair for application/json ContentType.
 type CreateKeyPairJSONRequestBody = CreateKeyPairRequest
 
+// PatchKeyPairJSONRequestBody defines body for PatchKeyPair for application/json ContentType.
+type PatchKeyPairJSONRequestBody = PatchKeyPairRequest
+
 // UpdateKeyPairJSONRequestBody defines body for UpdateKeyPair for application/json ContentType.
 type UpdateKeyPairJSONRequestBody = UpdateKeyPairRequest
 
 // CreatePolicyJSONRequestBody defines body for CreatePolicy for application/json ContentType.
 type CreatePolicyJSONRequestBody = CreatePolicyRequest
 
+// PatchPolicyJSONRequestBody defines body for PatchPolicy for application/json ContentType.
+type PatchPolicyJSONRequestBody = PatchPolicyRequest
+
 // UpdatePolicyJSONRequestBody defines body for UpdatePolicy for application/json ContentType.
 type UpdatePolicyJSONRequestBody = UpdatePolicyRequest
 
 // CreateRouteJSONRequestBody defines body for CreateRoute for application/json ContentType.
 type CreateRouteJSONRequestBody = CreateRouteRequest
+
+// PatchRouteJSONRequestBody defines body for PatchRoute for application/json ContentType.
+type PatchRouteJSONRequestBody = PatchRouteRequest
 
 // UpdateRouteJSONRequestBody defines body for UpdateRoute for application/json ContentType.
 type UpdateRouteJSONRequestBody = UpdateRouteRequest
@@ -4544,6 +4583,11 @@ type ClientInterface interface {
 	// GetServiceAccount request
 	GetServiceAccount(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PatchServiceAccountWithBody request with any body
+	PatchServiceAccountWithBody(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchServiceAccount(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, body PatchServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetServiceAccountToken request
 	GetServiceAccountToken(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4611,6 +4655,11 @@ type ClientInterface interface {
 	// GetKeyPair request
 	GetKeyPair(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PatchKeyPairWithBody request with any body
+	PatchKeyPairWithBody(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchKeyPair(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, body PatchKeyPairJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// UpdateKeyPairWithBody request with any body
 	UpdateKeyPairWithBody(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4636,6 +4685,11 @@ type ClientInterface interface {
 	// GetPolicy request
 	GetPolicy(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PatchPolicyWithBody request with any body
+	PatchPolicyWithBody(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchPolicy(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, body PatchPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// UpdatePolicyWithBody request with any body
 	UpdatePolicyWithBody(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4657,6 +4711,11 @@ type ClientInterface interface {
 
 	// GetRoute request
 	GetRoute(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchRouteWithBody request with any body
+	PatchRouteWithBody(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchRoute(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, body PatchRouteJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateRouteWithBody request with any body
 	UpdateRouteWithBody(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5352,6 +5411,30 @@ func (c *Client) GetServiceAccount(ctx context.Context, organizationId PathOrgan
 	return c.Client.Do(req)
 }
 
+func (c *Client) PatchServiceAccountWithBody(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchServiceAccountRequestWithBody(c.Server, organizationId, clusterId, serviceAccountId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchServiceAccount(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, body PatchServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchServiceAccountRequest(c.Server, organizationId, clusterId, serviceAccountId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetServiceAccountToken(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetServiceAccountTokenRequest(c.Server, organizationId, clusterId, serviceAccountId)
 	if err != nil {
@@ -5640,6 +5723,30 @@ func (c *Client) GetKeyPair(ctx context.Context, organizationId PathOrganization
 	return c.Client.Do(req)
 }
 
+func (c *Client) PatchKeyPairWithBody(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchKeyPairRequestWithBody(c.Server, organizationId, keyPairId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchKeyPair(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, body PatchKeyPairJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchKeyPairRequest(c.Server, organizationId, keyPairId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) UpdateKeyPairWithBody(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateKeyPairRequestWithBody(c.Server, organizationId, keyPairId, contentType, body)
 	if err != nil {
@@ -5748,6 +5855,30 @@ func (c *Client) GetPolicy(ctx context.Context, organizationId PathOrganizationI
 	return c.Client.Do(req)
 }
 
+func (c *Client) PatchPolicyWithBody(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchPolicyRequestWithBody(c.Server, organizationId, policyId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchPolicy(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, body PatchPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchPolicyRequest(c.Server, organizationId, policyId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) UpdatePolicyWithBody(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdatePolicyRequestWithBody(c.Server, organizationId, policyId, contentType, body)
 	if err != nil {
@@ -5834,6 +5965,30 @@ func (c *Client) DeleteRoute(ctx context.Context, organizationId PathOrganizatio
 
 func (c *Client) GetRoute(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetRouteRequest(c.Server, organizationId, routeId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchRouteWithBody(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchRouteRequestWithBody(c.Server, organizationId, routeId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchRoute(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, body PatchRouteJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchRouteRequest(c.Server, organizationId, routeId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -8215,6 +8370,67 @@ func NewGetServiceAccountRequest(server string, organizationId PathOrganizationI
 	return req, nil
 }
 
+// NewPatchServiceAccountRequest calls the generic PatchServiceAccount builder with application/json body
+func NewPatchServiceAccountRequest(server string, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, body PatchServiceAccountJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchServiceAccountRequestWithBody(server, organizationId, clusterId, serviceAccountId, "application/json", bodyReader)
+}
+
+// NewPatchServiceAccountRequestWithBody generates requests for PatchServiceAccount with any type of body
+func NewPatchServiceAccountRequestWithBody(server string, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organizationId", organizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "clusterId", clusterId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "serviceAccountId", serviceAccountId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/%s/clusters/%s/serviceAccounts/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetServiceAccountTokenRequest generates requests for GetServiceAccountToken
 func NewGetServiceAccountTokenRequest(server string, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId) (*http.Request, error) {
 	var err error
@@ -9265,6 +9481,60 @@ func NewGetKeyPairRequest(server string, organizationId PathOrganizationId, keyP
 	return req, nil
 }
 
+// NewPatchKeyPairRequest calls the generic PatchKeyPair builder with application/json body
+func NewPatchKeyPairRequest(server string, organizationId PathOrganizationId, keyPairId PathKeyPairId, body PatchKeyPairJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchKeyPairRequestWithBody(server, organizationId, keyPairId, "application/json", bodyReader)
+}
+
+// NewPatchKeyPairRequestWithBody generates requests for PatchKeyPair with any type of body
+func NewPatchKeyPairRequestWithBody(server string, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organizationId", organizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "keyPairId", keyPairId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/%s/keyPairs/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewUpdateKeyPairRequest calls the generic UpdateKeyPair builder with application/json body
 func NewUpdateKeyPairRequest(server string, organizationId PathOrganizationId, keyPairId PathKeyPairId, body UpdateKeyPairJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -9642,6 +9912,60 @@ func NewGetPolicyRequest(server string, organizationId PathOrganizationId, polic
 	return req, nil
 }
 
+// NewPatchPolicyRequest calls the generic PatchPolicy builder with application/json body
+func NewPatchPolicyRequest(server string, organizationId PathOrganizationId, policyId PathPolicyId, body PatchPolicyJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchPolicyRequestWithBody(server, organizationId, policyId, "application/json", bodyReader)
+}
+
+// NewPatchPolicyRequestWithBody generates requests for PatchPolicy with any type of body
+func NewPatchPolicyRequestWithBody(server string, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organizationId", organizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "policyId", policyId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/%s/policies/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewUpdatePolicyRequest calls the generic UpdatePolicy builder with application/json body
 func NewUpdatePolicyRequest(server string, organizationId PathOrganizationId, policyId PathPolicyId, body UpdatePolicyJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -10003,6 +10327,60 @@ func NewGetRouteRequest(server string, organizationId PathOrganizationId, routeI
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPatchRouteRequest calls the generic PatchRoute builder with application/json body
+func NewPatchRouteRequest(server string, organizationId PathOrganizationId, routeId PathRouteId, body PatchRouteJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchRouteRequestWithBody(server, organizationId, routeId, "application/json", bodyReader)
+}
+
+// NewPatchRouteRequestWithBody generates requests for PatchRoute with any type of body
+func NewPatchRouteRequestWithBody(server string, organizationId PathOrganizationId, routeId PathRouteId, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organizationId", organizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "routeId", routeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/%s/routes/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -10694,6 +11072,11 @@ type ClientWithResponsesInterface interface {
 	// GetServiceAccountWithResponse request
 	GetServiceAccountWithResponse(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, reqEditors ...RequestEditorFn) (*GetServiceAccountAPIResponse, error)
 
+	// PatchServiceAccountWithBodyWithResponse request with any body
+	PatchServiceAccountWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchServiceAccountAPIResponse, error)
+
+	PatchServiceAccountWithResponse(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, body PatchServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchServiceAccountAPIResponse, error)
+
 	// GetServiceAccountTokenWithResponse request
 	GetServiceAccountTokenWithResponse(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, reqEditors ...RequestEditorFn) (*GetServiceAccountTokenAPIResponse, error)
 
@@ -10761,6 +11144,11 @@ type ClientWithResponsesInterface interface {
 	// GetKeyPairWithResponse request
 	GetKeyPairWithResponse(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, reqEditors ...RequestEditorFn) (*GetKeyPairAPIResponse, error)
 
+	// PatchKeyPairWithBodyWithResponse request with any body
+	PatchKeyPairWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchKeyPairAPIResponse, error)
+
+	PatchKeyPairWithResponse(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, body PatchKeyPairJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchKeyPairAPIResponse, error)
+
 	// UpdateKeyPairWithBodyWithResponse request with any body
 	UpdateKeyPairWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKeyPairAPIResponse, error)
 
@@ -10786,6 +11174,11 @@ type ClientWithResponsesInterface interface {
 	// GetPolicyWithResponse request
 	GetPolicyWithResponse(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, reqEditors ...RequestEditorFn) (*GetPolicyAPIResponse, error)
 
+	// PatchPolicyWithBodyWithResponse request with any body
+	PatchPolicyWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchPolicyAPIResponse, error)
+
+	PatchPolicyWithResponse(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, body PatchPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchPolicyAPIResponse, error)
+
 	// UpdatePolicyWithBodyWithResponse request with any body
 	UpdatePolicyWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdatePolicyAPIResponse, error)
 
@@ -10807,6 +11200,11 @@ type ClientWithResponsesInterface interface {
 
 	// GetRouteWithResponse request
 	GetRouteWithResponse(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, reqEditors ...RequestEditorFn) (*GetRouteAPIResponse, error)
+
+	// PatchRouteWithBodyWithResponse request with any body
+	PatchRouteWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchRouteAPIResponse, error)
+
+	PatchRouteWithResponse(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, body PatchRouteJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchRouteAPIResponse, error)
 
 	// UpdateRouteWithBodyWithResponse request with any body
 	UpdateRouteWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateRouteAPIResponse, error)
@@ -11729,6 +12127,28 @@ func (r GetServiceAccountAPIResponse) StatusCode() int {
 	return 0
 }
 
+type PatchServiceAccountAPIResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PatchServiceAccountResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchServiceAccountAPIResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchServiceAccountAPIResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetServiceAccountTokenAPIResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -12143,6 +12563,28 @@ func (r GetKeyPairAPIResponse) StatusCode() int {
 	return 0
 }
 
+type PatchKeyPairAPIResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PatchKeyPairResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchKeyPairAPIResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchKeyPairAPIResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UpdateKeyPairAPIResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -12295,6 +12737,28 @@ func (r GetPolicyAPIResponse) StatusCode() int {
 	return 0
 }
 
+type PatchPolicyAPIResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PatchPolicyResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchPolicyAPIResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchPolicyAPIResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UpdatePolicyAPIResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -12420,6 +12884,28 @@ func (r GetRouteAPIResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetRouteAPIResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchRouteAPIResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PatchRouteResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchRouteAPIResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchRouteAPIResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -13180,6 +13666,23 @@ func (c *ClientWithResponses) GetServiceAccountWithResponse(ctx context.Context,
 	return ParseGetServiceAccountAPIResponse(rsp)
 }
 
+// PatchServiceAccountWithBodyWithResponse request with arbitrary body returning *PatchServiceAccountAPIResponse
+func (c *ClientWithResponses) PatchServiceAccountWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchServiceAccountAPIResponse, error) {
+	rsp, err := c.PatchServiceAccountWithBody(ctx, organizationId, clusterId, serviceAccountId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchServiceAccountAPIResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchServiceAccountWithResponse(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, body PatchServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchServiceAccountAPIResponse, error) {
+	rsp, err := c.PatchServiceAccount(ctx, organizationId, clusterId, serviceAccountId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchServiceAccountAPIResponse(rsp)
+}
+
 // GetServiceAccountTokenWithResponse request returning *GetServiceAccountTokenAPIResponse
 func (c *ClientWithResponses) GetServiceAccountTokenWithResponse(ctx context.Context, organizationId PathOrganizationId, clusterId PathClusterId, serviceAccountId PathServiceAccountId, reqEditors ...RequestEditorFn) (*GetServiceAccountTokenAPIResponse, error) {
 	rsp, err := c.GetServiceAccountToken(ctx, organizationId, clusterId, serviceAccountId, reqEditors...)
@@ -13391,6 +13894,23 @@ func (c *ClientWithResponses) GetKeyPairWithResponse(ctx context.Context, organi
 	return ParseGetKeyPairAPIResponse(rsp)
 }
 
+// PatchKeyPairWithBodyWithResponse request with arbitrary body returning *PatchKeyPairAPIResponse
+func (c *ClientWithResponses) PatchKeyPairWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchKeyPairAPIResponse, error) {
+	rsp, err := c.PatchKeyPairWithBody(ctx, organizationId, keyPairId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchKeyPairAPIResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchKeyPairWithResponse(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, body PatchKeyPairJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchKeyPairAPIResponse, error) {
+	rsp, err := c.PatchKeyPair(ctx, organizationId, keyPairId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchKeyPairAPIResponse(rsp)
+}
+
 // UpdateKeyPairWithBodyWithResponse request with arbitrary body returning *UpdateKeyPairAPIResponse
 func (c *ClientWithResponses) UpdateKeyPairWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, keyPairId PathKeyPairId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKeyPairAPIResponse, error) {
 	rsp, err := c.UpdateKeyPairWithBody(ctx, organizationId, keyPairId, contentType, body, reqEditors...)
@@ -13470,6 +13990,23 @@ func (c *ClientWithResponses) GetPolicyWithResponse(ctx context.Context, organiz
 	return ParseGetPolicyAPIResponse(rsp)
 }
 
+// PatchPolicyWithBodyWithResponse request with arbitrary body returning *PatchPolicyAPIResponse
+func (c *ClientWithResponses) PatchPolicyWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchPolicyAPIResponse, error) {
+	rsp, err := c.PatchPolicyWithBody(ctx, organizationId, policyId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchPolicyAPIResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchPolicyWithResponse(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, body PatchPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchPolicyAPIResponse, error) {
+	rsp, err := c.PatchPolicy(ctx, organizationId, policyId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchPolicyAPIResponse(rsp)
+}
+
 // UpdatePolicyWithBodyWithResponse request with arbitrary body returning *UpdatePolicyAPIResponse
 func (c *ClientWithResponses) UpdatePolicyWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, policyId PathPolicyId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdatePolicyAPIResponse, error) {
 	rsp, err := c.UpdatePolicyWithBody(ctx, organizationId, policyId, contentType, body, reqEditors...)
@@ -13538,6 +14075,23 @@ func (c *ClientWithResponses) GetRouteWithResponse(ctx context.Context, organiza
 		return nil, err
 	}
 	return ParseGetRouteAPIResponse(rsp)
+}
+
+// PatchRouteWithBodyWithResponse request with arbitrary body returning *PatchRouteAPIResponse
+func (c *ClientWithResponses) PatchRouteWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchRouteAPIResponse, error) {
+	rsp, err := c.PatchRouteWithBody(ctx, organizationId, routeId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchRouteAPIResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchRouteWithResponse(ctx context.Context, organizationId PathOrganizationId, routeId PathRouteId, body PatchRouteJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchRouteAPIResponse, error) {
+	rsp, err := c.PatchRoute(ctx, organizationId, routeId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchRouteAPIResponse(rsp)
 }
 
 // UpdateRouteWithBodyWithResponse request with arbitrary body returning *UpdateRouteAPIResponse
@@ -14653,6 +15207,32 @@ func ParseGetServiceAccountAPIResponse(rsp *http.Response) (*GetServiceAccountAP
 	return response, nil
 }
 
+// ParsePatchServiceAccountAPIResponse parses an HTTP response from a PatchServiceAccountWithResponse call
+func ParsePatchServiceAccountAPIResponse(rsp *http.Response) (*PatchServiceAccountAPIResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchServiceAccountAPIResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PatchServiceAccountResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetServiceAccountTokenAPIResponse parses an HTTP response from a GetServiceAccountTokenWithResponse call
 func ParseGetServiceAccountTokenAPIResponse(rsp *http.Response) (*GetServiceAccountTokenAPIResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -15107,6 +15687,32 @@ func ParseGetKeyPairAPIResponse(rsp *http.Response) (*GetKeyPairAPIResponse, err
 	return response, nil
 }
 
+// ParsePatchKeyPairAPIResponse parses an HTTP response from a PatchKeyPairWithResponse call
+func ParsePatchKeyPairAPIResponse(rsp *http.Response) (*PatchKeyPairAPIResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchKeyPairAPIResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PatchKeyPairResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseUpdateKeyPairAPIResponse parses an HTTP response from a UpdateKeyPairWithResponse call
 func ParseUpdateKeyPairAPIResponse(rsp *http.Response) (*UpdateKeyPairAPIResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -15269,6 +15875,32 @@ func ParseGetPolicyAPIResponse(rsp *http.Response) (*GetPolicyAPIResponse, error
 	return response, nil
 }
 
+// ParsePatchPolicyAPIResponse parses an HTTP response from a PatchPolicyWithResponse call
+func ParsePatchPolicyAPIResponse(rsp *http.Response) (*PatchPolicyAPIResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchPolicyAPIResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PatchPolicyResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseUpdatePolicyAPIResponse parses an HTTP response from a UpdatePolicyWithResponse call
 func ParseUpdatePolicyAPIResponse(rsp *http.Response) (*UpdatePolicyAPIResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -15405,6 +16037,32 @@ func ParseGetRouteAPIResponse(rsp *http.Response) (*GetRouteAPIResponse, error) 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest GetRouteResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchRouteAPIResponse parses an HTTP response from a PatchRouteWithResponse call
+func ParsePatchRouteAPIResponse(rsp *http.Response) (*PatchRouteAPIResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchRouteAPIResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PatchRouteResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

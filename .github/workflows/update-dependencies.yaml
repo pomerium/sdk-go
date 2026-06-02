@@ -12,7 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
-          submodules: "true"
           token: ${{ secrets.APPARITOR_GITHUB_TOKEN }}
 
       - name: Setup ASDF
