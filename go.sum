@@ -65,6 +65,8 @@ github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260603020924-4437d737e5bd 
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260603020924-4437d737e5bd/go.mod h1:oMaIKrwENmqLbT1TQU90OwMQiL9eiGjvD7Py9U/5XJ0=
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260603212910-dd6c58153006 h1:L1EiZ4nQFtEWu9FSO5ffE81ynBouXi0KWQu8pZUWadc=
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260603212910-dd6c58153006/go.mod h1:oMaIKrwENmqLbT1TQU90OwMQiL9eiGjvD7Py9U/5XJ0=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260604232106-e3e395eaf31e h1:aTj2UQYm3k4qjBAcLrzGLw2xXDjLUJbEBRELC2p9JuM=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260604232106-e3e395eaf31e/go.mod h1:oMaIKrwENmqLbT1TQU90OwMQiL9eiGjvD7Py9U/5XJ0=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602005606-d7bd8b406167 h1:lkokJfCCft8A1GC0nJ4gbalJT/3+3aeSMkqQ9jLutNc=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602005606-d7bd8b406167/go.mod h1:vGNJJi5+vCfSm09u4QfXsxlEMWyEDpjcJXLQtoH7zHo=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602131448-af30c43e5bf3 h1:gnxu6WGO78rEs6/9ScaAMVFCpJfqjN8N22xils9Mp7I=
@@ -73,6 +75,8 @@ github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260603020924-4437d737e
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260603020924-4437d737e5bd/go.mod h1:z8KslsVKOmun+v66nck4pB1WY8YjQ6OXkR3CEnAhp0M=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260603212910-dd6c58153006 h1:Do76K1CBExqkXkTB8VbAqZKDK2WVkWu2Afn0pUMIL+E=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260603212910-dd6c58153006/go.mod h1:z8KslsVKOmun+v66nck4pB1WY8YjQ6OXkR3CEnAhp0M=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260604232106-e3e395eaf31e h1:M4bOGB+KFzJBqwGQhZjsdL20mBTDVtEBPUTjMaXRVAI=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260604232106-e3e395eaf31e/go.mod h1:z8KslsVKOmun+v66nck4pB1WY8YjQ6OXkR3CEnAhp0M=
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rogpeppe/go-internal v1.14.1 h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0tI/otEQ=
 github.com/rogpeppe/go-internal v1.14.1/go.mod h1:MaRKkUm5W0goXpeCfT7UZI6fk/L7L7so1lCWt35ZSgc=
