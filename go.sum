@@ -83,6 +83,8 @@ github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260617213613-aea9e5699a22 
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260617213613-aea9e5699a22/go.mod h1:vkaP69dElekMzew1CeCV2cMOHy6QW8GCkjB+O3G9pIA=
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260618224910-de33872b3fe6 h1:1/TN9HCb2e7ld7Q4TiLa2G3FHdIsG+98f+oUoGAPzZs=
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260618224910-de33872b3fe6/go.mod h1:vkaP69dElekMzew1CeCV2cMOHy6QW8GCkjB+O3G9pIA=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260623212418-7565e9cafca5 h1:weoz9T3DhNJtJ1EM7EguNmMTSwEl+qJUh2Sxv6sHUD4=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260623212418-7565e9cafca5/go.mod h1:vkaP69dElekMzew1CeCV2cMOHy6QW8GCkjB+O3G9pIA=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602005606-d7bd8b406167 h1:lkokJfCCft8A1GC0nJ4gbalJT/3+3aeSMkqQ9jLutNc=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602005606-d7bd8b406167/go.mod h1:vGNJJi5+vCfSm09u4QfXsxlEMWyEDpjcJXLQtoH7zHo=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602131448-af30c43e5bf3 h1:gnxu6WGO78rEs6/9ScaAMVFCpJfqjN8N22xils9Mp7I=
@@ -103,6 +105,8 @@ github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260617213613-aea9e5699
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260617213613-aea9e5699a22/go.mod h1:iLYmTMvWA25xnQS0CWBJ0b+yDygcv/ATU3x4fKNcYmg=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260618224910-de33872b3fe6 h1:XvJYYqzTgv2TVH0GABwasJrsBvdd3O8eUYF8FJGAvKk=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260618224910-de33872b3fe6/go.mod h1:iLYmTMvWA25xnQS0CWBJ0b+yDygcv/ATU3x4fKNcYmg=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260623212418-7565e9cafca5 h1:rifJPh241wDQjsVo1hjJBIAAmu6wFK/so0FzVJP4OqE=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260623212418-7565e9cafca5/go.mod h1:iLYmTMvWA25xnQS0CWBJ0b+yDygcv/ATU3x4fKNcYmg=
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rogpeppe/go-internal v1.14.1 h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0tI/otEQ=
 github.com/rogpeppe/go-internal v1.14.1/go.mod h1:MaRKkUm5W0goXpeCfT7UZI6fk/L7L7so1lCWt35ZSgc=
@@ -190,6 +194,8 @@ google.golang.org/genproto/googleapis/api v0.0.0-20260615183401-62b3387ff324 h1:
 google.golang.org/genproto/googleapis/api v0.0.0-20260615183401-62b3387ff324/go.mod h1:Z4WJ5pJOYWFWcHEQUelD5QaZDknIQkpIL/+fyJOT9+A=
 google.golang.org/genproto/googleapis/api v0.0.0-20260618152121-87f3d3e198d3 h1:ctPmKL12ZsoKAlmPUsoW70zEDiYF+/H6aLieXxgAU0k=
 google.golang.org/genproto/googleapis/api v0.0.0-20260618152121-87f3d3e198d3/go.mod h1:Z4WJ5pJOYWFWcHEQUelD5QaZDknIQkpIL/+fyJOT9+A=
+google.golang.org/genproto/googleapis/api v0.0.0-20260622175928-b703f567277d h1:xr2lwHI91bn3UiXcnyzRMQjp2LRiM8wEHzwUaE0YhTs=
+google.golang.org/genproto/googleapis/api v0.0.0-20260622175928-b703f567277d/go.mod h1:O0ZOWSrfWfJ+Z5HbwZ+wNtHsg/vk1k2C/w67eww8PfQ=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20260526163538-3dc84a4a5aaa h1:mZHHdPZl0dbGHCflZgAq/Q468DWVFcU2whhB2KAo8fk=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20260526163538-3dc84a4a5aaa/go.mod h1:4Hqkh8ycfw05ld/3BWL7rJOSfebL2Q+DVDeRgYgxUU8=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20260610212136-7ab31c22f7ad h1:45WmJvIV6C2+O/jjLkPUH+F3aOj/1miDoU2DD0+NWbg=
@@ -198,6 +204,8 @@ google.golang.org/genproto/googleapis/rpc v0.0.0-20260615183401-62b3387ff324 h1:
 google.golang.org/genproto/googleapis/rpc v0.0.0-20260615183401-62b3387ff324/go.mod h1:4Hqkh8ycfw05ld/3BWL7rJOSfebL2Q+DVDeRgYgxUU8=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20260618152121-87f3d3e198d3 h1:phvBWCAQMGN1945mp5fjCXP6jEF0+a0+4TjokS4sxNY=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20260618152121-87f3d3e198d3/go.mod h1:4Hqkh8ycfw05ld/3BWL7rJOSfebL2Q+DVDeRgYgxUU8=
+google.golang.org/genproto/googleapis/rpc v0.0.0-20260622175928-b703f567277d h1:mpAgMyM9vQHxycBlDq50y1VHpfSfVwzXvrQKtYbXuUY=
+google.golang.org/genproto/googleapis/rpc v0.0.0-20260622175928-b703f567277d/go.mod h1:4Hqkh8ycfw05ld/3BWL7rJOSfebL2Q+DVDeRgYgxUU8=
 google.golang.org/grpc v1.81.1 h1:VnnIIZ88UzOOKLukQi+ImGz8O1Wdp8nAGGnvOfEIWQQ=
 google.golang.org/grpc v1.81.1/go.mod h1:xGH9GfzOyMTGIOXBJmXt+BX/V0kcdQbdcuwQ/zNw42I=
 google.golang.org/protobuf v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=
