@@ -85,6 +85,8 @@ github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260618224910-de33872b3fe6 
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260618224910-de33872b3fe6/go.mod h1:vkaP69dElekMzew1CeCV2cMOHy6QW8GCkjB+O3G9pIA=
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260623212418-7565e9cafca5 h1:weoz9T3DhNJtJ1EM7EguNmMTSwEl+qJUh2Sxv6sHUD4=
 github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260623212418-7565e9cafca5/go.mod h1:vkaP69dElekMzew1CeCV2cMOHy6QW8GCkjB+O3G9pIA=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260624160022-7357600c29a8 h1:nQm664JparLbOTVr0Yx8l+s5vnCkWUjHzcIRfI22QHY=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260624160022-7357600c29a8/go.mod h1:vkaP69dElekMzew1CeCV2cMOHy6QW8GCkjB+O3G9pIA=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602005606-d7bd8b406167 h1:lkokJfCCft8A1GC0nJ4gbalJT/3+3aeSMkqQ9jLutNc=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602005606-d7bd8b406167/go.mod h1:vGNJJi5+vCfSm09u4QfXsxlEMWyEDpjcJXLQtoH7zHo=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260602131448-af30c43e5bf3 h1:gnxu6WGO78rEs6/9ScaAMVFCpJfqjN8N22xils9Mp7I=
@@ -107,6 +109,8 @@ github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260618224910-de33872b3
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260618224910-de33872b3fe6/go.mod h1:iLYmTMvWA25xnQS0CWBJ0b+yDygcv/ATU3x4fKNcYmg=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260623212418-7565e9cafca5 h1:rifJPh241wDQjsVo1hjJBIAAmu6wFK/so0FzVJP4OqE=
 github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260623212418-7565e9cafca5/go.mod h1:iLYmTMvWA25xnQS0CWBJ0b+yDygcv/ATU3x4fKNcYmg=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260624160022-7357600c29a8 h1:pwGpp0JjXzEJHONT83ymkf6h+X+0+NFz2sAkj3M14lw=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260624160022-7357600c29a8/go.mod h1:iLYmTMvWA25xnQS0CWBJ0b+yDygcv/ATU3x4fKNcYmg=
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rogpeppe/go-internal v1.14.1 h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0tI/otEQ=
 github.com/rogpeppe/go-internal v1.14.1/go.mod h1:MaRKkUm5W0goXpeCfT7UZI6fk/L7L7so1lCWt35ZSgc=
