@@ -7,8 +7,8 @@ require (
 	github.com/go-jose/go-jose/v3 v3.0.5
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/oapi-codegen/runtime v1.4.2
-	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260630161354-0aaa881e8e56
-	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260630161354-0aaa881e8e56
+	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260701231005-38556cde0118
+	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260701231005-38556cde0118
 	github.com/stretchr/testify v1.11.1
 	google.golang.org/grpc v1.82.0
 	google.golang.org/protobuf v1.36.11
