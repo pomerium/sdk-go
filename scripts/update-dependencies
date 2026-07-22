@@ -17,6 +17,7 @@ update-pomerium() {
 
 	go get -u github.com/pomerium/pomerium/pkg/grpc/config@main
 	go get -u github.com/pomerium/pomerium/pkg/grpc/databroker@main
+	go mod tidy
 
 	popd
 }
