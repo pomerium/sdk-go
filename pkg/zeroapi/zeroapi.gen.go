@@ -2720,10 +2720,16 @@ type RenewApiUserRefreshTokenResponse = RefreshTokenProperties
 
 // Route defines model for Route.
 type Route struct {
-	AllowSpdy                bool                      `json:"allowSpdy"`
-	AllowUpgrades            *StringList               `json:"allowUpgrades,omitempty"`
-	AllowWebsockets          bool                      `json:"allowWebsockets"`
-	BearerTokenFormat        *BearerTokenFormat        `json:"bearerTokenFormat,omitempty"`
+	AllowSpdy bool `json:"allowSpdy"`
+
+	// AllowUpgrades Allows custom upgrade types.
+	AllowUpgrades   *StringList `json:"allowUpgrades,omitempty"`
+	AllowWebsockets bool        `json:"allowWebsockets"`
+
+	// BearerTokenFormat The expected format of bearer tokens
+	BearerTokenFormat *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
+
+	// CircuitBreakerThresholds Sets the circuit breaker thresholds for a route.
 	CircuitBreakerThresholds *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
 	CreatedAt                time.Time                 `json:"createdAt"`
 
@@ -2737,22 +2743,24 @@ type Route struct {
 	HealthCheck                               *RouteHealthCheck `json:"healthCheck,omitempty"`
 
 	// HealthyPanicThreshold If the number of healthy hosts falls below this percentage, traffic will be balanced among all hosts regardless of health, allowing some requests to fail. 0% disables this behavior.
-	HealthyPanicThreshold            *int32                    `json:"healthyPanicThreshold,omitempty"`
-	HostPathRegexRewritePattern      *string                   `json:"hostPathRegexRewritePattern,omitempty"`
-	HostPathRegexRewriteSubstitution *string                   `json:"hostPathRegexRewriteSubstitution,omitempty"`
-	HostRewrite                      *string                   `json:"hostRewrite,omitempty"`
-	HostRewriteHeader                *string                   `json:"hostRewriteHeader,omitempty"`
-	Id                               string                    `json:"id"`
-	IdentityProviderClientId         *string                   `json:"identityProviderClientId,omitempty"`
-	IdentityProviderClientSecret     *string                   `json:"identityProviderClientSecret,omitempty"`
-	IdleTimeout                      *Duration                 `json:"idleTimeout,omitempty"`
-	IdpAccessTokenAllowedAudiences   *StringList               `json:"idpAccessTokenAllowedAudiences,omitempty"`
-	JwtIssuerFormat                  *JwtIssuerFormat          `json:"jwtIssuerFormat,omitempty"`
-	KubernetesServiceAccountToken    *string                   `json:"kubernetesServiceAccountToken,omitempty"`
-	LoadBalancingPolicy              *RouteLoadBalancingPolicy `json:"loadBalancingPolicy,omitempty"`
-	LogoUrl                          *string                   `json:"logoUrl,omitempty"`
+	HealthyPanicThreshold            *int32    `json:"healthyPanicThreshold,omitempty"`
+	HostPathRegexRewritePattern      *string   `json:"hostPathRegexRewritePattern,omitempty"`
+	HostPathRegexRewriteSubstitution *string   `json:"hostPathRegexRewriteSubstitution,omitempty"`
+	HostRewrite                      *string   `json:"hostRewrite,omitempty"`
+	HostRewriteHeader                *string   `json:"hostRewriteHeader,omitempty"`
+	Id                               string    `json:"id"`
+	IdentityProviderClientId         *string   `json:"identityProviderClientId,omitempty"`
+	IdentityProviderClientSecret     *string   `json:"identityProviderClientSecret,omitempty"`
+	IdleTimeout                      *Duration `json:"idleTimeout,omitempty"`
 
-	// Mcp Model Context Protocol configuration
+	// IdpAccessTokenAllowedAudiences Validates the audience claim of an IdP access token.
+	IdpAccessTokenAllowedAudiences *StringList               `json:"idpAccessTokenAllowedAudiences,omitempty"`
+	JwtIssuerFormat                *JwtIssuerFormat          `json:"jwtIssuerFormat,omitempty"`
+	KubernetesServiceAccountToken  *string                   `json:"kubernetesServiceAccountToken,omitempty"`
+	LoadBalancingPolicy            *RouteLoadBalancingPolicy `json:"loadBalancingPolicy,omitempty"`
+	LogoUrl                        *string                   `json:"logoUrl,omitempty"`
+
+	// Mcp Model Context Protocol configuration for this route
 	Mcp                            *MCP                   `json:"mcp,omitempty"`
 	Name                           EntityName             `json:"name"`
 	NamespaceId                    string                 `json:"namespaceId"`
@@ -2787,7 +2795,7 @@ type Route struct {
 	To                             *[]string              `json:"to,omitempty"`
 	UpdatedAt                      time.Time              `json:"updatedAt"`
 
-	// UpstreamTunnel Upstream tunnel configuration
+	// UpstreamTunnel Upstream tunnel configuration for this route
 	UpstreamTunnel *UpstreamTunnel `json:"upstreamTunnel,omitempty"`
 }
 
@@ -2852,10 +2860,16 @@ type RouteLoadBalancingPolicy string
 
 // RouteProperties defines model for RouteProperties.
 type RouteProperties struct {
-	AllowSpdy                bool                      `json:"allowSpdy"`
-	AllowUpgrades            *StringList               `json:"allowUpgrades,omitempty"`
-	AllowWebsockets          bool                      `json:"allowWebsockets"`
-	BearerTokenFormat        *BearerTokenFormat        `json:"bearerTokenFormat,omitempty"`
+	AllowSpdy bool `json:"allowSpdy"`
+
+	// AllowUpgrades Allows custom upgrade types.
+	AllowUpgrades   *StringList `json:"allowUpgrades,omitempty"`
+	AllowWebsockets bool        `json:"allowWebsockets"`
+
+	// BearerTokenFormat The expected format of bearer tokens
+	BearerTokenFormat *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
+
+	// CircuitBreakerThresholds Sets the circuit breaker thresholds for a route.
 	CircuitBreakerThresholds *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
 
 	// DependsOn Additional route domains to redirect through on login.
@@ -2866,21 +2880,23 @@ type RouteProperties struct {
 	HealthCheck                               *RouteHealthCheck `json:"healthCheck,omitempty"`
 
 	// HealthyPanicThreshold If the number of healthy hosts falls below this percentage, traffic will be balanced among all hosts regardless of health, allowing some requests to fail. 0% disables this behavior.
-	HealthyPanicThreshold            *int32                    `json:"healthyPanicThreshold,omitempty"`
-	HostPathRegexRewritePattern      *string                   `json:"hostPathRegexRewritePattern,omitempty"`
-	HostPathRegexRewriteSubstitution *string                   `json:"hostPathRegexRewriteSubstitution,omitempty"`
-	HostRewrite                      *string                   `json:"hostRewrite,omitempty"`
-	HostRewriteHeader                *string                   `json:"hostRewriteHeader,omitempty"`
-	IdentityProviderClientId         *string                   `json:"identityProviderClientId,omitempty"`
-	IdentityProviderClientSecret     *string                   `json:"identityProviderClientSecret,omitempty"`
-	IdleTimeout                      *Duration                 `json:"idleTimeout,omitempty"`
-	IdpAccessTokenAllowedAudiences   *StringList               `json:"idpAccessTokenAllowedAudiences,omitempty"`
-	JwtIssuerFormat                  *JwtIssuerFormat          `json:"jwtIssuerFormat,omitempty"`
-	KubernetesServiceAccountToken    *string                   `json:"kubernetesServiceAccountToken,omitempty"`
-	LoadBalancingPolicy              *RouteLoadBalancingPolicy `json:"loadBalancingPolicy,omitempty"`
-	LogoUrl                          *string                   `json:"logoUrl,omitempty"`
+	HealthyPanicThreshold            *int32    `json:"healthyPanicThreshold,omitempty"`
+	HostPathRegexRewritePattern      *string   `json:"hostPathRegexRewritePattern,omitempty"`
+	HostPathRegexRewriteSubstitution *string   `json:"hostPathRegexRewriteSubstitution,omitempty"`
+	HostRewrite                      *string   `json:"hostRewrite,omitempty"`
+	HostRewriteHeader                *string   `json:"hostRewriteHeader,omitempty"`
+	IdentityProviderClientId         *string   `json:"identityProviderClientId,omitempty"`
+	IdentityProviderClientSecret     *string   `json:"identityProviderClientSecret,omitempty"`
+	IdleTimeout                      *Duration `json:"idleTimeout,omitempty"`
 
-	// Mcp Model Context Protocol configuration
+	// IdpAccessTokenAllowedAudiences Validates the audience claim of an IdP access token.
+	IdpAccessTokenAllowedAudiences *StringList               `json:"idpAccessTokenAllowedAudiences,omitempty"`
+	JwtIssuerFormat                *JwtIssuerFormat          `json:"jwtIssuerFormat,omitempty"`
+	KubernetesServiceAccountToken  *string                   `json:"kubernetesServiceAccountToken,omitempty"`
+	LoadBalancingPolicy            *RouteLoadBalancingPolicy `json:"loadBalancingPolicy,omitempty"`
+	LogoUrl                        *string                   `json:"logoUrl,omitempty"`
+
+	// Mcp Model Context Protocol configuration for this route
 	Mcp                            *MCP                   `json:"mcp,omitempty"`
 	Name                           EntityName             `json:"name"`
 	NamespaceId                    string                 `json:"namespaceId"`
@@ -2913,7 +2929,7 @@ type RouteProperties struct {
 	TlsUpstreamServerName          *string                `json:"tlsUpstreamServerName,omitempty"`
 	To                             *[]string              `json:"to,omitempty"`
 
-	// UpstreamTunnel Upstream tunnel configuration
+	// UpstreamTunnel Upstream tunnel configuration for this route
 	UpstreamTunnel *UpstreamTunnel `json:"upstreamTunnel,omitempty"`
 }
 
@@ -2991,26 +3007,41 @@ type ServiceAccountToken struct {
 
 // Settings defines model for Settings.
 type Settings struct {
+	// AccessLogFields Controls which fields are included in the access logs.
 	AccessLogFields *StringList `json:"accessLogFields,omitempty"`
 
 	// Address Specifies the IP Address and Port to serve HTTP requests from. If empty, `:443` is used.
-	Address       string      `json:"address"`
+	Address string `json:"address"`
+
+	// AllowUpgrades Allows custom upgrade types.
 	AllowUpgrades *StringList `json:"allowUpgrades,omitempty"`
 
 	// AuthenticateServiceUrl Specifies the URL to use for the authenticate service, if not using the Hosted Authenticate Service. (This URL should resolve to your Pomerium deployment.)
-	AuthenticateServiceUrl *string            `json:"authenticateServiceUrl,omitempty"`
-	AuthorizeLogFields     *StringList        `json:"authorizeLogFields,omitempty"`
-	AutoApplyChangesets    bool               `json:"autoApplyChangesets"`
-	BearerTokenFormat      *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
-	BlobStorage            *BlobStorage       `json:"blobStorage,omitempty"`
+	AuthenticateServiceUrl *string `json:"authenticateServiceUrl,omitempty"`
+
+	// AuthorizeLogFields Controls which fields are included in the authorize logs.
+	AuthorizeLogFields  *StringList `json:"authorizeLogFields,omitempty"`
+	AutoApplyChangesets bool        `json:"autoApplyChangesets"`
+
+	// BearerTokenFormat The expected format of bearer tokens
+	BearerTokenFormat *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
+
+	// BlobStorage Sets the blob storage setting.
+	BlobStorage *BlobStorage `json:"blobStorage,omitempty"`
 
 	// CertificateAuthorityKeyPairId ID of CA's public and private key pair.
-	CertificateAuthorityKeyPairId *string                   `json:"certificateAuthorityKeyPairId,omitempty"`
-	CircuitBreakerThresholds      *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
-	CodecType                     CodecType                 `json:"codecType"`
+	CertificateAuthorityKeyPairId *string `json:"certificateAuthorityKeyPairId,omitempty"`
+
+	// CircuitBreakerThresholds Sets the circuit breaker thresholds for a route.
+	CircuitBreakerThresholds *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
+
+	// CodecType Sets the codec type.
+	CodecType CodecType `json:"codecType"`
 
 	// CookieDomain Sets the scope of session cookies issued by Pomerium. If you specify the domain explicitly, then subdomains would also be included.
-	CookieDomain *string  `json:"cookieDomain,omitempty"`
+	CookieDomain *string `json:"cookieDomain,omitempty"`
+
+	// CookieExpire Sets the lifetime of session cookies. After this interval, users must reauthenticate.
 	CookieExpire Duration `json:"cookieExpire"`
 
 	// CookieHttpOnly If true, this setting forbids JavaScript from accessing the cookie.
@@ -3027,14 +3058,24 @@ type Settings struct {
 	CreatedAt    time.Time `json:"createdAt"`
 
 	// DatabrokerStorageConnection The databroker storage connection string.
-	DatabrokerStorageConnection *string         `json:"databrokerStorageConnection,omitempty"`
-	DefaultUpstreamTimeout      Duration        `json:"defaultUpstreamTimeout"`
-	DnsFailureRefreshRate       *Duration       `json:"dnsFailureRefreshRate,omitempty"`
-	DnsLookupFamily             DNSLookupFamily `json:"dnsLookupFamily"`
-	DnsQueryTimeout             *Duration       `json:"dnsQueryTimeout,omitempty"`
+	DatabrokerStorageConnection *string `json:"databrokerStorageConnection,omitempty"`
+
+	// DefaultUpstreamTimeout The default timeout applied to a proxied route when no timeout key is specified by the policy.
+	DefaultUpstreamTimeout Duration `json:"defaultUpstreamTimeout"`
+
+	// DnsFailureRefreshRate Sets the rate at which DNS lookups are refreshed when requests are failing.
+	DnsFailureRefreshRate *Duration `json:"dnsFailureRefreshRate,omitempty"`
+
+	// DnsLookupFamily Sets the DNS IP address resolution policy.
+	DnsLookupFamily DNSLookupFamily `json:"dnsLookupFamily"`
+
+	// DnsQueryTimeout Sets the amount of time each name server is given to respond to a query on the first try of any given server.
+	DnsQueryTimeout *Duration `json:"dnsQueryTimeout,omitempty"`
 
 	// DnsQueryTries Sets the maximum number of query attempts the resolver will make before giving up. Each attempt may use a different name server.
-	DnsQueryTries  *uint32   `json:"dnsQueryTries,omitempty"`
+	DnsQueryTries *uint32 `json:"dnsQueryTries,omitempty"`
+
+	// DnsRefreshRate Sets the rate at which DNS lookups are refreshed.
 	DnsRefreshRate *Duration `json:"dnsRefreshRate,omitempty"`
 
 	// DnsUdpMaxQueries Caps the number of UDP based DNS queries on a single port.
@@ -3044,34 +3085,53 @@ type Settings struct {
 	DnsUseTcp *bool `json:"dnsUseTcp,omitempty"`
 
 	// DownstreamMtlsCaKeyPairId Key pair ID of the downstream client CA. If set, requires mTLS for incoming requests.
-	DownstreamMtlsCaKeyPairId *string     `json:"downstreamMtlsCaKeyPairId,omitempty"`
-	EnvoyDynamicExtensions    *StringList `json:"envoyDynamicExtensions,omitempty"`
+	DownstreamMtlsCaKeyPairId *string `json:"downstreamMtlsCaKeyPairId,omitempty"`
+
+	// EnvoyDynamicExtensions Sets envoy dynamic extensions
+	EnvoyDynamicExtensions *StringList `json:"envoyDynamicExtensions,omitempty"`
 
 	// GoogleCloudServerlessAuthenticationServiceAccount Specifies the Service Account credentials to support GCP's Authorization Header format.
 	GoogleCloudServerlessAuthenticationServiceAccount *string `json:"googleCloudServerlessAuthenticationServiceAccount,omitempty"`
 
 	// HttpRedirectAddr Specifies the IP Address and Port to redirect HTTP to HTTPS traffic on. If unset, no redirect server is started.
-	HttpRedirectAddr *string               `json:"httpRedirectAddr,omitempty"`
-	Id               string                `json:"id"`
+	HttpRedirectAddr *string `json:"httpRedirectAddr,omitempty"`
+	Id               string  `json:"id"`
+
+	// IdentityProvider Identity provider type, if not using the Hosted Authenticate Service.
 	IdentityProvider *IdentityProviderType `json:"identityProvider,omitempty"`
 
 	// IdentityProviderClientId Identity provider client ID, if not using the Hosted Authenticate Service.
 	IdentityProviderClientId *string `json:"identityProviderClientId,omitempty"`
 
 	// IdentityProviderClientSecret Identity provider client secret, if not using the Hosted Authenticate Service.
-	IdentityProviderClientSecret  *string     `json:"identityProviderClientSecret,omitempty"`
-	IdentityProviderRequestParams *StringMap  `json:"identityProviderRequestParams,omitempty"`
-	IdentityProviderScopes        *StringList `json:"identityProviderScopes,omitempty"`
+	IdentityProviderClientSecret *string `json:"identityProviderClientSecret,omitempty"`
+
+	// IdentityProviderRequestParams Identity provider request params, if not using the Hosted Authenticate Service.
+	IdentityProviderRequestParams *StringMap `json:"identityProviderRequestParams,omitempty"`
+
+	// IdentityProviderScopes Identity provider scopes, if not using the Hosted Authenticate Service.
+	IdentityProviderScopes *StringList `json:"identityProviderScopes,omitempty"`
 
 	// IdentityProviderUrl Identity provider URL, if not using the Hosted Authenticate Service. (This is required only for certain identity providers types.)
-	IdentityProviderUrl            *string     `json:"identityProviderUrl,omitempty"`
+	IdentityProviderUrl *string `json:"identityProviderUrl,omitempty"`
+
+	// IdpAccessTokenAllowedAudiences Validates the audience claim of an IdP access token.
 	IdpAccessTokenAllowedAudiences *StringList `json:"idpAccessTokenAllowedAudiences,omitempty"`
-	JwtClaimsHeaders               *StringMap  `json:"jwtClaimsHeaders,omitempty"`
+
+	// JwtClaimsHeaders Pass specific user session data to upstream applications as unsigned HTTP request headers.
+	JwtClaimsHeaders *StringMap `json:"jwtClaimsHeaders,omitempty"`
 
 	// LogLevel Sets the global logging level for Pomerium. Only logs of the desired level and above will be logged.
-	LogLevel                    string      `json:"logLevel"`
+	LogLevel string `json:"logLevel"`
+
+	// McpAllowedAsMetadataDomains Specifies the allowed as metadata domains setting.
 	McpAllowedAsMetadataDomains *StringList `json:"mcpAllowedAsMetadataDomains,omitempty"`
-	McpAllowedClientIdDomains   *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
+
+	// McpAllowedClientIdDomains Specifies the allowed domains for MCP client ID metadata URLs. Supports wildcard patterns like "*.example.com".
+	McpAllowedClientIdDomains *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
+
+	// McpDynamicClientRegistration Enables MCP Dynamic Client Registration (DCR).
+	McpDynamicClientRegistration *bool `json:"mcpDynamicClientRegistration,omitempty"`
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
@@ -3081,27 +3141,39 @@ type Settings struct {
 	OtelAttributeValueLengthLimit *int32 `json:"otelAttributeValueLengthLimit,omitempty"`
 
 	// OtelBspMaxExportBatchSize Maximum span batch size
-	OtelBspMaxExportBatchSize *int32    `json:"otelBspMaxExportBatchSize,omitempty"`
-	OtelBspScheduleDelay      *Duration `json:"otelBspScheduleDelay,omitempty"`
+	OtelBspMaxExportBatchSize *int32 `json:"otelBspMaxExportBatchSize,omitempty"`
+
+	// OtelBspScheduleDelay The interval at which trace data is exported
+	OtelBspScheduleDelay *Duration `json:"otelBspScheduleDelay,omitempty"`
 
 	// OtelExporterOtlpEndpoint Endpoint URL for OTLP data
-	OtelExporterOtlpEndpoint *string     `json:"otelExporterOtlpEndpoint,omitempty"`
-	OtelExporterOtlpHeaders  *StringList `json:"otelExporterOtlpHeaders,omitempty"`
+	OtelExporterOtlpEndpoint *string `json:"otelExporterOtlpEndpoint,omitempty"`
+
+	// OtelExporterOtlpHeaders Key=Value headers to add to all outgoing export requests
+	OtelExporterOtlpHeaders *StringList `json:"otelExporterOtlpHeaders,omitempty"`
 
 	// OtelExporterOtlpProtocol Transport protocol to be used for OTLP data
-	OtelExporterOtlpProtocol *string   `json:"otelExporterOtlpProtocol,omitempty"`
-	OtelExporterOtlpTimeout  *Duration `json:"otelExporterOtlpTimeout,omitempty"`
+	OtelExporterOtlpProtocol *string `json:"otelExporterOtlpProtocol,omitempty"`
+
+	// OtelExporterOtlpTimeout The timeout value for all outgoing data (traces, metrics, and logs)
+	OtelExporterOtlpTimeout *Duration `json:"otelExporterOtlpTimeout,omitempty"`
 
 	// OtelExporterOtlpTracesEndpoint Endpoint URL for OTLP trace data
-	OtelExporterOtlpTracesEndpoint *string     `json:"otelExporterOtlpTracesEndpoint,omitempty"`
-	OtelExporterOtlpTracesHeaders  *StringList `json:"otelExporterOtlpTracesHeaders,omitempty"`
+	OtelExporterOtlpTracesEndpoint *string `json:"otelExporterOtlpTracesEndpoint,omitempty"`
+
+	// OtelExporterOtlpTracesHeaders Key=Value headers to add to all outgoing trace export requests
+	OtelExporterOtlpTracesHeaders *StringList `json:"otelExporterOtlpTracesHeaders,omitempty"`
 
 	// OtelExporterOtlpTracesProtocol Transport protocol to be used for OTLP trace data
-	OtelExporterOtlpTracesProtocol *string   `json:"otelExporterOtlpTracesProtocol,omitempty"`
-	OtelExporterOtlpTracesTimeout  *Duration `json:"otelExporterOtlpTracesTimeout,omitempty"`
+	OtelExporterOtlpTracesProtocol *string `json:"otelExporterOtlpTracesProtocol,omitempty"`
+
+	// OtelExporterOtlpTracesTimeout The timeout value for all outgoing traces
+	OtelExporterOtlpTracesTimeout *Duration `json:"otelExporterOtlpTracesTimeout,omitempty"`
 
 	// OtelLogLevel Log level used by the OTEL SDK
-	OtelLogLevel           *string     `json:"otelLogLevel,omitempty"`
+	OtelLogLevel *string `json:"otelLogLevel,omitempty"`
+
+	// OtelResourceAttributes Key-value pairs to be used as additional resource attributes
 	OtelResourceAttributes *StringList `json:"otelResourceAttributes,omitempty"`
 
 	// OtelTracesExporter The name of the tracing provider. Available options are "none" (default) or "otlp".
@@ -3112,47 +3184,72 @@ type Settings struct {
 	PassIdentityHeaders  bool     `json:"passIdentityHeaders"`
 
 	// ProxyLogLevel Sets the logging level for the Pomerium Proxy service access logs. Only logs of the desired level and above will be logged.
-	ProxyLogLevel               *string    `json:"proxyLogLevel,omitempty"`
-	SessionRecordingConcurrency *uint32    `json:"sessionRecordingConcurrency,omitempty"`
-	SetResponseHeaders          *StringMap `json:"setResponseHeaders,omitempty"`
+	ProxyLogLevel               *string `json:"proxyLogLevel,omitempty"`
+	SessionRecordingConcurrency *uint32 `json:"sessionRecordingConcurrency,omitempty"`
+
+	// SetResponseHeaders Specifies a mapping of HTTP Headers added globally to all managed routes and Pomerium's Authenticate Service.
+	SetResponseHeaders *StringMap `json:"setResponseHeaders,omitempty"`
 
 	// SkipXffAppend If true, the incoming X-Forwarded-For HTTP header would not be modified.
 	SkipXffAppend bool `json:"skipXffAppend"`
 
 	// SshAddress Sets the SSH address.
-	SshAddress  *string     `json:"sshAddress,omitempty"`
+	SshAddress *string `json:"sshAddress,omitempty"`
+
+	// SshHostKeys Sets the SSH host keys.
 	SshHostKeys *StringList `json:"sshHostKeys,omitempty"`
 
 	// SshUserCaKey Sets the SSH user CA key.
-	SshUserCaKey *string   `json:"sshUserCaKey,omitempty"`
-	TimeoutIdle  Duration  `json:"timeoutIdle"`
-	TimeoutRead  Duration  `json:"timeoutRead"`
+	SshUserCaKey *string `json:"sshUserCaKey,omitempty"`
+
+	// TimeoutIdle Sets the idle timeout is the time at which a downstream or upstream connection will be terminated if there are no active streams.
+	TimeoutIdle Duration `json:"timeoutIdle"`
+
+	// TimeoutRead Sets the amount of time for the entire request stream to be received from the client.
+	TimeoutRead Duration `json:"timeoutRead"`
+
+	// TimeoutWrite Sets the max stream duration is the maximum time that a stream’s lifetime will span.
 	TimeoutWrite Duration  `json:"timeoutWrite"`
 	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
 // SettingsProperties defines model for SettingsProperties.
 type SettingsProperties struct {
+	// AccessLogFields Controls which fields are included in the access logs.
 	AccessLogFields *StringList `json:"accessLogFields,omitempty"`
 
 	// Address Specifies the IP Address and Port to serve HTTP requests from. If empty, `:443` is used.
-	Address       string      `json:"address"`
+	Address string `json:"address"`
+
+	// AllowUpgrades Allows custom upgrade types.
 	AllowUpgrades *StringList `json:"allowUpgrades,omitempty"`
 
 	// AuthenticateServiceUrl Specifies the URL to use for the authenticate service, if not using the Hosted Authenticate Service. (This URL should resolve to your Pomerium deployment.)
-	AuthenticateServiceUrl *string            `json:"authenticateServiceUrl,omitempty"`
-	AuthorizeLogFields     *StringList        `json:"authorizeLogFields,omitempty"`
-	AutoApplyChangesets    bool               `json:"autoApplyChangesets"`
-	BearerTokenFormat      *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
-	BlobStorage            *BlobStorage       `json:"blobStorage,omitempty"`
+	AuthenticateServiceUrl *string `json:"authenticateServiceUrl,omitempty"`
+
+	// AuthorizeLogFields Controls which fields are included in the authorize logs.
+	AuthorizeLogFields  *StringList `json:"authorizeLogFields,omitempty"`
+	AutoApplyChangesets bool        `json:"autoApplyChangesets"`
+
+	// BearerTokenFormat The expected format of bearer tokens
+	BearerTokenFormat *BearerTokenFormat `json:"bearerTokenFormat,omitempty"`
+
+	// BlobStorage Sets the blob storage setting.
+	BlobStorage *BlobStorage `json:"blobStorage,omitempty"`
 
 	// CertificateAuthorityKeyPairId ID of CA's public and private key pair.
-	CertificateAuthorityKeyPairId *string                   `json:"certificateAuthorityKeyPairId,omitempty"`
-	CircuitBreakerThresholds      *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
-	CodecType                     CodecType                 `json:"codecType"`
+	CertificateAuthorityKeyPairId *string `json:"certificateAuthorityKeyPairId,omitempty"`
+
+	// CircuitBreakerThresholds Sets the circuit breaker thresholds for a route.
+	CircuitBreakerThresholds *CircuitBreakerThresholds `json:"circuitBreakerThresholds,omitempty"`
+
+	// CodecType Sets the codec type.
+	CodecType CodecType `json:"codecType"`
 
 	// CookieDomain Sets the scope of session cookies issued by Pomerium. If you specify the domain explicitly, then subdomains would also be included.
-	CookieDomain *string  `json:"cookieDomain,omitempty"`
+	CookieDomain *string `json:"cookieDomain,omitempty"`
+
+	// CookieExpire Sets the lifetime of session cookies. After this interval, users must reauthenticate.
 	CookieExpire Duration `json:"cookieExpire"`
 
 	// CookieHttpOnly If true, this setting forbids JavaScript from accessing the cookie.
@@ -3168,14 +3265,24 @@ type SettingsProperties struct {
 	CookieSecret *string `json:"cookieSecret,omitempty"`
 
 	// DatabrokerStorageConnection The databroker storage connection string.
-	DatabrokerStorageConnection *string         `json:"databrokerStorageConnection,omitempty"`
-	DefaultUpstreamTimeout      Duration        `json:"defaultUpstreamTimeout"`
-	DnsFailureRefreshRate       *Duration       `json:"dnsFailureRefreshRate,omitempty"`
-	DnsLookupFamily             DNSLookupFamily `json:"dnsLookupFamily"`
-	DnsQueryTimeout             *Duration       `json:"dnsQueryTimeout,omitempty"`
+	DatabrokerStorageConnection *string `json:"databrokerStorageConnection,omitempty"`
+
+	// DefaultUpstreamTimeout The default timeout applied to a proxied route when no timeout key is specified by the policy.
+	DefaultUpstreamTimeout Duration `json:"defaultUpstreamTimeout"`
+
+	// DnsFailureRefreshRate Sets the rate at which DNS lookups are refreshed when requests are failing.
+	DnsFailureRefreshRate *Duration `json:"dnsFailureRefreshRate,omitempty"`
+
+	// DnsLookupFamily Sets the DNS IP address resolution policy.
+	DnsLookupFamily DNSLookupFamily `json:"dnsLookupFamily"`
+
+	// DnsQueryTimeout Sets the amount of time each name server is given to respond to a query on the first try of any given server.
+	DnsQueryTimeout *Duration `json:"dnsQueryTimeout,omitempty"`
 
 	// DnsQueryTries Sets the maximum number of query attempts the resolver will make before giving up. Each attempt may use a different name server.
-	DnsQueryTries  *uint32   `json:"dnsQueryTries,omitempty"`
+	DnsQueryTries *uint32 `json:"dnsQueryTries,omitempty"`
+
+	// DnsRefreshRate Sets the rate at which DNS lookups are refreshed.
 	DnsRefreshRate *Duration `json:"dnsRefreshRate,omitempty"`
 
 	// DnsUdpMaxQueries Caps the number of UDP based DNS queries on a single port.
@@ -3185,33 +3292,52 @@ type SettingsProperties struct {
 	DnsUseTcp *bool `json:"dnsUseTcp,omitempty"`
 
 	// DownstreamMtlsCaKeyPairId Key pair ID of the downstream client CA. If set, requires mTLS for incoming requests.
-	DownstreamMtlsCaKeyPairId *string     `json:"downstreamMtlsCaKeyPairId,omitempty"`
-	EnvoyDynamicExtensions    *StringList `json:"envoyDynamicExtensions,omitempty"`
+	DownstreamMtlsCaKeyPairId *string `json:"downstreamMtlsCaKeyPairId,omitempty"`
+
+	// EnvoyDynamicExtensions Sets envoy dynamic extensions
+	EnvoyDynamicExtensions *StringList `json:"envoyDynamicExtensions,omitempty"`
 
 	// GoogleCloudServerlessAuthenticationServiceAccount Specifies the Service Account credentials to support GCP's Authorization Header format.
 	GoogleCloudServerlessAuthenticationServiceAccount *string `json:"googleCloudServerlessAuthenticationServiceAccount,omitempty"`
 
 	// HttpRedirectAddr Specifies the IP Address and Port to redirect HTTP to HTTPS traffic on. If unset, no redirect server is started.
-	HttpRedirectAddr *string               `json:"httpRedirectAddr,omitempty"`
+	HttpRedirectAddr *string `json:"httpRedirectAddr,omitempty"`
+
+	// IdentityProvider Identity provider type, if not using the Hosted Authenticate Service.
 	IdentityProvider *IdentityProviderType `json:"identityProvider,omitempty"`
 
 	// IdentityProviderClientId Identity provider client ID, if not using the Hosted Authenticate Service.
 	IdentityProviderClientId *string `json:"identityProviderClientId,omitempty"`
 
 	// IdentityProviderClientSecret Identity provider client secret, if not using the Hosted Authenticate Service.
-	IdentityProviderClientSecret  *string     `json:"identityProviderClientSecret,omitempty"`
-	IdentityProviderRequestParams *StringMap  `json:"identityProviderRequestParams,omitempty"`
-	IdentityProviderScopes        *StringList `json:"identityProviderScopes,omitempty"`
+	IdentityProviderClientSecret *string `json:"identityProviderClientSecret,omitempty"`
+
+	// IdentityProviderRequestParams Identity provider request params, if not using the Hosted Authenticate Service.
+	IdentityProviderRequestParams *StringMap `json:"identityProviderRequestParams,omitempty"`
+
+	// IdentityProviderScopes Identity provider scopes, if not using the Hosted Authenticate Service.
+	IdentityProviderScopes *StringList `json:"identityProviderScopes,omitempty"`
 
 	// IdentityProviderUrl Identity provider URL, if not using the Hosted Authenticate Service. (This is required only for certain identity providers types.)
-	IdentityProviderUrl            *string     `json:"identityProviderUrl,omitempty"`
+	IdentityProviderUrl *string `json:"identityProviderUrl,omitempty"`
+
+	// IdpAccessTokenAllowedAudiences Validates the audience claim of an IdP access token.
 	IdpAccessTokenAllowedAudiences *StringList `json:"idpAccessTokenAllowedAudiences,omitempty"`
-	JwtClaimsHeaders               *StringMap  `json:"jwtClaimsHeaders,omitempty"`
+
+	// JwtClaimsHeaders Pass specific user session data to upstream applications as unsigned HTTP request headers.
+	JwtClaimsHeaders *StringMap `json:"jwtClaimsHeaders,omitempty"`
 
 	// LogLevel Sets the global logging level for Pomerium. Only logs of the desired level and above will be logged.
-	LogLevel                    string      `json:"logLevel"`
+	LogLevel string `json:"logLevel"`
+
+	// McpAllowedAsMetadataDomains Specifies the allowed as metadata domains setting.
 	McpAllowedAsMetadataDomains *StringList `json:"mcpAllowedAsMetadataDomains,omitempty"`
-	McpAllowedClientIdDomains   *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
+
+	// McpAllowedClientIdDomains Specifies the allowed domains for MCP client ID metadata URLs. Supports wildcard patterns like "*.example.com".
+	McpAllowedClientIdDomains *StringList `json:"mcpAllowedClientIdDomains,omitempty"`
+
+	// McpDynamicClientRegistration Enables MCP Dynamic Client Registration (DCR).
+	McpDynamicClientRegistration *bool `json:"mcpDynamicClientRegistration,omitempty"`
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
@@ -3221,27 +3347,39 @@ type SettingsProperties struct {
 	OtelAttributeValueLengthLimit *int32 `json:"otelAttributeValueLengthLimit,omitempty"`
 
 	// OtelBspMaxExportBatchSize Maximum span batch size
-	OtelBspMaxExportBatchSize *int32    `json:"otelBspMaxExportBatchSize,omitempty"`
-	OtelBspScheduleDelay      *Duration `json:"otelBspScheduleDelay,omitempty"`
+	OtelBspMaxExportBatchSize *int32 `json:"otelBspMaxExportBatchSize,omitempty"`
+
+	// OtelBspScheduleDelay The interval at which trace data is exported
+	OtelBspScheduleDelay *Duration `json:"otelBspScheduleDelay,omitempty"`
 
 	// OtelExporterOtlpEndpoint Endpoint URL for OTLP data
-	OtelExporterOtlpEndpoint *string     `json:"otelExporterOtlpEndpoint,omitempty"`
-	OtelExporterOtlpHeaders  *StringList `json:"otelExporterOtlpHeaders,omitempty"`
+	OtelExporterOtlpEndpoint *string `json:"otelExporterOtlpEndpoint,omitempty"`
+
+	// OtelExporterOtlpHeaders Key=Value headers to add to all outgoing export requests
+	OtelExporterOtlpHeaders *StringList `json:"otelExporterOtlpHeaders,omitempty"`
 
 	// OtelExporterOtlpProtocol Transport protocol to be used for OTLP data
-	OtelExporterOtlpProtocol *string   `json:"otelExporterOtlpProtocol,omitempty"`
-	OtelExporterOtlpTimeout  *Duration `json:"otelExporterOtlpTimeout,omitempty"`
+	OtelExporterOtlpProtocol *string `json:"otelExporterOtlpProtocol,omitempty"`
+
+	// OtelExporterOtlpTimeout The timeout value for all outgoing data (traces, metrics, and logs)
+	OtelExporterOtlpTimeout *Duration `json:"otelExporterOtlpTimeout,omitempty"`
 
 	// OtelExporterOtlpTracesEndpoint Endpoint URL for OTLP trace data
-	OtelExporterOtlpTracesEndpoint *string     `json:"otelExporterOtlpTracesEndpoint,omitempty"`
-	OtelExporterOtlpTracesHeaders  *StringList `json:"otelExporterOtlpTracesHeaders,omitempty"`
+	OtelExporterOtlpTracesEndpoint *string `json:"otelExporterOtlpTracesEndpoint,omitempty"`
+
+	// OtelExporterOtlpTracesHeaders Key=Value headers to add to all outgoing trace export requests
+	OtelExporterOtlpTracesHeaders *StringList `json:"otelExporterOtlpTracesHeaders,omitempty"`
 
 	// OtelExporterOtlpTracesProtocol Transport protocol to be used for OTLP trace data
-	OtelExporterOtlpTracesProtocol *string   `json:"otelExporterOtlpTracesProtocol,omitempty"`
-	OtelExporterOtlpTracesTimeout  *Duration `json:"otelExporterOtlpTracesTimeout,omitempty"`
+	OtelExporterOtlpTracesProtocol *string `json:"otelExporterOtlpTracesProtocol,omitempty"`
+
+	// OtelExporterOtlpTracesTimeout The timeout value for all outgoing traces
+	OtelExporterOtlpTracesTimeout *Duration `json:"otelExporterOtlpTracesTimeout,omitempty"`
 
 	// OtelLogLevel Log level used by the OTEL SDK
-	OtelLogLevel           *string     `json:"otelLogLevel,omitempty"`
+	OtelLogLevel *string `json:"otelLogLevel,omitempty"`
+
+	// OtelResourceAttributes Key-value pairs to be used as additional resource attributes
 	OtelResourceAttributes *StringList `json:"otelResourceAttributes,omitempty"`
 
 	// OtelTracesExporter The name of the tracing provider. Available options are "none" (default) or "otlp".
@@ -3252,21 +3390,31 @@ type SettingsProperties struct {
 	PassIdentityHeaders  bool     `json:"passIdentityHeaders"`
 
 	// ProxyLogLevel Sets the logging level for the Pomerium Proxy service access logs. Only logs of the desired level and above will be logged.
-	ProxyLogLevel               *string    `json:"proxyLogLevel,omitempty"`
-	SessionRecordingConcurrency *uint32    `json:"sessionRecordingConcurrency,omitempty"`
-	SetResponseHeaders          *StringMap `json:"setResponseHeaders,omitempty"`
+	ProxyLogLevel               *string `json:"proxyLogLevel,omitempty"`
+	SessionRecordingConcurrency *uint32 `json:"sessionRecordingConcurrency,omitempty"`
+
+	// SetResponseHeaders Specifies a mapping of HTTP Headers added globally to all managed routes and Pomerium's Authenticate Service.
+	SetResponseHeaders *StringMap `json:"setResponseHeaders,omitempty"`
 
 	// SkipXffAppend If true, the incoming X-Forwarded-For HTTP header would not be modified.
 	SkipXffAppend bool `json:"skipXffAppend"`
 
 	// SshAddress Sets the SSH address.
-	SshAddress  *string     `json:"sshAddress,omitempty"`
+	SshAddress *string `json:"sshAddress,omitempty"`
+
+	// SshHostKeys Sets the SSH host keys.
 	SshHostKeys *StringList `json:"sshHostKeys,omitempty"`
 
 	// SshUserCaKey Sets the SSH user CA key.
-	SshUserCaKey *string  `json:"sshUserCaKey,omitempty"`
-	TimeoutIdle  Duration `json:"timeoutIdle"`
-	TimeoutRead  Duration `json:"timeoutRead"`
+	SshUserCaKey *string `json:"sshUserCaKey,omitempty"`
+
+	// TimeoutIdle Sets the idle timeout is the time at which a downstream or upstream connection will be terminated if there are no active streams.
+	TimeoutIdle Duration `json:"timeoutIdle"`
+
+	// TimeoutRead Sets the amount of time for the entire request stream to be received from the client.
+	TimeoutRead Duration `json:"timeoutRead"`
+
+	// TimeoutWrite Sets the max stream duration is the maximum time that a stream’s lifetime will span.
 	TimeoutWrite Duration `json:"timeoutWrite"`
 }
 
@@ -3376,6 +3524,7 @@ type UpdateUserResponse = User
 
 // UpstreamOAuth2 OAuth2 configuration for upstream authentication
 type UpstreamOAuth2 struct {
+	// AuthorizationUrlParams Extra query parameters appended to the upstream OAuth authorization URL (e.g., access_type, prompt, audience)
 	AuthorizationUrlParams *StringMap `json:"authorizationUrlParams,omitempty"`
 
 	// ClientId OAuth2 client ID
@@ -3386,7 +3535,9 @@ type UpstreamOAuth2 struct {
 
 	// Oauth2Endpoint OAuth2 endpoint configuration
 	Oauth2Endpoint *OAuth2Endpoint `json:"oauth2Endpoint,omitempty"`
-	Scopes         *StringList     `json:"scopes,omitempty"`
+
+	// Scopes OAuth2 scopes
+	Scopes *StringList `json:"scopes,omitempty"`
 }
 
 // UpstreamTunnel Upstream tunnel configuration
