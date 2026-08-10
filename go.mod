@@ -7,11 +7,11 @@ require (
 	github.com/go-jose/go-jose/v3 v3.0.5
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/oapi-codegen/runtime v1.6.0
-	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260730223030-c8e4e88021d5
-	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260730223030-c8e4e88021d5
+	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260805185403-0d89f1ef49c2
+	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260805185403-0d89f1ef49c2
 	github.com/stretchr/testify v1.11.1
 	google.golang.org/grpc v1.83.0
-	google.golang.org/protobuf v1.36.11
+	google.golang.org/protobuf v1.36.12
 )
 
 require (
@@ -33,7 +33,7 @@ require (
 	golang.org/x/net v0.57.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.40.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260729162451-8efbd57d26e0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260729162451-8efbd57d26e0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260810153831-ec0a7760b754 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260810153831-ec0a7760b754 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
