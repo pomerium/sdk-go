@@ -6,7 +6,7 @@ require (
 	connectrpc.com/connect v1.20.0
 	github.com/go-jose/go-jose/v3 v3.0.5
 	github.com/hashicorp/golang-lru/v2 v2.0.7
-	github.com/oapi-codegen/runtime v1.4.2
+	github.com/oapi-codegen/runtime v1.6.0
 	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260730223030-c8e4e88021d5
 	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260730223030-c8e4e88021d5
 	github.com/stretchr/testify v1.11.1
