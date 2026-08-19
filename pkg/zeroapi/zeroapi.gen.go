@@ -50,6 +50,7 @@ const (
 	BearerTokenFormatEmpty            BearerTokenFormat = ""
 	BearerTokenFormatIdpAccessToken   BearerTokenFormat = "idp_access_token"
 	BearerTokenFormatIdpIdentityToken BearerTokenFormat = "idp_identity_token"
+	BearerTokenFormatJwt              BearerTokenFormat = "jwt"
 )
 
 // Valid indicates whether the value is a known member of the BearerTokenFormat enum.
@@ -62,6 +63,8 @@ func (e BearerTokenFormat) Valid() bool {
 	case BearerTokenFormatIdpAccessToken:
 		return true
 	case BearerTokenFormatIdpIdentityToken:
+		return true
+	case BearerTokenFormatJwt:
 		return true
 	default:
 		return false
