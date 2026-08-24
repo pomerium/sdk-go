@@ -10,11 +10,12 @@ linters:
     rules:
       - linters:
           - errcheck
+          - staticcheck
         path: _test\.go$
 formatters:
   enable:
+    - gci
     - gofumpt
-    - goimports
   settings:
     gci:
       sections:
