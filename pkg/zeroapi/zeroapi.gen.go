@@ -1451,6 +1451,12 @@ func (e UserType) Valid() bool {
 	}
 }
 
+// AcquireEnterpriseLicenseRequest defines model for AcquireEnterpriseLicenseRequest.
+type AcquireEnterpriseLicenseRequest = EnterpriseLicenseProperties
+
+// AcquireEnterpriseLicenseResponse defines model for AcquireEnterpriseLicenseResponse.
+type AcquireEnterpriseLicenseResponse = EnterpriseLicense
+
 // ActivityLog defines model for ActivityLog.
 type ActivityLog struct {
 	ActivityType ActivityType `json:"activityType"`
@@ -1971,6 +1977,28 @@ type DistributionValue struct {
 // Duration defines model for Duration.
 type Duration = string
 
+// EnterpriseLicense defines model for EnterpriseLicense.
+type EnterpriseLicense struct {
+	CreatedAt  time.Time  `json:"createdAt"`
+	ExpiresAt  *time.Time `json:"expiresAt,omitempty"`
+	ExternalId *string    `json:"externalId,omitempty"`
+	Id         string     `json:"id"`
+	Key        *string    `json:"key,omitempty"`
+	Name       *string    `json:"name,omitempty"`
+	UpdatedAt  time.Time  `json:"updatedAt"`
+}
+
+// EnterpriseLicenseComputedProperties defines model for EnterpriseLicenseComputedProperties.
+type EnterpriseLicenseComputedProperties struct {
+	ExpiresAt  *time.Time `json:"expiresAt,omitempty"`
+	ExternalId *string    `json:"externalId,omitempty"`
+	Key        *string    `json:"key,omitempty"`
+	Name       *string    `json:"name,omitempty"`
+}
+
+// EnterpriseLicenseProperties defines model for EnterpriseLicenseProperties.
+type EnterpriseLicenseProperties = map[string]interface{}
+
 // EntityInfo defines model for EntityInfo.
 type EntityInfo struct {
 	Id        string    `json:"id"`
@@ -2330,6 +2358,9 @@ type ListCustomDomainsResponse = []CustomDomain
 
 // ListDefaultTemplatesResponse defines model for ListDefaultTemplatesResponse.
 type ListDefaultTemplatesResponse = []DefaultTemplate
+
+// ListEnterpriseLicensesResponse defines model for ListEnterpriseLicensesResponse.
+type ListEnterpriseLicensesResponse = []EnterpriseLicense
 
 // ListFeatureFlagsResponse defines model for ListFeatureFlagsResponse.
 type ListFeatureFlagsResponse = []FeatureFlag
@@ -4094,6 +4125,9 @@ type UpdateSettingsJSONRequestBody = UpdateSettingsRequest
 // AddCustomDomainJSONRequestBody defines body for AddCustomDomain for application/json ContentType.
 type AddCustomDomainJSONRequestBody = CreateCustomDomainRequest
 
+// AcquireEnterpriseLicenseJSONRequestBody defines body for AcquireEnterpriseLicense for application/json ContentType.
+type AcquireEnterpriseLicenseJSONRequestBody = AcquireEnterpriseLicenseRequest
+
 // CreateOrganizationInviteJSONRequestBody defines body for CreateOrganizationInvite for application/json ContentType.
 type CreateOrganizationInviteJSONRequestBody = CreateOrganizationInviteRequest
 
@@ -4783,6 +4817,14 @@ type ClientInterface interface {
 
 	// RetryCustomDomain request
 	RetryCustomDomain(ctx context.Context, organizationId PathOrganizationId, customDomainId PathCustomDomainId, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListEnterpriseLicenses request
+	ListEnterpriseLicenses(ctx context.Context, organizationId PathOrganizationId, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AcquireEnterpriseLicenseWithBody request with any body
+	AcquireEnterpriseLicenseWithBody(ctx context.Context, organizationId PathOrganizationId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AcquireEnterpriseLicense(ctx context.Context, organizationId PathOrganizationId, body AcquireEnterpriseLicenseJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListFeatureFlags request
 	ListFeatureFlags(ctx context.Context, organizationId PathOrganizationId, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5750,6 +5792,42 @@ func (c *Client) DeleteCustomDomain(ctx context.Context, organizationId PathOrga
 
 func (c *Client) RetryCustomDomain(ctx context.Context, organizationId PathOrganizationId, customDomainId PathCustomDomainId, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRetryCustomDomainRequest(c.Server, organizationId, customDomainId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListEnterpriseLicenses(ctx context.Context, organizationId PathOrganizationId, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListEnterpriseLicensesRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AcquireEnterpriseLicenseWithBody(ctx context.Context, organizationId PathOrganizationId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAcquireEnterpriseLicenseRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AcquireEnterpriseLicense(ctx context.Context, organizationId PathOrganizationId, body AcquireEnterpriseLicenseJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAcquireEnterpriseLicenseRequest(c.Server, organizationId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -9158,6 +9236,87 @@ func NewRetryCustomDomainRequest(server string, organizationId PathOrganizationI
 	return req, nil
 }
 
+// NewListEnterpriseLicensesRequest generates requests for ListEnterpriseLicenses
+func NewListEnterpriseLicensesRequest(server string, organizationId PathOrganizationId) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organizationId", organizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/%s/enterpriseLicenses", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAcquireEnterpriseLicenseRequest calls the generic AcquireEnterpriseLicense builder with application/json body
+func NewAcquireEnterpriseLicenseRequest(server string, organizationId PathOrganizationId, body AcquireEnterpriseLicenseJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAcquireEnterpriseLicenseRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewAcquireEnterpriseLicenseRequestWithBody generates requests for AcquireEnterpriseLicense with any type of body
+func NewAcquireEnterpriseLicenseRequestWithBody(server string, organizationId PathOrganizationId, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organizationId", organizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/%s/enterpriseLicenses", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListFeatureFlagsRequest generates requests for ListFeatureFlags
 func NewListFeatureFlagsRequest(server string, organizationId PathOrganizationId) (*http.Request, error) {
 	var err error
@@ -11181,6 +11340,14 @@ type ClientWithResponsesInterface interface {
 	// RetryCustomDomainWithResponse request
 	RetryCustomDomainWithResponse(ctx context.Context, organizationId PathOrganizationId, customDomainId PathCustomDomainId, reqEditors ...RequestEditorFn) (*RetryCustomDomainAPIResponse, error)
 
+	// ListEnterpriseLicensesWithResponse request
+	ListEnterpriseLicensesWithResponse(ctx context.Context, organizationId PathOrganizationId, reqEditors ...RequestEditorFn) (*ListEnterpriseLicensesAPIResponse, error)
+
+	// AcquireEnterpriseLicenseWithBodyWithResponse request with any body
+	AcquireEnterpriseLicenseWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AcquireEnterpriseLicenseAPIResponse, error)
+
+	AcquireEnterpriseLicenseWithResponse(ctx context.Context, organizationId PathOrganizationId, body AcquireEnterpriseLicenseJSONRequestBody, reqEditors ...RequestEditorFn) (*AcquireEnterpriseLicenseAPIResponse, error)
+
 	// ListFeatureFlagsWithResponse request
 	ListFeatureFlagsWithResponse(ctx context.Context, organizationId PathOrganizationId, reqEditors ...RequestEditorFn) (*ListFeatureFlagsAPIResponse, error)
 
@@ -12864,6 +13031,66 @@ func (r RetryCustomDomainAPIResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r RetryCustomDomainAPIResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListEnterpriseLicensesAPIResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ListEnterpriseLicensesResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListEnterpriseLicensesAPIResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListEnterpriseLicensesAPIResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListEnterpriseLicensesAPIResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AcquireEnterpriseLicenseAPIResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *AcquireEnterpriseLicenseResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r AcquireEnterpriseLicenseAPIResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AcquireEnterpriseLicenseAPIResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AcquireEnterpriseLicenseAPIResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -14583,6 +14810,32 @@ func (c *ClientWithResponses) RetryCustomDomainWithResponse(ctx context.Context,
 	return ParseRetryCustomDomainAPIResponse(rsp)
 }
 
+// ListEnterpriseLicensesWithResponse request returning *ListEnterpriseLicensesAPIResponse
+func (c *ClientWithResponses) ListEnterpriseLicensesWithResponse(ctx context.Context, organizationId PathOrganizationId, reqEditors ...RequestEditorFn) (*ListEnterpriseLicensesAPIResponse, error) {
+	rsp, err := c.ListEnterpriseLicenses(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListEnterpriseLicensesAPIResponse(rsp)
+}
+
+// AcquireEnterpriseLicenseWithBodyWithResponse request with arbitrary body returning *AcquireEnterpriseLicenseAPIResponse
+func (c *ClientWithResponses) AcquireEnterpriseLicenseWithBodyWithResponse(ctx context.Context, organizationId PathOrganizationId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AcquireEnterpriseLicenseAPIResponse, error) {
+	rsp, err := c.AcquireEnterpriseLicenseWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAcquireEnterpriseLicenseAPIResponse(rsp)
+}
+
+func (c *ClientWithResponses) AcquireEnterpriseLicenseWithResponse(ctx context.Context, organizationId PathOrganizationId, body AcquireEnterpriseLicenseJSONRequestBody, reqEditors ...RequestEditorFn) (*AcquireEnterpriseLicenseAPIResponse, error) {
+	rsp, err := c.AcquireEnterpriseLicense(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAcquireEnterpriseLicenseAPIResponse(rsp)
+}
+
 // ListFeatureFlagsWithResponse request returning *ListFeatureFlagsAPIResponse
 func (c *ClientWithResponses) ListFeatureFlagsWithResponse(ctx context.Context, organizationId PathOrganizationId, reqEditors ...RequestEditorFn) (*ListFeatureFlagsAPIResponse, error) {
 	rsp, err := c.ListFeatureFlags(ctx, organizationId, reqEditors...)
@@ -16271,6 +16524,58 @@ func ParseRetryCustomDomainAPIResponse(rsp *http.Response) (*RetryCustomDomainAP
 	response := &RetryCustomDomainAPIResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListEnterpriseLicensesAPIResponse parses an HTTP response from a ListEnterpriseLicensesWithResponse call
+func ParseListEnterpriseLicensesAPIResponse(rsp *http.Response) (*ListEnterpriseLicensesAPIResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListEnterpriseLicensesAPIResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListEnterpriseLicensesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAcquireEnterpriseLicenseAPIResponse parses an HTTP response from a AcquireEnterpriseLicenseWithResponse call
+func ParseAcquireEnterpriseLicenseAPIResponse(rsp *http.Response) (*AcquireEnterpriseLicenseAPIResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AcquireEnterpriseLicenseAPIResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest AcquireEnterpriseLicenseResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
 	}
 
 	return response, nil
