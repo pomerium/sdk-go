@@ -44,10 +44,10 @@ github.com/oapi-codegen/runtime v1.7.0/go.mod h1:GwV7hC2hviaMzj+ITfHVRESK5J2W/Ge
 github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 h1:GFCKgmp0tecUJ0sJuv4pzYCqS9+RGSn52M3FUwPs+uo=
 github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10/go.mod h1:t/avpk3KcrXxUnYOhZhMXJlSEyie6gQbtLq5NM3loB8=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260901023223-237fbdb8dd6d h1:QipLtUTfosHaAlpFtEwPGCIFvI5uY9JhjXO9vWHXNQU=
-github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260901023223-237fbdb8dd6d/go.mod h1:Vl7D2tW7mU0+L7PgrJhfo1cOY2EBT71bfClTxOJTAFo=
-github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260901023223-237fbdb8dd6d h1:5dz+AnO5qBGmt3aw5mcEGP+6Hg3dlHP+p1BZxSyWrTE=
-github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260901023223-237fbdb8dd6d/go.mod h1:cbKHupPBFv5B8m37S6bLaFLOCqw0zn4kPydqH0p32Hk=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260903131624-4fd12e6d5f70 h1:LuxXhSzg1GZiVfFHLbITOOjkMiWmrbgHhtE9vzVo3jI=
+github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260903131624-4fd12e6d5f70/go.mod h1:o/siowhohtTGjWXa/DFIhomuvSx5xk0zBMxi5BgICHE=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260903141216-bb68935052d8 h1:ggyFxj4FjblPMZSoLVfuFQ65MSQKRaNicQCKPoBRrNg=
+github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260903141216-bb68935052d8/go.mod h1:KhPJ9x43VQA+RS0L2TQbBjxExdbBF2vNYxMlTguSZgY=
 github.com/spkg/bom v0.0.0-20160624110644-59b7046e48ad/go.mod h1:qLr4V1qq6nMqFKkMo8ZTx3f+BZEkzsRUY10Xsm2mwU0=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
