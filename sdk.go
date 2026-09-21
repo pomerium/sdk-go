@@ -6,10 +6,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/go-jose/go-jose/v3"
@@ -41,7 +40,7 @@ const (
 type Verifier struct {
 	staticJWKSEndpoint string
 	datastore          JSONWebKeyStore
-	logger             *log.Logger
+	logger             *slog.Logger
 	httpClient         *http.Client
 	expected           *jwt.Expected
 }
@@ -58,7 +57,8 @@ type Options struct {
 	// HTTPClient is an optional custom http client which you can provide.
 	HTTPClient *http.Client
 	// Logger is an optional custom logger which you provide.
-	Logger *log.Logger
+	// If nil, slog.Default() is used. The SDK only logs at debug level.
+	Logger *slog.Logger
 	// Expected defines values used for protected claims validation.
 	// If field has zero value then validation is skipped, with the exception
 	// of Time, where the zero value means "now."
@@ -77,7 +77,7 @@ func New(o *Options) (*Verifier, error) {
 		v.datastore, _ = NewLRUKeyStore(10)
 	}
 	if v.logger == nil {
-		v.logger = log.New(os.Stderr, "", log.LstdFlags)
+		v.logger = slog.Default()
 	}
 	if v.httpClient == nil {
 		v.httpClient = http.DefaultClient
@@ -166,7 +166,8 @@ func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*
 		return nil, err
 	}
 
-	v.logger.Printf("KeyID: %s not found, fetching jwks endpoint: %s", h.KeyID, verifyEndpoint)
+	v.logger.DebugContext(ctx, "signing key not cached, fetching JWKS",
+		"key_id", h.KeyID, "endpoint", verifyEndpoint)
 
 	return v.fetchJWKSFromRemote(ctx, verifyEndpoint, h.KeyID)
 }
