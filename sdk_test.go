@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
@@ -67,7 +67,7 @@ func TestVerifier_GetIdentity(t *testing.T) {
 		name        string
 		jwkEndpoint string
 		datastore   JSONWebKeyStore
-		logger      *log.Logger
+		logger      *slog.Logger
 		httpClient  *http.Client
 		expected    *jwt.Expected
 		headerKey   string
