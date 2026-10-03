@@ -7,10 +7,10 @@ require (
 	github.com/go-jose/go-jose/v3 v3.0.5
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/oapi-codegen/runtime v1.7.0
-	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20260922181352-6a0461070c4a
-	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20260922181352-6a0461070c4a
+	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20261002194704-395f41d1eee2
+	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20261002194704-395f41d1eee2
 	github.com/stretchr/testify v1.12.1
-	google.golang.org/grpc v1.84.0
+	google.golang.org/grpc v1.86.0-dev
 	google.golang.org/protobuf v1.36.12
 )
 
@@ -19,7 +19,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 // indirect
-	github.com/envoyproxy/go-control-plane/envoy v1.39.0 // indirect
+	github.com/envoyproxy/go-control-plane/envoy v1.39.1-0.20260819172001-e6e3fd93e4be // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.3.3 // indirect
 	github.com/google/gnostic v0.7.2-0.20250814192921-e0e09f706281 // indirect
 	github.com/google/gnostic-models v0.7.1 // indirect
@@ -30,6 +30,6 @@ require (
 	golang.org/x/net v0.59.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260921155816-b14227669459 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260921155816-b14227669459 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260928230214-8a89bd6388cc // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260928230214-8a89bd6388cc // indirect
 )
