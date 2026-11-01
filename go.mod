@@ -3,10 +3,10 @@ module github.com/pomerium/sdk-go
 go 1.26.3
 
 require (
-	connectrpc.com/connect v1.21.0
+	connectrpc.com/connect v1.21.1
 	github.com/go-jose/go-jose/v3 v3.0.5
 	github.com/hashicorp/golang-lru/v2 v2.0.7
-	github.com/oapi-codegen/runtime v1.7.0
+	github.com/oapi-codegen/runtime v1.8.0
 	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20261023153227-548f63720016
 	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20261023153227-548f63720016
 	github.com/stretchr/testify v1.12.1
