@@ -16,8 +16,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-jose/go-jose/v3"
-	"github.com/go-jose/go-jose/v3/jwt"
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -88,7 +88,7 @@ func TestVerifier_GetIdentity(t *testing.T) {
 		{"does pass iss validation", ts.URL, nil, nil, nil, &jwt.Expected{Issuer: ts.URL}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Issuer: ts.URL}}, "", false, "user@pomerium.com"},
 		{"good enforces sub validation", ts.URL, nil, nil, nil, &jwt.Expected{Subject: "1234"}, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{Subject: "1234"}}, "", false, "user@pomerium.com"},
 		{"expired", ts.URL, nil, nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{IssuedAt: fiveMinutesAgo, Expiry: fiveMinutesAgo}}, "", false, `{"error":"unexpected Pomerium JWT assertion claim: go-jose/go-jose/jwt: validation failed, token is expired (exp)"}`},
-		{"issued in the future", ts.URL, nil, nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{IssuedAt: fiveMinutesFromNow, Expiry: fiveMinutesFromNow}}, "", false, `{"error":"unexpected Pomerium JWT assertion claim: go-jose/go-jose/jwt: validation field, token issued in the future (iat)"}`},
+		{"issued in the future", ts.URL, nil, nil, nil, nil, defaultAttestationHeader, goodSigner, &Identity{Email: "user@pomerium.com", Claims: jwt.Claims{IssuedAt: fiveMinutesFromNow, Expiry: fiveMinutesFromNow}}, "", false, `{"error":"unexpected Pomerium JWT assertion claim: go-jose/go-jose/jwt: validation failed, token issued in the future (iat)"}`},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -114,7 +114,8 @@ func TestVerifier_GetIdentity(t *testing.T) {
 				assert.NoError(t, err)
 				obj, err := tt.signer.Sign(b)
 				assert.NoError(t, err)
-				serialized := obj.FullSerialize()
+				serialized, err := obj.CompactSerialize()
+				assert.NoError(t, err)
 				r.Header.Set(tt.headerKey, serialized)
 			} else if tt.headerValue != "" {
 				r.Header.Set(tt.headerKey, tt.headerValue)
@@ -145,17 +146,17 @@ func TestVerifier_getVerifyEndpoint(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		key := []byte("secret")
+		key := []byte("01234567890123456789012345678901")
 		sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key}, (&jose.SignerOptions{}).WithType("JWT"))
 		require.NoError(t, err)
 
 		raw, err := jwt.Signed(sig).Claims(jwt.Claims{
 			Subject: "subject",
 			Issuer:  testCase.issuer,
-		}).CompactSerialize()
+		}).Serialize()
 		require.NoError(t, err)
 
-		tok, err := jwt.ParseSigned(raw)
+		tok, err := jwt.ParseSigned(raw, []jose.SignatureAlgorithm{jose.HS256})
 		require.NoError(t, err)
 
 		v, err := New(&Options{})

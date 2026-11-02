@@ -11,9 +11,17 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/go-jose/go-jose/v3"
-	"github.com/go-jose/go-jose/v3/jwt"
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
 )
+
+// allowedSignatureAlgorithms are the signature algorithms accepted for Pomerium JWT assertions.
+var allowedSignatureAlgorithms = []jose.SignatureAlgorithm{
+	jose.ES256, jose.ES384, jose.ES512,
+	jose.RS256, jose.RS384, jose.RS512,
+	jose.PS256, jose.PS384, jose.PS512,
+	jose.EdDSA,
+}
 
 // errors
 var (
@@ -21,8 +29,10 @@ var (
 	ErrJWKNotFound      = errors.New("no JSON Web Key found with matching KeyID (`kid`)")
 	ErrJWKSInvalid      = errors.New("invalid JSON Web Key")
 	ErrJWKSTypeMismatch = errors.New("priv/pub JSON Web Key mismatch")
-	ErrMultipleHeaders  = errors.New("JWT signature must have only one header")
-	ErrTokenNotFound    = errors.New("attestation token not found")
+	// Deprecated: no longer returned. JWTs are parsed in compact
+	// serialization, which always has exactly one header.
+	ErrMultipleHeaders = errors.New("JWT signature must have only one header")
+	ErrTokenNotFound   = errors.New("attestation token not found")
 )
 
 // JSONWebKeyStore is the interface to for storing JSON Web Keys.
@@ -111,7 +121,7 @@ type Identity struct {
 func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, error) {
 	var id Identity
 	// get the web signature of the raw jwt
-	sig, err := jose.ParseSigned(rawJWT)
+	sig, err := jose.ParseSigned(rawJWT, allowedSignatureAlgorithms)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse Pomerium JWT assertion: %w", err)
 	}
@@ -148,14 +158,11 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 }
 
 func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*jose.JSONWebKey, error) {
-	tok, err := jwt.ParseSigned(rawJWT)
+	tok, err := jwt.ParseSigned(rawJWT, allowedSignatureAlgorithms)
 	if err != nil {
 		return nil, fmt.Errorf("invalid JWT: %w", err)
 	}
 
-	if len(tok.Headers) != 1 {
-		return nil, ErrMultipleHeaders
-	}
 	h := tok.Headers[0]
 	if val, ok := v.datastore.Get(h.KeyID); ok {
 		return val, nil
