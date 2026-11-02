@@ -3,7 +3,6 @@ package sdk
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -11,8 +10,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/go-jose/go-jose/v3"
-	"github.com/go-jose/go-jose/v3/jwt"
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
 )
 
 // errors
@@ -96,6 +95,12 @@ func New(o *Options) (*Verifier, error) {
 	return &v, nil
 }
 
+// Pomerium signs assertions with ES256 (ECDSA keys) or RS256 (RSA keys).
+var allowedSignatureAlgorithms = []jose.SignatureAlgorithm{
+	jose.ES256,
+	jose.RS256,
+}
+
 // Identity is a Pomerium attested identity.
 type Identity struct {
 	jwt.Claims          // standard JWT claims
@@ -109,14 +114,12 @@ type Identity struct {
 
 // GetIdentity takes a raw JWT string and returns a parsed, and validated Identity.
 func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, error) {
-	var id Identity
-	// get the web signature of the raw jwt
-	sig, err := jose.ParseSigned(rawJWT)
+	tok, err := jwt.ParseSigned(rawJWT, allowedSignatureAlgorithms)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse Pomerium JWT assertion: %w", err)
 	}
 
-	jsonWebKey, err := v.getJSONWebKeyFromToken(ctx, rawJWT)
+	jsonWebKey, err := v.getJSONWebKeyFromToken(ctx, tok)
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve signature key for Pomerium JWT assertion: %w", err)
 	}
@@ -126,15 +129,9 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 		return nil, fmt.Errorf("failed to marshal signature key for Pomerium JWT assertion: %w", err)
 	}
 
-	id.PublicKey = string(jwkBytes)
-
-	b, err := sig.Verify(jsonWebKey)
-	if err != nil {
+	id := Identity{PublicKey: string(jwkBytes)}
+	if err := tok.Claims(jsonWebKey, &id); err != nil {
 		return nil, fmt.Errorf("invalid Pomerium JWT assertion signature: %w", err)
-	}
-	err = json.Unmarshal(b, &id)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal Pomerium JWT assertion: %w", err)
 	}
 	var expected jwt.Expected
 	if v.expected != nil {
@@ -147,12 +144,7 @@ func (v *Verifier) GetIdentity(ctx context.Context, rawJWT string) (*Identity, e
 	return &id, nil
 }
 
-func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, rawJWT string) (*jose.JSONWebKey, error) {
-	tok, err := jwt.ParseSigned(rawJWT)
-	if err != nil {
-		return nil, fmt.Errorf("invalid JWT: %w", err)
-	}
-
+func (v *Verifier) getJSONWebKeyFromToken(ctx context.Context, tok *jwt.JSONWebToken) (*jose.JSONWebKey, error) {
 	if len(tok.Headers) != 1 {
 		return nil, ErrMultipleHeaders
 	}
