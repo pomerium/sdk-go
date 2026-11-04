@@ -1,14 +1,14 @@
 module github.com/pomerium/sdk-go
 
-go 1.26.3
+go 1.26.9
 
 require (
 	connectrpc.com/connect v1.21.1
 	github.com/go-jose/go-jose/v3 v3.0.5
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/oapi-codegen/runtime v1.8.0
-	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20261023153227-548f63720016
-	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20261023153227-548f63720016
+	github.com/pomerium/pomerium/pkg/grpc/config v0.0.0-20261104122925-30a9f80310bb
+	github.com/pomerium/pomerium/pkg/grpc/databroker v0.0.0-20261104122925-30a9f80310bb
 	github.com/stretchr/testify v1.12.1
 	google.golang.org/grpc v1.86.0-dev
 	google.golang.org/protobuf v1.36.12
@@ -30,9 +30,9 @@ require (
 	github.com/rs/zerolog v1.35.1 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
-	golang.org/x/net v0.61.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20261019180522-ce908d29299b // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20261019180522-ce908d29299b // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20261026165753-2ffab32bce7e // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20261026165753-2ffab32bce7e // indirect
 )
