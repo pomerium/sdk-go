@@ -2791,9 +2791,12 @@ type Route struct {
 	LogoUrl                        *string                   `json:"logoUrl,omitempty"`
 
 	// Mcp Model Context Protocol configuration for this route
-	Mcp                            *MCP                   `json:"mcp,omitempty"`
-	Name                           EntityName             `json:"name"`
-	NamespaceId                    string                 `json:"namespaceId"`
+	Mcp         *MCP       `json:"mcp,omitempty"`
+	Name        EntityName `json:"name"`
+	NamespaceId string     `json:"namespaceId"`
+
+	// OidcBridge Configure OIDC bridge support for this route.
+	OidcBridge                     *RouteOIDCBridge       `json:"oidcBridge,omitempty"`
 	OriginatorId                   *string                `json:"originatorId,omitempty"`
 	PassIdentityHeaders            *bool                  `json:"passIdentityHeaders,omitempty"`
 	Path                           *string                `json:"path,omitempty"`
@@ -2888,6 +2891,18 @@ type RouteHttpHealthCheckType string
 // RouteLoadBalancingPolicy defines model for RouteLoadBalancingPolicy.
 type RouteLoadBalancingPolicy string
 
+// RouteOIDCBridge defines model for RouteOIDCBridge.
+type RouteOIDCBridge struct {
+	// ClientSecret Client secret to use for upstream applications that do not support public clients / PKCE.
+	ClientSecret *string `json:"clientSecret,omitempty"`
+
+	// Enabled Whether the OIDC bridge feature should be enabled for this route.
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// RedirectUris List of allowed redirect URIs. By default any subpath of the route's `to` address is allowed.
+	RedirectUris *StringList `json:"redirectUris,omitempty"`
+}
+
 // RouteProperties defines model for RouteProperties.
 type RouteProperties struct {
 	AllowSpdy bool `json:"allowSpdy"`
@@ -2927,9 +2942,12 @@ type RouteProperties struct {
 	LogoUrl                        *string                   `json:"logoUrl,omitempty"`
 
 	// Mcp Model Context Protocol configuration for this route
-	Mcp                            *MCP                   `json:"mcp,omitempty"`
-	Name                           EntityName             `json:"name"`
-	NamespaceId                    string                 `json:"namespaceId"`
+	Mcp         *MCP       `json:"mcp,omitempty"`
+	Name        EntityName `json:"name"`
+	NamespaceId string     `json:"namespaceId"`
+
+	// OidcBridge Configure OIDC bridge support for this route.
+	OidcBridge                     *RouteOIDCBridge       `json:"oidcBridge,omitempty"`
 	OriginatorId                   *string                `json:"originatorId,omitempty"`
 	PassIdentityHeaders            *bool                  `json:"passIdentityHeaders,omitempty"`
 	Path                           *string                `json:"path,omitempty"`
