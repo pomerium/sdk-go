@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	"github.com/go-jose/go-jose/v3"
-	"github.com/go-jose/go-jose/v3/jwt"
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
 
 	"github.com/pomerium/pomerium/pkg/grpc/config"
 	"github.com/pomerium/pomerium/pkg/grpc/config/configconnect"
@@ -192,7 +192,7 @@ func generateGRPCJWT(key []byte) (string, error) {
 
 	return jwt.Signed(sig).Claims(jwt.Claims{
 		Expiry: jwt.NewNumericDate(time.Now().Add(time.Hour)),
-	}).CompactSerialize()
+	}).Serialize()
 }
 
 func generateBootstrapJWT(key []byte) (string, error) {
@@ -208,5 +208,5 @@ func generateBootstrapJWT(key []byte) (string, error) {
 		Subject:   "bootstrap-014e587b-3f4b-4fcf-90a9-f6ecdf8154af.pomerium",
 		IssuedAt:  jwt.NewNumericDate(now),
 		NotBefore: jwt.NewNumericDate(now.Add(-time.Second)),
-	}).CompactSerialize()
+	}).Serialize()
 }
