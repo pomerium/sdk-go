@@ -15,13 +15,9 @@ import (
 	"github.com/go-jose/go-jose/v4/jwt"
 )
 
-// allowedSignatureAlgorithms are the signature algorithms accepted for Pomerium JWT assertions.
-var allowedSignatureAlgorithms = []jose.SignatureAlgorithm{
-	jose.ES256, jose.ES384, jose.ES512,
-	jose.RS256, jose.RS384, jose.RS512,
-	jose.PS256, jose.PS384, jose.PS512,
-	jose.EdDSA,
-}
+// allowedSignatureAlgorithms are the signature algorithms Pomerium signs JWT
+// assertions with: ES256 for an EC P-256 signing key, RS256 for an RSA one.
+var allowedSignatureAlgorithms = []jose.SignatureAlgorithm{jose.ES256, jose.RS256}
 
 // errors
 var (
