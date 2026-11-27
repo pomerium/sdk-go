@@ -2496,6 +2496,18 @@ type OAuth2Endpoint struct {
 	TokenUrl *string `json:"tokenUrl,omitempty"`
 }
 
+// OIDCBridge defines model for OIDCBridge.
+type OIDCBridge struct {
+	// ClientSecret Client secret to use for upstream applications that do not support public clients / PKCE. Only stored when the OIDC bridge is enabled.
+	ClientSecret *string `json:"clientSecret,omitempty"`
+
+	// Enabled Whether the OIDC bridge feature is enabled. When omitted, the OIDC bridge is enabled, matching Pomerium core.
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// RedirectUris List of allowed redirect URIs. By default any subpath of the route's `from` URL (the client ID) is allowed. Only stored when the OIDC bridge is enabled.
+	RedirectUris *StringList `json:"redirectUris,omitempty"`
+}
+
 // Organization defines model for Organization.
 type Organization struct {
 	CreatedAt time.Time `json:"createdAt"`
@@ -2795,8 +2807,8 @@ type Route struct {
 	Name        EntityName `json:"name"`
 	NamespaceId string     `json:"namespaceId"`
 
-	// OidcBridge Configure OIDC bridge support for this route.
-	OidcBridge                     *RouteOIDCBridge       `json:"oidcBridge,omitempty"`
+	// OidcBridge Configure OIDC bridge support for this route. When omitted, the route inherits the cluster's global OIDC bridge settings. Set `enabled` to false to disable the OIDC bridge for this route, or to true to enable it with route-specific settings that replace the global settings.
+	OidcBridge                     *OIDCBridge            `json:"oidcBridge,omitempty"`
 	OriginatorId                   *string                `json:"originatorId,omitempty"`
 	PassIdentityHeaders            *bool                  `json:"passIdentityHeaders,omitempty"`
 	Path                           *string                `json:"path,omitempty"`
@@ -2891,18 +2903,6 @@ type RouteHttpHealthCheckType string
 // RouteLoadBalancingPolicy defines model for RouteLoadBalancingPolicy.
 type RouteLoadBalancingPolicy string
 
-// RouteOIDCBridge defines model for RouteOIDCBridge.
-type RouteOIDCBridge struct {
-	// ClientSecret Client secret to use for upstream applications that do not support public clients / PKCE.
-	ClientSecret *string `json:"clientSecret,omitempty"`
-
-	// Enabled Whether the OIDC bridge feature should be enabled for this route.
-	Enabled *bool `json:"enabled,omitempty"`
-
-	// RedirectUris List of allowed redirect URIs. By default any subpath of the route's `to` address is allowed.
-	RedirectUris *StringList `json:"redirectUris,omitempty"`
-}
-
 // RouteProperties defines model for RouteProperties.
 type RouteProperties struct {
 	AllowSpdy bool `json:"allowSpdy"`
@@ -2946,8 +2946,8 @@ type RouteProperties struct {
 	Name        EntityName `json:"name"`
 	NamespaceId string     `json:"namespaceId"`
 
-	// OidcBridge Configure OIDC bridge support for this route.
-	OidcBridge                     *RouteOIDCBridge       `json:"oidcBridge,omitempty"`
+	// OidcBridge Configure OIDC bridge support for this route. When omitted, the route inherits the cluster's global OIDC bridge settings. Set `enabled` to false to disable the OIDC bridge for this route, or to true to enable it with route-specific settings that replace the global settings.
+	OidcBridge                     *OIDCBridge            `json:"oidcBridge,omitempty"`
 	OriginatorId                   *string                `json:"originatorId,omitempty"`
 	PassIdentityHeaders            *bool                  `json:"passIdentityHeaders,omitempty"`
 	Path                           *string                `json:"path,omitempty"`
@@ -3183,7 +3183,10 @@ type Settings struct {
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
-	OriginatorId   *string `json:"originatorId,omitempty"`
+
+	// OidcBridge Configure default OIDC bridge support for all routes. Routes without their own OIDC bridge settings inherit these settings. Only stored when the OIDC bridge is enabled.
+	OidcBridge   *OIDCBridge `json:"oidcBridge,omitempty"`
+	OriginatorId *string     `json:"originatorId,omitempty"`
 
 	// OtelAttributeValueLengthLimit Maximum allowed attribute value size
 	OtelAttributeValueLengthLimit *int32 `json:"otelAttributeValueLengthLimit,omitempty"`
@@ -3389,7 +3392,10 @@ type SettingsProperties struct {
 
 	// MetricsAddress Exposes a Prometheus endpoint on the specified port.
 	MetricsAddress *string `json:"metricsAddress,omitempty"`
-	OriginatorId   *string `json:"originatorId,omitempty"`
+
+	// OidcBridge Configure default OIDC bridge support for all routes. Routes without their own OIDC bridge settings inherit these settings. Only stored when the OIDC bridge is enabled.
+	OidcBridge   *OIDCBridge `json:"oidcBridge,omitempty"`
+	OriginatorId *string     `json:"originatorId,omitempty"`
 
 	// OtelAttributeValueLengthLimit Maximum allowed attribute value size
 	OtelAttributeValueLengthLimit *int32 `json:"otelAttributeValueLengthLimit,omitempty"`
